@@ -1,0 +1,107 @@
+{
+  "search": "ghost_census",
+  "claim": "For each (k, p) recorded, c = k! * C(N,K) is not in (x)_k(F_p), hence not in the intersection over all primes, hence not a ghost.",
+  "caveats": [
+    "Not a targeted ghost hunt: these are the c the Singmaster search produces, not candidates chosen for being ghost-like.",
+    "Each column stops at its first killing prime, so the census records that c fails locally somewhere, not how nearly it passed.",
+    "A column surviving its cap would be an unresolved anomaly, not a ghost; ghosthood needs failure at every prime."
+  ],
+  "n_values": 884236,
+  "k_range": [
+    41,
+    756136
+  ],
+  "ghosts_found": 0,
+  "members": [
+    {
+      "file": "i2_witness.npz",
+      "i": 2,
+      "N": 104,
+      "K": 39,
+      "n_values": 9,
+      "k_min": 41,
+      "k_max": 49,
+      "k_odd_frac": 0.5556,
+      "p_min": 53,
+      "p_max": 59,
+      "g_median": 8,
+      "sum_g": 78,
+      "sha256": "676ac6984ff42fa4f47f0b6dfb100642a250e3cb110b2024f5eb4e97e0b064d1"
+    },
+    {
+      "file": "i3_witness.npz",
+      "i": 3,
+      "N": 714,
+      "K": 272,
+      "n_values": 140,
+      "k_min": 201,
+      "k_max": 342,
+      "k_odd_frac": 0.5,
+      "p_min": 211,
+      "p_max": 373,
+      "g_median": 22,
+      "sum_g": 4278,
+      "sha256": "97ee81d32c31fec9d23279c58ac7e12e14d651086f81d1faaf9d6e9a0e257815"
+    },
+    {
+      "file": "i4_witness.npz",
+      "i": 4,
+      "N": 4895,
+      "K": 1869,
+      "n_values": 2145,
+      "k_min": 201,
+      "k_max": 2347,
+      "k_odd_frac": 0.5002,
+      "p_min": 223,
+      "p_max": 2473,
+      "g_median": 18,
+      "sum_g": 219998,
+      "sha256": "17f4ebadbfa27e7a41c81cf86e965caff0cacdec73733379b4b57f5bd697b324"
+    },
+    {
+      "file": "i5_witness.npz",
+      "i": 5,
+      "N": 33552,
+      "K": 12815,
+      "n_values": 15892,
+      "k_min": 201,
+      "k_max": 16094,
+      "k_odd_frac": 0.5,
+      "p_min": 227,
+      "p_max": 16843,
+      "g_median": 29,
+      "sum_g": 9582542,
+      "sha256": "05a7ddb0f7e4d3bcced307b87674e8a2767c04fc6d3d917e5971b56220189d04"
+    },
+    {
+      "file": "i6_witness.npz",
+      "i": 6,
+      "N": 229970,
+      "K": 87840,
+      "n_values": 110116,
+      "k_min": 201,
+      "k_max": 110318,
+      "k_odd_frac": 0.5,
+      "p_min": 499,
+      "p_max": 115057,
+      "g_median": 99,
+      "sum_g": 442945406,
+      "sha256": "2165869ca530bfda1941d9bbcfcd03eacdec5861615ef917adfcefadfce699e1"
+    },
+    {
+      "file": "i7_witness.npz",
+      "i": 7,
+      "N": 1576239,
+      "K": 602069,
+      "n_values": 755934,
+      "k_min": 201,
+      "k_max": 756136,
+      "k_odd_frac": 0.5,
+      "p_min": 1259,
+      "p_max": 788209,
+      "g_median": 536,
+      "sum_g": 20748410203,
+      "sha256": "ba1df7a02fa042cef673c9346af77c405eba40486b21da1a8a229c54c661dd9c"
+    }
+  ]
+}

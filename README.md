@@ -152,6 +152,19 @@ merges old records with new ones, so a silent format or parameter change
 would produce a certificate over columns that were never all tested the same
 way.
 
+## Independent checks
+
+Beyond the built-in verifier, `scripts/verify_independent.py` re-checks
+certificates through sympy plus two from-scratch controls, choosing the route
+by cost: `math.comb` brute force where p is small, GF(p) factorisation where k
+is small, and a freshly written factorial identity elsewhere. It agrees on
+every certificate tried.
+
+`scripts/ghost_census.py` reads the witness tables as a test of the
+falling-factorial local-global question: each recorded (k, p) certifies that
+c = k!*C(N,K) lies outside (x)_k(F_p), hence is not a "ghost". The output
+carries its own caveats, which are worth reading before quoting the count.
+
 ## Notes
 
 - [`docs/modular-spec.txt`](docs/modular-spec.txt) — Lucas/modular layer: what a certificate is, how to run scans, what not to rebuild

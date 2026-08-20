@@ -37,7 +37,10 @@ The real question underneath it is Q2 below.
 
 ## Tier A — execution, high value, mostly bounded
 
-### Q1. Where does the time actually go? *(difficulty: low · **HARD**)*
+### Q1. Where does the time actually go? *(difficulty: low · **HARD**)* — DONE 2026-08-20
+`scripts/profile_sweep.py` samples each phase and reports the split between factorial table, image scan, r(p) and prime assignment. The split is decisive and was not guessable: **i=9 Band II is 100% scan; the i=9 Z-jump is 90.6% table** (214 of 237 core-hours). Its distinct-prime count integrates prime density over the live intervals -- a window sample near the range start is ~2x high -- and recovers i=8's recorded 124,830 primes to 0.2%. Wall-clock projection is good to about a factor of 2; the split is the reliable part.
+
+*Original text:*
 There is still no profiling harness. `Claude-Answer.txt` was wrong twice about
 the bottleneck (claimed r(p) dominated Stage 3, retracted, then un-retracted),
 and this session found the Z-jump is table-dominated rather than scan-dominated
@@ -173,7 +176,12 @@ below the threshold" — which is tighter at the bottom (the document recommends
 ~15 live primes at k<10³) and looser above. Does an adaptive cap change any
 outcome, and does it cost or save time?
 
-### Q9. Make the ghost census a first-class output. *(difficulty: low-medium · **HARD**)*
+### Q9. Make the ghost census a first-class output. *(difficulty: low-medium · **HARD**)* — DONE 2026-08-20
+`scripts/ghost_census.py` reads the witness tables and reports the census with its claim stated exactly: for each recorded (k,p), c = k! C(N,K) is outside (x)_k(F_p), hence outside the intersection over all primes, hence a certified NON-ghost. 884,236 values over k = 41..756,136 before i=8's re-derivation. Verified exactly on a spot-check (k=201, p=211, c a 582-digit number).
+
+The output carries its own caveats, because the honest reading is narrower than 'largest test in existence': this is not a targeted ghost hunt (these are the c the Singmaster search happens to produce, not ghost-like candidates), each column stops at its FIRST killing prime so the census records that c fails somewhere rather than how nearly it passed, and 'ghosts found: 0' is the only possible answer -- a surviving column would be an unresolved anomaly, since ghosthood needs failure at every prime.
+
+*Original text:*
 Every killed column is a certified non-ghost: a value `c = m·k!` with a prime
 witnessing `c ∉ (x)_k(F_p)`. Across i=2..8 that is ~6.07M values of c, and i=9
 takes it past 42M — which `Claude-Answer.txt` calls *"the largest test of this
@@ -181,14 +189,27 @@ conjecture in existence"* and *"a genuine contribution to a question nobody has
 data on."* Right now it is an unrecorded by-product. Should the witness tables
 be indexed and reported as a ghost census in their own right?
 
-### Q10. An independent reimplementation of the verifier. *(difficulty: low-medium · **HARD**)*
+### Q10. An independent reimplementation of the verifier. *(difficulty: low-medium · **HARD**)* — DONE 2026-08-20
+`scripts/verify_independent.py`. No PARI/GP, Sage or Magma on this machine, so sympy plus two from-scratch controls, with the route chosen by cost:
+
+* **brute** -- `math.comb(x,k) % p` over the whole domain. Assumes only the definition; the real control. Used when p is small.
+* **sympy-poly** -- factor (x)_k - k! r over GF(p) and look for a linear factor. Different theorem, different algorithm. Cheap only for small k: Cantor-Zassenhaus on degree ~300 is slower than the walk it checks, the same crossover Q7 found.
+* **factorial** -- F[k+b] == r F[k] F[b], written fresh, for the large-k/large-p certificates the other two cannot reach.
+* **lucas** -- r(p) rebuilt with `sympy.binomial`, on every certificate.
+
+Result: **AGREE** on all 140 i=3 certificates and on samples from i=4..i=7, with full membership coverage (no certificate left at primality-and-r only). Stated limits: sympy is a different library, not a different language or machine, so it catches implementation error rather than a shared misunderstanding; and the `factorial` route uses the same identity as the sweep, so it cross-checks witness.py without independently certifying the sweep.
+
+*Original text:*
 `witness.py` shares no code path with the sweep, but both rest on the same
 author's Lucas implementation. A second implementation in PARI/GP or Sage,
 checking a sample of certificates, closes the last shared-assumption gap and is
 the kind of thing a referee asks for. Cheap, and it either finds nothing or
 finds something important.
 
-### Q11. What is the claim, and is more compute the way to get it? *(difficulty: judgment · **HARD**)*
+### Q11. What is the claim, and is more compute the way to get it? *(difficulty: judgment · **HARD**)* — ANSWERED 2026-08-20
+Full analysis in [`q11-what-is-the-claim.md`](q11-what-is-the-claim.md). **Recommendation: after i=9, stop the family ladder.** Cost grows as phi^8 = 47x per step, so i=10 is **65.7 days on 8 workers** and i=11 is 8.5 years; optimisation cannot rescue a curve like that (even a 10x cheaper factorial table only takes i=10 to ~36 days). Meanwhile the whole `nearby` sweep over k=2M..8M cost 37 minutes, and extending it to k=1e9 with d,e<=10 is about 7 days -- a tenth of one family step, aimed at (d,e) pairs BBW 2017 left open, where a hit would be a new result. The family's own outcome is now predicted before the run with zero fitted parameters, so another member tests the method rather than the mathematics. Named conditions for re-opening i=10 are in the doc.
+
+*Original text:*
 i=9 costs 1–3 days; i=10 costs ~47× that. Each member adds one more instance of
 a pattern nobody doubts. Meanwhile `nearby` and `collide` are **sampled, not
 exhaustive**, and have not been touched in this session's work. An honest

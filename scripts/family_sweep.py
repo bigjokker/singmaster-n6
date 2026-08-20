@@ -215,9 +215,13 @@ def main() -> int:
     i = 7
     if "--i" in sys.argv:
         i = int(sys.argv[sys.argv.index("--i") + 1])
-    if i == 8:
-        print("i=8 is already closed. Use the i=8 bats. Not rerunning.", flush=True)
-        return 2
+    # i=8 was originally closed by a stitched pipeline (Stages 1-3 by
+    # next-prime walk, hang-guards, stragglers, Band II, Z-jump remnant) whose
+    # checkpoints are gone, so its 4.27M certificates exist nowhere. Running
+    # it here re-derives them by ONE uniform method over k=3..k_max, which is
+    # a better proof object than the original stitching. Outputs are
+    # i8_sweep.json / i8_witness.npz and do not collide with the historical
+    # bandii_sweep.json or zjump.json.
 
     out, chk = paths(i)
     if "--preflight" in sys.argv:
