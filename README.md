@@ -131,7 +131,8 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/nearby_k8M-1B.json` | Nearby, \(k=8\text{M}..10^9\), \(d,e\le 6\), `new_hits=0` |
 | `results/nearby_k2M-8M_de8.json` | Nearby, \(k=2\text{M}..8\text{M}\), \(d,e\le 8\), `new_hits=0` |
 | `results/intersective_search.json` | \(k=5..15\), \(|c|\le 10^9\): every survivor a genuine falling-factorial value, 0 intersective |
-| `results/k6_intersective.json` | \((x)_6-c\) is **never** intersective — proved, not searched. Smallest open degree is now 7 |
+| `results/k6_intersective.json` | \((x)_6-c\) is **never** intersective — proved, not searched |
+| `results/k7_intersective.json` | \((x)_7-c\): only \(c=\pm896,\pm17472,\pm459648\) even factor, and 5 divides none. Modulo effective Thue |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
 | `results/ghost_census.json` | Certified non-ghosts, with its own caveats |
 | `results/bandii_sweep.json` | Historical Band II \(p>N/2\): 1,055,989 columns, died at prime 8 |
@@ -221,6 +222,7 @@ A run's jsonl is the only record of which prime killed which column, so a clean
 - [`docs/extra-questions.md`](docs/extra-questions.md) — Q2/Q3/Q8/Q12/Q15/Q16/Q17/Q18, with the declines and why
 - [`docs/q14-intersective.md`](docs/q14-intersective.md) — can \((x)_k-c\) be intersective? Settled for \(k\le 5\)
 - [`docs/q25-k6-intersective.md`](docs/q25-k6-intersective.md) — \(k=6\) settled too: for even \(k\) the sextic is a **cubic** in \(t^2\)
+- [`docs/q26-k7-intersective.md`](docs/q26-k7-intersective.md) — \(k=7\), modulo one effective-Thue step: odd \(k\) gets **no** reduction
 - [`docs/q11-what-is-the-claim.md`](docs/q11-what-is-the-claim.md) — what another family member buys, against what it costs
 - [`docs/interior-2022.md`](docs/interior-2022.md) — the MRSTT interior theorem, and why it does not reach i=8/9
 - [`docs/modular-spec.txt`](docs/modular-spec.txt) — Lucas/modular layer: what a certificate is, what not to rebuild

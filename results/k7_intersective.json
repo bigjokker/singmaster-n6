@@ -1,0 +1,40 @@
+{
+  "search": "k7_intersective",
+  "claim": "(x)_7 - c is never intersective, modulo effective Thue",
+  "candidates": [
+    {
+      "c": 17472,
+      "branch": "A",
+      "split": [
+        2,
+        5
+      ]
+    },
+    {
+      "c": 459648,
+      "branch": "A",
+      "split": [
+        2,
+        5
+      ]
+    },
+    {
+      "c": 896,
+      "branch": "B",
+      "split": [
+        3,
+        4
+      ]
+    }
+  ],
+  "brute_force": {
+    "limit": 20000,
+    "found": [
+      896,
+      17472
+    ]
+  },
+  "a_max": 400,
+  "intersective_found": 0,
+  "gap": "Siegel gives finiteness; effective Thue not carried out"
+}

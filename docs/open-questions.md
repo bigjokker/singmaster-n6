@@ -483,3 +483,40 @@ That is why `k=5` needed a Pell equation and `k=6` needed a Legendre symbol.
 Operationally this changes nothing -- our `c = k!m` has 3.1M digits and the
 census still relies on Q14 section 6's per-column termination certificate.
 Full write-up in [`q25-k6-intersective.md`](q25-k6-intersective.md).
+
+### Q26. Is `(x)_7 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Thue) 2026-08-20
+**No counterexample exists, and only finitely many can.** Weaker than Q25 and
+labelled so: Q25 is a proof, this is a proof modulo an effective Thue
+computation not carried out.
+
+Odd `k` gets NO degree reduction. The odd analogue of Q25's trick exists --
+`f_c(y)f_c(-y) = T(y^2)` with `T(v) = c^2 - v S(v)^2` -- but `deg T = 7`, not
+3. Even `k` maps `2m -> m`; odd `k` maps `2m+1 -> 2m+1`. That is the whole
+difference between `k=6` and `k=7`.
+
+Only TWO branches, since `2+2+3` is a `2+5` with a reducible quintic:
+
+- **quadratic factor** -- eliminating the quintic's coefficients leaves one
+  condition free of `c`, involving `a` only via `a^2`: the chord curve
+  `Phi(A,b)=0` for `P(y1)=P(y2)`. Leading form is an irreducible cubic form,
+  so 3 points at infinity and Siegel gives finiteness. Nontrivial points:
+  `c = +-17472, +-459648`.
+- **cubic factor (3+4)** -- two conditions; the first is linear in `d`, giving
+  a degree-5 plane curve with a squarefree leading form (5 points at infinity,
+  Siegel again). **The degenerate locus `3a^2-2b-14=0` must be handled
+  separately** -- my first pass skipped it and wrongly concluded 3+4 was
+  empty. It is where the only nontrivial solution lives: `c = +-896`.
+
+All of `896 = 2^7*7`, `17472 = 2^6*3*7*13`, `459648 = 2^7*3^3*7*19` fail
+`rad(7!) = 210`, and specifically **5 divides none of them**. `(x)_7` vanishes
+identically on `F_5`, so `f_c == -c != 0` there: no root mod 5.
+
+Cross-validated: brute-force factorisation for EVERY integer `c` in
+`[0,400000]` finds exactly the two candidates in that range that the curves
+predict. **The gap** is that Siegel gives finiteness but the effective
+(Baker/Thue) computation was not run, so the lists are complete only to
+`|a| <= 400`. PARI/GP `thue` on the two curves would close it.
+
+Next target is `k = 8`, not `k = 9`: even, so Q25's reduction applies, giving
+a quartic `g` with `e1 = 84`, where Case 3 becomes a surface rather than a
+bounded conic. Full write-up in [`q26-k7-intersective.md`](q26-k7-intersective.md).
