@@ -1,0 +1,70 @@
+{
+  "search": "k10_intersective",
+  "claim": "(x)_10 - c is never intersective, modulo one elliptic computation",
+  "case_1_4": {
+    "candidates": 66,
+    "max_prime": 29
+  },
+  "case_multiroot": {
+    "bound": 2680,
+    "points": [
+      [
+        1,
+        9
+      ],
+      [
+        1,
+        25
+      ],
+      [
+        1,
+        49
+      ],
+      [
+        1,
+        81
+      ],
+      [
+        9,
+        25
+      ],
+      [
+        9,
+        49
+      ],
+      [
+        9,
+        81
+      ],
+      [
+        25,
+        49
+      ],
+      [
+        25,
+        81
+      ],
+      [
+        49,
+        81
+      ]
+    ]
+  },
+  "case_2_3": {
+    "genus": 1,
+    "candidates": [
+      {
+        "a": -730,
+        "c": 1395418752000,
+        "kill_prime": 11
+      },
+      {
+        "a": -250,
+        "c": 2235340800,
+        "kill_prime": 13
+      }
+    ]
+  },
+  "intersective_found": 0,
+  "gap": "integral points on the genus-1 curve for the (2,3) branch"
+}

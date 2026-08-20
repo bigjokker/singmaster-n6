@@ -134,6 +134,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k6_intersective.json` | \((x)_6-c\) is **never** intersective — proved, not searched |
 | `results/k7_intersective.json` | \((x)_7-c\): only \(c=\pm896,\pm17472,\pm459648\) even factor, and 5 divides none. Modulo effective Thue |
 | `results/k8_intersective.json` | \((x)_8-c\): five cases, all closed; the exceptional locus is a genus-3 curve with only degenerate points |
+| `results/k10_intersective.json` | \((x)_{10}-c\): all cases closed; only a genus-1 gap remains. Difficulty is not monotone in \(k\) |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
 | `results/ghost_census.json` | Certified non-ghosts, with its own caveats |
 | `results/bandii_sweep.json` | Historical Band II \(p>N/2\): 1,055,989 columns, died at prime 8 |
@@ -225,6 +226,7 @@ A run's jsonl is the only record of which prime killed which column, so a clean
 - [`docs/q25-k6-intersective.md`](docs/q25-k6-intersective.md) — \(k=6\) settled too: for even \(k\) the sextic is a **cubic** in \(t^2\)
 - [`docs/q26-k7-intersective.md`](docs/q26-k7-intersective.md) — \(k=7\), modulo one effective-Thue step: odd \(k\) gets **no** reduction
 - [`docs/q27-k8-intersective.md`](docs/q27-k8-intersective.md) — \(k=8\): the difficulty hides in a **genus-3 curve**, whose points are exactly the degenerate ones
+- [`docs/q28-k10-intersective.md`](docs/q28-k10-intersective.md) — \(k=10\) is **cheaper than \(k=8\)**: difficulty tracks cubic factors, not \(k\)
 - [`docs/q11-what-is-the-claim.md`](docs/q11-what-is-the-claim.md) — what another family member buys, against what it costs
 - [`docs/interior-2022.md`](docs/interior-2022.md) — the MRSTT interior theorem, and why it does not reach i=8/9
 - [`docs/modular-spec.txt`](docs/modular-spec.txt) — Lucas/modular layer: what a certificate is, what not to rebuild

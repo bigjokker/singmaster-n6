@@ -559,3 +559,36 @@ Next target is **k=10, not k=9**: odd `k=9` has no reduction and seven
 partitions to grind, while `k=10` is even with a quintic `g` where the same
 divided-difference trick applies. Full write-up in
 [`q27-k8-intersective.md`](q27-k8-intersective.md).
+
+### Q28. Is `(x)_10 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo one elliptic computation) 2026-08-20
+**No -- and k=10 is CHEAPER than k=8.** Difficulty in this family is **not
+monotone in k**; it is governed by whether `g` has an irreducible CUBIC factor.
+
+The kill always needs Frobenius to be a DERANGEMENT of each higher-degree
+factor. **n=3 is the only degree whose derangements are all EVEN** (3-cycles,
+lying in A_3), which pins `(disc|p)=+1` and can conflict with the character
+condition on a rational root -- that conflict is exactly Q27's genus-3 curve.
+At k=10 the cofactor is a QUARTIC, 4-cycles are odd derangements, the
+character is free, and **no exceptional curve arises at all**.
+
+| n | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|
+| derangements | 1 | 2 | 9 | 44 | 265 |
+| odd ones | 1 | **0** | 6 | 20 | 135 |
+
+Cases: **(5)** Jordan, no computation. **(1,4)** unconditional, 66 candidates
+all killed by `p<=29`. **>=2 rational roots** -- the constraint curve has
+leading form `(b1^5-b2^5)/(b1-b2)`, which has NO real zeros, so the curve is
+COMPACT and a bounded search is a PROOF; the bound is 2680 and the complete
+search returns exactly the ten pairs from `{1,9,25,49,81}`, i.e. `c=0`. (My
+first pass searched to 400 and would have been reported as complete -- the
+bound had to be computed.) **(2,3)** reduces to `y^2 = 5a^4+1320a^3+126456a^2
++5102240a+72824400`, squarefree, **GENUS 1**; exactly two candidates survive
+`rad(10!)|c` and both die, at `p=11` and `p=13`.
+
+**Gap**: one elliptic integral-point computation. The mildest in the ladder --
+easier than Q26's Thue or Q27's genus 3.
+
+**Corrected ordering by difficulty: 6 < 10 < 7 < 8.** Scaling: case count is
+`p(k/2)`; where a curve IS needed its genus is `(m-1)(m-2)/2`, m=k/2 -- so
+1,3,6,10,15 for k=6..14. Full write-up in [`q28-k10-intersective.md`](q28-k10-intersective.md).
