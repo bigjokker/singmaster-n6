@@ -520,3 +520,42 @@ predict. **The gap** is that Siegel gives finiteness but the effective
 Next target is `k = 8`, not `k = 9`: even, so Q25's reduction applies, giving
 a quartic `g` with `e1 = 84`, where Case 3 becomes a surface rather than a
 bounded conic. Full write-up in [`q26-k7-intersective.md`](q26-k7-intersective.md).
+
+### Q27. Is `(x)_8 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Siegel) 2026-08-20
+**No.** Q26 predicted `k=8` would be hard because "Case 3 becomes a surface
+rather than a bounded conic". **That prediction was wrong** -- Cases 3 and 5
+both stayed bounded, and the difficulty moved into Case 2.
+
+`k=8` is even so Q25's reduction applies, but `g = R(u)-256c` is a QUARTIC, so
+the trichotomy becomes five cases. Two need no computation at all:
+**g irreducible** (Jordan) and **g = two irreducible quadratics** (both discs
+non-square, so a positive density of `p` has both non-residues and `g` has no
+root at all -- unconditionally dead, no side condition).
+
+Two are bounded. `e1=84, e2=1974, e3=12916` are FIXED, so two roots summing to
+`s` have their product forced, and `disc = s^2-4p(s) ~ -s^2` confines `s` to
+`[10,74]`. **Case 5** gives only `{1,9,25,49}`, i.e. `c=0`; **Case 3 proper is
+EMPTY**.
+
+That leaves **Case 2**, `g = (u-beta) x irreducible cubic` -- infinite. The
+kill needs a prime with `(beta|p) = -1` and Frobenius a 3-cycle on `q`, which
+exists unless `beta*disc(q)` is a square. The key: `q` is the divided
+difference `(R(u)-R(beta))/(u-beta)`, so **disc(q) is a POLYNOMIAL in beta**,
+`disc(q) = -16*P6(beta)`. The dangerous condition is therefore
+
+    y^2 = -beta*P6(beta),   squarefree, degree 7, GENUS 3
+
+whose integral points are exactly `beta in {0,1,9,25,49}` -- the roots of `R`
+plus 0. All are perfect squares (excluded) or give `c=0`. **No dangerous beta
+exists**, so Chebotarev always applies. Direct check: 197 candidates with
+`|beta| <= 4000`, zero dangerous, all killed by `p <= 29`.
+
+**Gap**: Siegel gives finiteness and Baker makes it effective, but the
+effective computation was not run (search covers `|beta| <= 20000`). Better
+than Q26's gap: the points found are exactly the geometrically forced ones,
+not merely "whatever the search turned up".
+
+Next target is **k=10, not k=9**: odd `k=9` has no reduction and seven
+partitions to grind, while `k=10` is even with a quintic `g` where the same
+divided-difference trick applies. Full write-up in
+[`q27-k8-intersective.md`](q27-k8-intersective.md).

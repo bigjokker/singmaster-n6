@@ -1,0 +1,29 @@
+{
+  "search": "k8_intersective",
+  "claim": "(x)_8 - c is never intersective, modulo effective Siegel",
+  "cases_1_4": "closed with no computation",
+  "cases_3_5": [
+    {
+      "c": 0,
+      "case": 5
+    }
+  ],
+  "case_2_curve": {
+    "genus": 3,
+    "integral_points": [
+      0,
+      1,
+      9,
+      25,
+      49
+    ],
+    "curve_max": 20000
+  },
+  "case_2_direct": {
+    "candidates": 52,
+    "dangerous": 0,
+    "max_prime": 29
+  },
+  "intersective_found": 0,
+  "gap": "effective integral points on the genus-3 curve not computed"
+}
