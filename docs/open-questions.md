@@ -48,7 +48,9 @@ only by measuring. Everything below is guesswork until a profile exists.
 Deliverable: per-phase, per-function wall-clock for a real i=7 run, plus a
 `--profile` flag.
 
-### Q2. Can `fact_table` be made cheap, or avoided? *(difficulty: medium · **EXTRA**)* — MEASURED 2026-08-20
+### Q2. Can `fact_table` be made cheap, or avoided? *(difficulty: medium · **EXTRA**)* — SOLVED 2026-08-20
+**Solved by Wilson's theorem.** `k!(p-1-k)! = (-1)^(k+1)` mod p, so `k!` mod p costs `g-1` multiplications rather than `k`. Since the scan reads only O(g) entries anyway, the p-sized table goes away entirely. Measured on real i=8 workloads: **1476x fewer multiplications on the Z-jump** (median g/p ~ 0 there -- the old code built a multi-million entry table to run a fifty-step test) and 1.75x on Band II. End to end on real Z-jump buckets: **11.8x, identical output**; memory 282 MB/worker at i=9 becomes O(g). Implemented as `fact_at` / `fact_window` / `scan_ks_windowed` behind `USE_WINDOWED_SCAN`. Full write-up in [`extra-questions.md`](extra-questions.md).
+
 `scripts/profile_sweep.py --i 9` now quantifies it: the i=9 Z-jump is **90.6% factorial-table construction** (214 of 237 core-hours, ~989,000 distinct live primes), against Band II which is 100% scan. So this is the single biggest remaining cost in the pipeline, and the three routes in the original text are still the options. Not yet fixed.
 
 *Original text:*

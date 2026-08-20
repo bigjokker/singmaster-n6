@@ -60,7 +60,7 @@ certificate checks in about a second from five integers.
 invalid, **and** no claimed column is missing one. A clean `family_sweep` writes
 `results/i{N}_witness.npz` automatically and names it in the certificate.
 
-`impossible` + a witness prime is a column-level proof. `possible` only means the prime list did not kill it. Nearby nulls are **sampled**, not exhaustive.
+`impossible` + a witness prime is a column-level proof. `possible` only means the prime list did not kill it. Nearby nulls are now **exhaustive** (Q12): the residual has exactly one root on the search region, so bracket-and-bisect is complete.
 
 ## Results worth keeping
 
@@ -169,6 +169,8 @@ carries its own caveats, which are worth reading before quoting the count.
 
 - [`docs/modular-spec.txt`](docs/modular-spec.txt) — Lucas/modular layer: what a certificate is, how to run scans, what not to rebuild
 - [`docs/interior-2022.md`](docs/interior-2022.md) — the MRSTT interior theorem, and why it does not reach i=8/9
+- [`docs/q14-intersective.md`](docs/q14-intersective.md) - can (x)_k - c be intersective? settled for k <= 5
+- [`docs/extra-questions.md`](docs/extra-questions.md) - Q2/Q3/Q8/Q12/Q15/Q16/Q17/Q18, with the declines and why
 - [`docs/open-questions.md`](docs/open-questions.md) — ranked open questions, with difficulty and recommended effort
 - [`docs/campaign-log.txt`](docs/campaign-log.txt) — original search campaign (exact i=8 \(k\le 300\), nearby, collide)
 - [`scripts/run-i8-k300.bat`](scripts/run-i8-k300.bat) — historical wrapper for the exact i=8 \(k\le 300\) job (already finished)
