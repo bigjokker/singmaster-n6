@@ -1,0 +1,34 @@
+{
+  "search": "k9_intersective",
+  "claim": "(x)_9 - c is never intersective, modulo effective Siegel",
+  "branch_A": [
+    {
+      "c": 2630880,
+      "rad_ok": true,
+      "kill_prime": 13
+    },
+    {
+      "c": 176774400,
+      "rad_ok": false,
+      "kill_prime": 7
+    }
+  ],
+  "branch_B": {
+    "points": 42,
+    "nontrivial": 0
+  },
+  "branch_C": {
+    "points": 65,
+    "nontrivial": 0
+  },
+  "second_obstruction": {
+    "blocking_pair": "C4 x F20 fused over C4"
+  },
+  "brute_force": {
+    "limit": 4200000,
+    "found": [
+      2630880
+    ]
+  },
+  "intersective_found": 0
+}

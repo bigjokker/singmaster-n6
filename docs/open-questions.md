@@ -592,3 +592,45 @@ easier than Q26's Thue or Q27's genus 3.
 **Corrected ordering by difficulty: 6 < 10 < 7 < 8.** Scaling: case count is
 `p(k/2)`; where a curve IS needed its genus is `(m-1)(m-2)/2`, m=k/2 -- so
 1,3,6,10,15 for k=6..14. Full write-up in [`q28-k10-intersective.md`](q28-k10-intersective.md).
+
+### Q29. Is `(x)_9 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Siegel) 2026-08-20
+**No.** Odd `k`, so no degree reduction -- the centred `(x)_9` is ODD in `y`,
+which buys only `f_c(-y) = -f_{-c}(y)` (restrict to `c >= 0`).
+
+The eight partitions of 9 into parts >=2 collapse to **three branches**: a
+shape containing a 2 is "has a quadratic factor", one containing a 3 but no 2
+is "has a cubic factor".
+
+- **A (quadratic factor)** -- the chord curve for `P(y1)=P(y2)`, free of `c`,
+  involving `a` only via `a^2`. Constant part factors as
+  `-(b+1)(b+4)(b+9)(b+16)`, echoing k=7's `-(w+1)(w+4)(w+9)`. Leading form
+  squarefree, 4 points at infinity, Siegel applies. Nontrivial:
+  `c = +-176774400` (fails rad, dies p=7) and **`c = +-2630880 = 2^5*3^4*5*7*29`,
+  which PASSES rad(9!)** -- the first candidate anywhere in this ladder to do
+  so -- and dies at `p=13`.
+- **B (cubic, no quadratic)** -- the y^2 condition is QUADRATIC in the cubic's
+  constant term, so this needs a resultant (degree 18 x 9). All 42 integer
+  points have `c=0`.
+- **C (quartic, no quad/cubic)** -- resultant splits into a DEGENERATE locus
+  `(2p2-3p3^2+30)^4` (empty; this is the trap that cost me `c=+-896` in Q26)
+  and a main component of degree 14 x 24 whose 65 points all have `c=0`.
+
+**A second obstruction mechanism, recorded though moot here.** Killing a 4+5
+needs Frobenius to be a derangement of BOTH factors. The sign character blocks
+no pair across all 9 transitive subgroups of S4 and all 20 of S5 -- I briefly
+concluded 4+5 was unconditionally dead, which was wrong. `C4` and `F20` fuse
+over `C4`, and there C4's derangements AVOID the identity coset while F20's lie
+entirely INSIDE it (they generate the kernel C5). Incompatible -> kill blocked.
+Distinct from the `n=3` mechanism of Q27: that one is a single factor whose
+derangements all lie in `A_n`; this is two factors in incompatible cosets of a
+shared quotient. **Lesson, now twice: check every transitive group, not the
+generic one.**
+
+Cross-checked by factoring `(x)_9 - c` for every multiple of 210 up to
+4,200,000: exactly one reducible-all-parts>=2 case, as predicted.
+
+**Gap**: Siegel finiteness on all three branch curves, effective computation
+not run. Full write-up in [`q29-k9-intersective.md`](q29-k9-intersective.md).
+
+**Ladder by gap severity: 6 < 10 < 7 < 9 < 8** -- still nothing to do with the
+size of `k`.
