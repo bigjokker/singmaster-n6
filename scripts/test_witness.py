@@ -308,6 +308,52 @@ def test_rebuild_is_deterministic() -> None:
         )
 
 
+def test_ghost_census_claim_holds() -> None:
+    """The census claim, checked exactly on real certificates.
+
+    "c = k! C(N,K) is outside (x)_k(F_p)" must be literally true for the
+    recorded pairs, computed from the definition with no repo arithmetic.
+    """
+    path = ROOT / "results" / f"i{I_TEST}_witness.npz"
+    if not path.exists():
+        return
+    fam, m = _fam()
+    ks, ps, _ = W.load(path)
+    bad = []
+    for k, p in list(zip(ks.tolist(), ps.tolist()))[:12]:
+        c = math.factorial(k) * m
+        # (x)_k == c mod p for some x?  falling factorial, straight from
+        # the definition -- no image walk, no factorial table
+        hit = any(
+            (math.prod(range(x - k + 1, x + 1)) - c) % p == 0 for x in range(p)
+        )
+        if hit:
+            bad.append((k, p))
+    expect(not bad, "ghost-census claim holds exactly on sampled certificates")
+
+
+def test_independent_verifier_agrees() -> None:
+    """The sympy/brute-force cross-check must agree on real certificates."""
+    path = ROOT / "results" / f"i{I_TEST}_witness.npz"
+    if not path.exists():
+        return
+    try:
+        import verify_independent as V
+    except ImportError as exc:
+        errors.append(f"verify_independent not importable: {exc}")
+        return
+    fam, m = _fam()
+    ks, ps, _ = W.load(path)
+    bad = []
+    for k, p in list(zip(ks.tolist(), ps.tolist()))[:10]:
+        r = V.sympy_lucas(fam.N, fam.K, p)
+        if r != int(m % p):
+            bad.append((k, p, "sympy Lucas disagrees with gmpy2"))
+        elif V.brute_has_root(k, r, p) or V.factorial_has_root(k, r, p):
+            bad.append((k, p, "an independent route finds a root"))
+    expect(not bad, f"independent routes agree on sampled certificates {bad[:2]}")
+
+
 def main() -> int:
     test_against_exact_arithmetic()
     test_rejects_bad_certificates()
@@ -319,6 +365,8 @@ def main() -> int:
     test_tamper_detection()
     test_checkpoint_formats_agree()
     test_rebuild_is_deterministic()
+    test_ghost_census_claim_holds()
+    test_independent_verifier_agrees()
     print("\n=== WITNESS TESTS ===")
     for line in ok:
         print("  OK   ", line)
