@@ -52,9 +52,14 @@ behind `USE_WINDOWED_SCAN` for A/B. Output is identical record for record
 `p=270097`, `b=589` reproduces exactly; every witness table sha256 unchanged).
 
 **Measured end to end: 11.8x on real i=8 Z-jump buckets**, identical output.
-The full-sweep figure is smaller and phase-dependent — Band II gets 1.75x —
-but the Z-jump is where the cost was, so this removes most of it. Dropping the
-table also drops the memory: 282 MB per worker at i=9 becomes `O(g)`.
+
+**Correction (Q24, same day).** The 1.75x for Band II in the table above
+counts MULTIPLICATIONS, and it does not survive a wall-clock A/B: on
+realistic Band II chunks of 2,000 / 10,000 / 33,000 columns the two paths
+measure 1.02x, 0.98x and 1.01x -- a wash, with identical output. Band II
+amortises a single table over an entire chunk and the numpy scan dominates
+it, so there is nothing there for the windowed build to win back. **The
+11.8x is entirely a Z-jump effect**, and that is the honest scope of Q2.
 
 One safety note: `scan_columns` used `r_checked` to cross-check `r` against the
 factorial table. With no table that check is gone, so it now cross-checks two

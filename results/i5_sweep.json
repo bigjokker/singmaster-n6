@@ -161,11 +161,16 @@
       [
         201,
         12814
+      ],
+      [
+        2,
+        200
       ]
     ],
     "excluded": [],
     "n_unresolved": 0,
     "unresolved": [],
+    "n_small_k_from_engine": 199,
     "primes_bii": [
       16787,
       16811,
@@ -183,8 +188,8 @@
       16927
     ],
     "schema": 1,
-    "n_witnesses": 15892,
-    "sha256": "05a7ddb0f7e4d3bcced307b87674e8a2767c04fc6d3d917e5971b56220189d04"
+    "n_witnesses": 16091,
+    "sha256": "cbdbd736ff61d96963b71557a01d0ae0e245ab1370b2f66eba6c6816b167c504"
   },
   "small_k_census": {
     "k_range": [
@@ -347,6 +352,6 @@
   "bii_survivors": [],
   "z_survivors": [],
   "clean": true,
-  "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=5 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i5_witness.npz (sha256 05a7ddb0f7e4d3bc); re-check with: python scripts/witness.py verify --file results/i5_witness.npz",
-  "seconds": 3.467
+  "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=5 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i5_witness.npz (sha256 cbdbd736ff61d969); re-check with: python scripts/witness.py verify --file results/i5_witness.npz",
+  "seconds": 2.608
 }

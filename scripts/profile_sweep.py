@@ -49,6 +49,7 @@ from bandii_kernel import (  # noqa: E402
     r_two_digit_delta,
     scan_ks_full,
     scan_ks_half,
+    scan_ks_windowed,
 )
 
 
@@ -77,29 +78,43 @@ def _live_prime_count(ivs, k_lo: int, k_hi: int) -> float:
 def profile_bandii(fam, kmax: int, sample: int) -> dict:
     """Band II: one prime, every column. Table built once per chunk."""
     p = first_primes_above(fam.N2, fam.D, kmax, n=1)[0]
+    # The windowed scan builds only the O(g) factorial entries it reads, so
+    # there is no longer a separate table cost to attribute. fact_table is
+    # still timed, but only to show what the old path would have cost.
     t_tab, F = _t(fact_table, p)
-    # r_closed/r_two_digit_delta default N,K to the i=8 constants; passing the
-    # member's own values is not optional.
     rp = r_closed(p, N=fam.N, K=fam.K)
     t_r, _ = _t(lambda q: r_closed(q, N=fam.N, K=fam.K), p)
 
     lo, hi = fam.K + 2, kmax
+    n_cols = hi - lo + 1
     step = max(1, (hi - lo) // sample)
-    ks = list(range(lo, hi + 1, step))
+    ks = list(range(lo, hi + 1, step))          # spread: per-column scan cost
     t_half, _ = _t(scan_ks_half, F, p, rp, ks)
     t_full, _ = _t(scan_ks_full, F, p, rp, ks)
 
-    n_cols = hi - lo + 1
-    scan_total = t_half / len(ks) * n_cols
+    # The windowed scan builds its factorial window ONCE per call, so timing it
+    # on a spread sample charges the whole window to `sample` columns instead of
+    # to a real chunk of n_cols/N_CHUNKS. Time a CONTIGUOUS block instead, which
+    # is what a chunk actually looks like, and scale per column.
+    n_chunks = 32
+    block_w = max(2, n_cols // n_chunks)
+    blk = list(range(lo, min(lo + min(block_w, sample), hi + 1)))
+    t_blk, _ = _t(scan_ks_windowed, p, rp, blk)
+    blk2 = list(range(lo, min(lo + min(block_w, 2 * sample), hi + 1)))
+    t_blk2, _ = _t(scan_ks_windowed, p, rp, blk2)
+    # separate the fixed window build from the marginal per-column cost
+    per_col = max((t_blk2 - t_blk) / max(len(blk2) - len(blk), 1), 0.0)
+    fixed = max(t_blk - per_col * len(blk), 0.0)
+    scan_total = n_chunks * fixed + n_cols * per_col
     return {
         "phase": "bandii",
         "p": p,
         "n_columns": n_cols,
         "n_primes": 1,
-        "table_s": t_tab,
         "scan_s": scan_total,
         "r_s": t_r,
         "half_vs_full": t_full / t_half if t_half else None,
+        "old_table_s": t_tab,
         "sampled": len(ks),
     }
 
@@ -128,19 +143,19 @@ def profile_zjump(fam, sample: int, k_lo: int) -> dict:
     est_primes = _live_prime_count(ivs, k_lo, fam.K)
 
     mid = ps[len(ps) // 2]
-    t_tab, F = _t(fact_table, mid)
+    t_tab, F = _t(fact_table, mid)          # old path, for comparison only
     t_r, _ = _t(lambda q: r_two_digit_delta(q, N=fam.N, K=fam.K), mid)
     r = r_two_digit_delta(mid, N=fam.N, K=fam.K) or 1
     probe = [k for k in ks if k < mid][-8:] or [ks[0]]
-    t_scan, _ = _t(scan_ks_half, F, mid, r, probe)
+    t_scan, _ = _t(scan_ks_windowed, mid, r, probe)
 
     return {
         "phase": "zjump",
         "n_columns": n_cols,
         "n_primes_est": est_primes,
         "cols_per_prime": n_cols / est_primes if est_primes else None,
-        "table_s": t_tab * est_primes,
         "scan_s": t_scan / len(probe) * n_cols,
+        "old_table_s": t_tab * est_primes,
         "r_s": t_r * est_primes,
         "assign_s": t_assign_per * n_cols,
         "sample_p": mid,
@@ -152,7 +167,7 @@ def report(rows: list[dict]) -> None:
         if not r.get("n_columns"):
             print(f"  {r['phase']}: empty")
             continue
-        parts = {k[:-2]: r[k] for k in ("table_s", "scan_s", "r_s", "assign_s")
+        parts = {k[:-2]: r[k] for k in ("scan_s", "r_s", "assign_s")
                  if r.get(k)}
         tot = sum(parts.values())
         print(f"\n  === {r['phase']} ===")
@@ -167,6 +182,9 @@ def report(rows: list[dict]) -> None:
               f"({tot/3600/8:.2f} h on 8 workers)")
         if r.get("half_vs_full"):
             print(f"    half-scan is {r['half_vs_full']:.2f}x the full scan here")
+        if r.get("old_table_s"):
+            print(f"    (pre-Q2 fact_table path would have added "
+                  f"{r['old_table_s']/3600:.2f} core-h here)")
         dom = max(parts, key=parts.get)
         print(f"    -> {dom}-dominated: optimise that, not the others")
 

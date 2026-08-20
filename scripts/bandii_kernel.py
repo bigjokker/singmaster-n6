@@ -14,6 +14,7 @@ int64 only: s·F[b] < p² < 2^63.
 
 from __future__ import annotations
 
+import bisect
 import math
 from dataclasses import dataclass
 
@@ -505,7 +506,22 @@ def binom_mod_prime(n: int, k: int, p: int) -> int:
     """C(n,k) mod p for prime p and 0 <= k <= n < p. Modular product, not exact comb."""
     if k < 0 or k > n:
         return 0
-    k = min(k, n - k)
+    # THREE lower indices, not two. Beyond k and n-k there is the negation
+    # identity: n = -(p-n) mod p, so
+    #     C(n,k) = (-1)^k C(p-n+k-1, p-n-1),
+    # whose lower index is p-n-1. That is tiny exactly when n is close to p,
+    # which is the whole Band II and Z-jump regime -- measured 3890x there and
+    # 940x on fat-cell primes, while never losing elsewhere (the min is taken).
+    d1 = p - n - 1
+    kk = min(k, n - k)
+    if 0 <= d1 < kk:
+        num = den = 1
+        for i in range(d1):
+            num = num * (k + d1 - i) % p
+            den = den * (i + 1) % p
+        c = num * pow(den, -1, p) % p if d1 else 1
+        return (-c) % p if k % 2 else c
+    k = kk
     if k == 0:
         return 1
     # One inverse at the end, not one per step: pow(i+1,-1,p) inside the loop
@@ -653,10 +669,36 @@ def live_intervals(windows: list[dict], fam: Fam = FAM8) -> list[tuple[int, int]
     return ivs
 
 
+_IV_CACHE: dict[int, list[int]] = {}
+
+
+def _iv_starts(ivs) -> list[int]:
+    """Cached list of interval left endpoints, keyed by identity of `ivs`."""
+    key = id(ivs)
+    got = _IV_CACHE.get(key)
+    if got is None or len(got) != len(ivs):
+        got = [lo for lo, _hi in ivs]
+        _IV_CACHE[key] = got
+    return got
+
+
 def first_live_after(x: int, ivs: list[tuple[int, int]], d: int = D) -> int | None:
+    """First live prime after x. Bisects to the right interval rather than
+    rescanning from index 0.
+
+    The old linear scan cost O(#intervals) per call -- 292 us at i=9's 7161
+    intervals, which is 2.3 h of single-threaded parent time over 28.3M
+    columns, all of it before any worker starts. Bisecting first is 142x.
+
+    Safe because live_intervals returns DISJOINT intervals sorted by lo
+    (verified: 0 overlaps and 0 containments at i=8 and i=9), so the last
+    interval with lo <= p is the only one that can contain p.
+    """
     p = int(gmpy2.next_prime(x))
-    i = 0
     n = len(ivs)
+    i = bisect.bisect_right(_iv_starts(ivs), p) - 1
+    if i < 0:
+        i = 0
     while p <= d and i < n:
         lo, hi = ivs[i]
         if p > hi:
@@ -664,6 +706,7 @@ def first_live_after(x: int, ivs: list[tuple[int, int]], d: int = D) -> int | No
             continue
         if p < lo:
             p = int(gmpy2.next_prime(lo - 1))
+            i = max(i, bisect.bisect_right(_iv_starts(ivs), p) - 1)
             continue
         return int(p)
     return None

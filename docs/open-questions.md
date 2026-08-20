@@ -324,12 +324,20 @@ mathematics re-derived clean throughout (image characterisation over 146k
 checks, cell geometry over 5,594 primes, Lemma A with no live prime skipped,
 four membership paths in agreement). These are what the audit turned up.
 
-### Q19. Should `first_live_after` bisect into the interval list? *(low - **HARD**)*
+### Q19. Should `first_live_after` bisect into the interval list? *(low - **HARD**)* — DONE 2026-08-20
+Implemented. Intervals verified DISJOINT at i=8 and i=9 (0 overlaps, 0 containments), which is what makes bisect provably correct -- with overlapping intervals it could land past the container and wrongly return None. Measured **292.5 -> 2.7 us/call**, identical answers on 300 consecutive k plus 400 spread over [100, K).
+
+*Original text:*
 It rescans from index 0 on every call. Measured **142x** (292.5 -> 2.1 us/call)
 with identical answers: 2.3 h of single-threaded parent time at i=9 becomes
 1.2 minutes. That is the stretch during which a running i=9 job looks idle.
 
-### Q20. Should `binom_mod_lucas` take the delta-identity branch? *(low - **HARD**)*
+### Q20. Should `binom_mod_lucas` take the delta-identity branch? *(low - **HARD**)* — DONE (re-posed) 2026-08-20
+**The question was mis-posed and the measurement re-posed it.** delta only wins where it is small: at nextprime_sweep's primes (k~10^6) delta-1 = 196,328 against min(k0,n0-k0) = 126,635, so delta LOSES. The right fix is general and lives one level down, in `binom_mod_prime`: n = -(p-n) mod p gives C(n,k) = (-1)^k C(p-n+k-1, p-n-1), a THIRD lower index p-n-1, and taking min(k, n-k, p-n-1) never loses. Verified on 515,362 exact checks and 203 primes of the full Lucas chain. Band II Lucas: **100+ms -> 0.001ms**; 3890x mean on Band II primes, 940x on fat-cell primes, 1.0x where it does not apply.
+
+The EXTRA sub-question is answered NO: `witness.binom_mod_prime_pure` is deliberately left naive. The verifier's independence rests on full Lucas being a different computation from the delta route, and the negation identity would make them algebraically the same. The verifier stays slow on purpose.
+
+*Original text:*
 Measured **33,000-35,000x** at i=9 two-digit primes, same answer.
 `r_two_digit_delta` already exists and the sweeps use it; `binom_mod_lucas`
 does not, and it is the r(p) route for `modular`, `nextprime_sweep`, and
@@ -337,7 +345,10 @@ does not, and it is the r(p) route for `modular`, `nextprime_sweep`, and
 Lucas as its *independent* route, so making delta primary would cost
 independence -- the honest answer may be "keep the verifier slow on purpose".
 
-### Q21. Build a machine-checked coverage ledger. *(low-medium - **HARD**)*
+### Q21. Build a machine-checked coverage ledger. *(low-medium - **HARD**)* — DONE 2026-08-20
+`scripts/coverage_ledger.py` states the global claim and checks it: witnessed(i) == [2, k_max] \ {K, K+1}, exactly, with k_max **recomputed from N and K** rather than read back from the file under audit. On first run it found the predicted gap in 6 of 7 members -- 199 missing columns for i=3,4,6,7, 37 for i=2, 1 for i=8. After Q22 all seven report **COMPLETE, 6,067,902 columns, 0 missing, 0 extra**.
+
+*Original text:*
 **The one correctness gap found.** `N(m)=6` claims every k in [2,kmax] except
 {K,K+1}, but each artifact self-reports only its own slice and the union is
 assembled by reading three files with three different evidence types.
@@ -345,7 +356,10 @@ assembled by reading three files with three different evidence types.
 which is not the same statement. Same shape as the false-`clean` bugs: a local
 check passing while the global claim goes unchecked.
 
-### Q22. Should the Z-jump start at k=2? *(trivial - **HARD**)*
+### Q22. Should the Z-jump start at k=2? *(trivial - **HARD**)* — DONE (re-posed) 2026-08-20
+**No -- measurement killed the original plan.** k=2 in the sweep kernel costs a full g~p scan (410 ms at i=8); the O(1) QR shortcut lives in the engine's `column_possible`, not in the kernel. So extending the Z-jump down would be expensive, not free. Instead the witness builder now takes those columns from the engine's modular scan, and `witness.py fill` back-fills existing tables without re-running any sweep -- legitimate precisely because a witness is checkable from (N,K,k,p) however it was found. All 199-per-member added witnesses verify.
+
+*Original text:*
 i=8's re-derivation starts at k=3, leaving k=2 to a separate artifact. k=2 is
 decided by the QR test in O(1), so including it should be free.
 
@@ -356,7 +370,10 @@ Band II and the Z-jump; not obviously irrelevant for the small-k census.
 Likely answer: no verdict changes, and the deliverable is a documented accuracy
 bound by regime rather than a code change.
 
-### Q24. Re-derive the phase budget now that the table is gone. *(low - **HARD**)*
+### Q24. Re-derive the phase budget now that the table is gone. *(low - **HARD**)* — DONE 2026-08-20
+`profile_sweep.py` now times the windowed path and reports the old table cost as historical only. Two corrections came out of it: (1) timing the windowed scan on a SPREAD sample charges the whole factorial window to `sample` columns instead of a real chunk, so the profiler now splits fixed per-chunk cost from marginal per-column cost; (2) **Q2's "1.75x on Band II" was a multiplication count and is a wash in wall-clock** (1.01x over chunks of 2k/10k/33k columns, identical output). Z-jump: the pre-Q2 table path would have added ~208 core-h at i=9 that is now gone. The extrapolated totals remain good only to a factor of ~2, so Q11's i=10 figure should be quoted as an order of magnitude, not a number.
+
+*Original text:*
 `profile_sweep.py` still times `fact_table`, which Q2 removed from the hot
 path, so the "90.6% table" split and the 29.6 h i=9 Z-jump estimate describe
 the *old* pipeline. This also feeds Q11, whose "i=10 is 65.7 days" rests on

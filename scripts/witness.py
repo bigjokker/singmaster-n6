@@ -415,6 +415,45 @@ def verify(path: Path, sample: int | None, workers: int, seed: int = 0) -> dict:
 # CLI
 # ---------------------------------------------------------------------------
 
+def fill_small_gaps(path: Path, i: int) -> dict:
+    """Add engine-derived witnesses for any column the table is missing.
+
+    The sweep only ever claimed [k_lo_z, K-1] u [K+2, k_max]; columns below the
+    Z-jump's start were closed by the engine's modular scan and lived in a
+    separate file. This puts them in the table, so one artifact carries the
+    whole claim. It re-runs no sweep -- a witness is checkable from (N,K,k,p)
+    regardless of how it was found, which is exactly the property that makes
+    this legitimate rather than a shortcut.
+    """
+    from singmaster_intersect import obstructing_prime, primes_upto
+
+    from bandii_kernel import kmax_of, make_fam
+
+    ks, ps, meta = load(path)
+    fam = make_fam(i)
+    kmax, _ = kmax_of(fam)
+    have = {int(a): int(b) for a, b in zip(ks, ps)}
+    want = set(range(2, kmax + 1)) - {fam.K, fam.K + 1}
+    missing = sorted(want - set(have))
+    if not missing:
+        return {"i": i, "added": 0, "unresolved": [], "sha256": meta["sha256"]}
+
+    small_primes = primes_upto(50_000)
+    added, unresolved = 0, []
+    for k in missing:
+        q = obstructing_prime(fam.N, fam.K, k, small_primes)
+        if q is None:
+            unresolved.append(k)
+        else:
+            have[k] = int(q)
+            added += 1
+    meta = {**meta, "claimed_ranges": [[2, kmax]], "excluded": [fam.K, fam.K + 1],
+            "n_filled_from_engine": added}
+    out = save(path, meta, have)
+    return {"i": i, "added": added, "unresolved": unresolved,
+            "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
+
+
 def _pass_tag(prefix: str):
     """Pass/round index out of a checkpoint record, across the three writers.
 
@@ -521,10 +560,34 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
     else:
         w_z, alive_z = {}, set()
 
-    witness = {**w_bii, **w_z}
+    # Columns below the Z-jump's start are closed by the engine's modular
+    # scan, not by the sweep, so the witness table used to have a hole there
+    # ([2,200] for i=3..7, [2,80] for i=9, k=2 for i=8) and the full claim was
+    # only assembled by reading a second file. Extending the Z-jump down is NOT
+    # the fix: the sweep kernel has no O(1) route for k=2, so k=2 there costs a
+    # full g~p scan (410 ms at i=8). The engine does have one, so take the
+    # witnesses from there and make the table self-contained.
+    w_small: dict[int, int] = {}
+    unresolved_small: set[int] = set()
+    if k_lo_z > 2:
+        from singmaster_intersect import obstructing_prime, primes_upto
+
+        small_primes = primes_upto(50_000)
+        for kk in range(2, k_lo_z):
+            if kk in (fam.K, fam.K + 1):
+                continue
+            q = obstructing_prime(fam.N, fam.K, kk, small_primes)
+            if q is None:
+                unresolved_small.add(kk)
+            else:
+                w_small[kk] = q
+
+    witness = {**w_bii, **w_z, **w_small}
     claimed = [[fam.K + 2, kmax]]
     if k_lo_z < fam.K:
         claimed.append([k_lo_z, fam.K - 1])
+    if w_small or unresolved_small:
+        claimed.append([2, k_lo_z - 1])
     meta = {
         "source": str(chk.name),
         "i": i,
@@ -533,8 +596,9 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
         "k_max": kmax,
         "claimed_ranges": claimed,
         "excluded": [],
-        "n_unresolved": len(alive_bii) + len(alive_z),
-        "unresolved": sorted(alive_bii | alive_z)[:100],
+        "n_unresolved": len(alive_bii) + len(alive_z) + len(unresolved_small),
+        "unresolved": sorted(alive_bii | alive_z | unresolved_small)[:100],
+        "n_small_k_from_engine": len(w_small),
         "primes_bii": primes,
     }
     return save(out, meta, witness)
@@ -557,6 +621,10 @@ def main() -> int:
     v.add_argument("--seed", type=int, default=0)
     v.add_argument("--json_out", type=Path, default=None)
 
+    fl = sub.add_parser("fill", help="add engine witnesses for columns the table lacks")
+    fl.add_argument("--i", type=int, required=True)
+    fl.add_argument("--file", type=Path, default=None)
+
     o = sub.add_parser("one", help="check a single certificate from five integers")
     o.add_argument("--N", type=int, required=True)
     o.add_argument("--K", type=int, required=True)
@@ -570,6 +638,14 @@ def main() -> int:
         res = check_witness(args.N, args.K, args.k, args.p)
         print(json.dumps({**res, "seconds": round(time.time() - t0, 3)}, indent=2))
         return 0 if res["ok"] else 1
+
+    if args.cmd == "fill":
+        f = args.file or ROOT / "results" / f"i{args.i}_witness.npz"
+        res = fill_small_gaps(f, args.i)
+        print(f"  {f.name}: added {res['added']} engine witnesses"
+              + (f", UNRESOLVED {res['unresolved'][:10]}" if res["unresolved"] else ""))
+        print(f"  sha256 {res['sha256'][:32]}...")
+        return 0 if not res["unresolved"] else 2
 
     if args.cmd == "build":
         out = args.out or ROOT / "results" / f"i{args.i}_witness.npz"
