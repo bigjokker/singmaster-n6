@@ -47,6 +47,25 @@ The parity that matters is k's, not g's. They are equivalent for odd p
 (g = p-k even <=> k odd), but k-parity is the invariant: it is a property of
 the polynomial f_k, fixed once and for all, while g changes with every prime.
 
+ACCURACY, BY REGIME (Q23; test_sizelaw.py pins these). The model's error and
+the trigger's headroom are anti-correlated, in the safe direction:
+
+    regime                 p        model/exact   smallest expected   headroom
+    Band II / Z-jump   ~5.4e6         1.00014x         0.206            21x
+    small-k census     ~2e2           1.263x          15.3            1527x
+
+So the model is loosest exactly where the trigger has three orders of
+magnitude of room, and is accurate to 0.014% exactly where the room is thin.
+Measured: 0 verdict flips over all 102 columns of the i=9 small-k census when
+Lambda is recomputed from EXACT image sizes; a flip there would need Lambda
+overestimated by 1527x against a measured worst case of 1.263x.
+
+The often-quoted "0.2%" is a large-p figure and should not be quoted globally.
+Note also which direction is dangerous: OVERestimating |I| inflates Lambda and
+can mask a real anomaly, while underestimating only causes a spurious
+escalation. The proved involution bound caps the model from above --
+p(1-(1-1/p)^M) < M -- so the overestimate can never exceed the theorem.
+
 VALIDATION (scripts/test_sizelaw.py re-checks all of it):
   * four measured image sizes at the real fat-cell parameters, to 0.15%
   * the Band II pre-registration, 102600/12600/1816/289.9/49.4/8.78/1.61/0.30

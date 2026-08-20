@@ -187,8 +187,8 @@ rather than an artefact of one proof.
 **Declined on value, not only on difficulty.** The payoff would be a *lower*
 bound on `|I|`, which sharpens pre-registrations but cannot improve a kill
 guarantee — a larger image makes killing *less* likely, not more. Since the
-size law already agrees with measurement to 0.2% across `g/p` in `[0.03,
-0.24]`, a proof would replace a 0.2%-accurate model with a weaker inequality.
+size law already agrees with measurement to 0.014% at Band II scale (Q23),
+a proof would replace an accurate model with a weaker inequality.
 Worth doing for a write-up that wants everything proved; not worth doing to
 make the census better.
 

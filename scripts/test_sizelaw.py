@@ -235,8 +235,48 @@ def test_round_model_tracks_a_real_sweep() -> None:
     )
 
 
+def test_accuracy_bound_by_regime() -> None:
+    """Q23: the model's error must stay inside the bound the docs claim.
+
+    Two regimes with opposite characters, and the trigger is safe because they
+    are anti-correlated: the model is loosest where the headroom is enormous,
+    and near-exact where the headroom is thin. A change that made the model
+    worse at Band II scale would be dangerous even though the same error is
+    harmless at small-k scale, so both are pinned separately.
+
+    Direction matters too: OVERestimating |I| inflates Lambda and can mask an
+    anomaly. The proved involution bound caps that -- p(1-(1-1/p)^M) < M -- so
+    this also asserts the model never exceeds the theorem.
+    """
+    def exact(k, p):
+        vals = {0, 1}; v = 1
+        for b in range(p - k - 1):
+            v = v * (k + b + 1) % p * pow(b + 1, -1, p) % p
+            vals.add(v)
+        return len(vals)
+
+    worst_small = 0.0
+    for k, p in ((11, 191), (29, 283), (45, 239), (247, 347)):
+        e = exact(k, p); m = S.image_size(p - k, p, k)
+        worst_small = max(worst_small, m / e, e / m)
+        expect(m < S.preimage_count(p - k, k) + 1e-9,
+               f"model stays under the proved bound at k={k}, p={p}")
+    expect(worst_small < 1.35,
+           f"small-k census regime within its documented 1.263x bound "
+           f"(measured {worst_small:.3f}x)")
+
+    worst_big = 0.0
+    for k, p in ((4126649, 5401853), (5182636, 5401853)):
+        e = exact(k, p); m = S.image_size(p - k, p, k)
+        worst_big = max(worst_big, m / e, e / m)
+    expect(worst_big < 1.002,
+           f"Band II regime within its documented 1.00014x bound "
+           f"(measured {worst_big:.5f}x) -- this is the thin-headroom regime")
+
+
 def main() -> int:
     test_image_size_against_measurement()
+    test_accuracy_bound_by_regime()
     test_proved_bound_is_never_violated()
     test_parity_fold_is_real()
     test_preregistration_regenerates()

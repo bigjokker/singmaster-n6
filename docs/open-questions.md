@@ -271,7 +271,7 @@ a referee could check in minutes instead of hours? This is what would turn 4.3M
 certificates into a publishable object rather than a large file.
 
 ### Q16. Prove the birthday deficit above `g > p^{1/3}`. *(difficulty: research · **EXTRA**)* — DECLINED 2026-08-20
-Declined on value, not only difficulty. The payoff is a LOWER bound on |I|, which sharpens pre-registrations but cannot improve a kill guarantee -- a larger image makes killing less likely. The size law already matches measurement to 0.2% across g/p in [0.03, 0.24], so a proof would replace an accurate model with a weaker inequality.
+Declined on value, not only difficulty. The payoff is a LOWER bound on |I|, which sharpens pre-registrations but cannot improve a kill guarantee -- a larger image makes killing less likely. The size law already matches measurement to 0.014% at Band II scale (Q23), so a proof would replace an accurate model with a weaker inequality.
 
 *Original text:*
 Theorem B covers ~77% of generic Band I columns exactly, and **0%** of the fat
@@ -363,7 +363,25 @@ check passing while the global claim goes unchecked.
 i=8's re-derivation starts at k=3, leaving k=2 to a separate artifact. k=2 is
 decided by the QR test in O(1), so including it should be free.
 
-### Q23. Is the size law accurate enough at small primes? *(medium - **EXTRA**)*
+### Q23. Is the size law accurate enough at small primes? *(medium - **EXTRA**)* — ANSWERED 2026-08-20
+**Answered: no code change. The bound is the deliverable, and it is now pinned by a test.**
+
+The two error directions are not symmetric. OVERestimating |I| inflates Lambda and can mask a real anomaly; underestimating only causes a spurious escalation. So the question is whether the model can overestimate enough to matter -- and the proved involution bound already caps it from above, since p(1-(1-1/p)^M) < M.
+
+Measured against EXACT image sizes:
+
+| regime | p | model/exact | smallest expected | headroom to threshold |
+|---|---:|---:|---:|---:|
+| Band II / Z-jump | ~5.4e6 | **1.00014x** | 0.206 | 21x |
+| small-k census | ~2e2 | **1.263x** | 15.3 | **1527x** |
+
+**The error and the headroom are anti-correlated, in the safe direction.** The model is loosest exactly where the trigger has three orders of magnitude of room, and accurate to 0.014% exactly where the room is thin (late Band II rounds, where expected counts fall to ~0.2).
+
+Recomputing Lambda from exact image sizes for **all 102 columns** of the i=9 small-k census gives **0 verdict flips**. A flip would need Lambda overestimated by 1527x against a measured worst case of 1.263x -- and the per-prime errors scatter both ways (+-9%) rather than compounding, which is why my ~50%-over-a-run guess in the audit was wrong.
+
+Recorded in `sizelaw.py`'s docstring by regime, pinned by `test_accuracy_bound_by_regime`, and the global "0.2%" claim is corrected wherever it was used as a general figure.
+
+*Original text:*
 The 0.2% figure is a large-p measurement. Against exact images the error is
 5.6% at p~10^3 and 1.9% at p~10^4, and compounds over a run. Irrelevant for
 Band II and the Z-jump; not obviously irrelevant for the small-k census.
