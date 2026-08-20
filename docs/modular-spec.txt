@@ -1,0 +1,405 @@
+SINGMASTER — modular layer spec (was AFTER-D.txt)
+================================================================================
+Historical: written while the exact i=8 k<=300 job (scripts/run-i8-k300.bat) ran.
+That job finished. Keep this file as the modular contract, not a live gate.
+================================================================================
+Read this whole file before doing anything.
+Do not start E. Do not merge Claude's 1660-line dump. Do not touch D while it runs.
+
+Live project:  C:\Users\wwwsa\Desktop\Singmaster
+Engine:        singmaster_intersect.py
+Notes:         docs/campaign-log.txt
+Machine:       Intel Ultra 9 275HX. D is one core.
+USB SanDisk D: still ~40 MB/s (USB 2). Backup only, not a compute disk.
+
+
+0. What this file is
+--------------------
+After-D brief for the next session. Written 2026-08-17 while D was still
+running (i=8 extra-rep k<=300).
+
+The next project is NOT "run E" and NOT "build i=10's 147-million-digit m".
+It is: gate D, then add a Lucas/modular obstruction layer to the LIVE file
+as a patch, then modular-scan i=9 (k=2..12) and i=10 (k=2 and k=3).
+
+
+1. Tell Reviewer #1 (ChatGPT) only this, if you relay anything
+--------------------------------------------------------------
+You do not need a new review cycle.
+
+One correction to Grok's earlier wording: Claude did not "revert"
+classify_status. His upload was a stale snapshot that still had the old
+adjacent-row heuristic. Same danger if merged; the verb was wrong.
+
+Everything else from your Review.txt still stands and was accepted with
+these limits (already discussed):
+
+  * Legendre language in spec; gmpy2.jacobi / Euler on a prime is fine in code
+  * Prime-outer + shared images: right architecture, not a blocker for k<=12
+  * "Certificate" = modular impossible + witness only. Do not rename old
+    nearby/collide/intersect JSON "certificates" fields
+  * Store i,N,K,k,p,m_mod_p for an impossible column. Do not dump the image
+  * Differential test is same (n,k) pairs, not just N
+  * Central stays exact_only
+  * Modular changes INTERSECT only. Nearby is still sampled. Collide (3,5)
+    is still a different engine
+
+No other message for Reviewer #1.
+
+
+2. After "D finished" — section 4 gate (do this first)
+------------------------------------------------------
+Open results\fibonacci_i8_k300.json.
+
+  file must exist
+  discoveries must be []
+  hits must have length 1
+  hits[0].status must be known_fibonacci
+  hits[0].extra_reps must be []
+  hits[0].N must be 6
+  hits[0].meta.i must be 8
+  hits[0].meta.k_extra must be 300
+  hits[0].meta.also_central must be true
+  hits[0].m_digits should be about 3120256 (off-by-one allowed)
+  hits[0].left_reps must be the i=8 pair
+      (10803703, 4126648) and (10803704, 4126647)  (order may swap)
+  certificates[0].k_extra must be 300
+  certificates[0].i_range must be [8, 8]
+  certificates[0].i_with_no_extra must be [8]
+
+If the file is missing, discoveries is not [], extra_reps is not [],
+status is not known_fibonacci, or the window printed ALERT /
+NEW EXTRA REPRESENTATION: STOP. Paste SUMMARY/ALERT. Do not start E.
+Do not add modular as if the search were null.
+
+If it passes: optional copy of results\ to D:\Singmaster\results\
+(USB backup). Then implement Phase 1 below.
+
+
+3. Do not do
+------------
+  * python singmaster_intersect.py all --deep
+  * start E (intersect --imin 9 --kextra 12) until modular i=9 is done
+    AND either some column stays possible OR the user asks for exact E
+  * build m_10 (C(507544127, 193864605), ~146.6 million digits, ~7 days)
+    to answer k=2. That question is modular. k=2 already dies at p=317
+  * replace singmaster_intersect.py with Claude's full dump
+  * change classify_status / is_fibonacci_pair
+  * delete the classifier sanity tests
+  * invent a modular central C(2t,t) test
+  * rerun sanity/nearby/collide A-C as research
+  * put the live job or --json_out on the USB stick
+  * rename old JSON "certificates" fields
+
+
+4. Live classifier (must stay exactly this)
+-------------------------------------------
+Fibonacci recognition is is_fibonacci_pair / fib_pairs_upto only.
+Adjacent rows are NOT enough. This was a real bug and is closed.
+
+classify_status:
+  norm = left_reps normalized
+  extra_set = extra normalized
+  sporadic table first (3003 / known_sporadic)
+  base = norm - extra_set
+  if is_fibonacci_pair(base): NEW_FAMILY_PLUS_EXTRA or known_fibonacci
+  elif extra_set: NEW_COLLISION_PLUS_EXTRA
+  else: NEW_COLLISION
+
+is_fibonacci_pair: exactly one family member's two left-half pairs.
+C(n,k)=C(n-1, k+e) for e>=3 is unsettled and must stay NEW_COLLISION.
+
+Sanity tests that must remain (and still pass):
+  fib i=1..5 -> known_fibonacci
+  fake (1000,100)+(999,103) -> NEW_COLLISION
+  fake (500,40)+(499,44) -> NEW_COLLISION
+  (16,2)+(10,3) -> known_sporadic
+  3003 full set -> known_3003
+  fib i=2 + extra (200,3) -> NEW_FAMILY_PLUS_EXTRA
+  hit_from_value nearby on fake adj starts with NEW
+  hit_from_value fib i=2 stays known_fibonacci
+
+extra_reps live signature:
+  extra_reps(m, k_extra, exclude=None, also_central=True)
+If you add primes=, default None, all existing calls unchanged.
+
+
+5. First principles (the next project)
+--------------------------------------
+m_i = C(N,K) with known Fibonacci (N,K). You do not need the decimal
+of m_i to prove a column is empty.
+
+Lucas: C(N,K) mod p from base-p digits of N and K.
+For each prime p, compute m_i mod p with Lucas BEFORE any construction
+of m_i. Modular mode must use fib_member(i, compute_m=False). It must
+not call compute_m=True, comb(N,K), or bincoef on the family pair.
+
+For prime p > k, C(x,k) is a polynomial on F_p.
+If m_i mod p is not in that image, there is no integer x with C(x,k)=m_i.
+That is a proof for that column.
+
+Conservative rule (absolute):
+  not in image  =>  impossible  (certificate, if you record the witness)
+  in image      =>  possible    (not a hit, not a certificate)
+
+k=2 special case (prime p>2): Legendre / Euler
+  ((8m+1)/p) = -1  kills the column
+  8m+1 ≡ 0 mod p   does NOT kill (do not reject)
+In code, pow(a, (p-1)//2, p)==1 on an odd prime is fine.
+Name it like a prime-field test. Do not say Jacobi in JSON.
+
+Skip p <= k. Once p<=k, C(x,k) mod p is not a function of x mod p alone.
+A residue image scan there would be silently wrong.
+
+Central C(2t,t): exact_only. No modular test this round.
+
+Already measured on this machine with real gmpy2 (Lucas only, no
+engine edit). Independently rechecked after Claude claimed the same:
+
+  i=1 k=2     possible (3003 = C(78,2))  TRIPWIRE — must never reject
+  i=2..7 k=2  impossible (small p)
+  i=8 k=2     impossible at p=227
+  i=9 k=2     impossible at p=191
+  i=9 k=3     239
+  i=9 k=4     191
+  i=9 k=5     239
+  i=9 k=6     191
+  i=9 k=7     191
+  i=9 k=8     239
+  i=9 k=9     191
+  i=9 k=10    283
+  i=9 k=11    449
+  i=9 k=12    283
+              => i=9 k=2..12 ALL impossible at pmax=4000
+  i=10 k=2    impossible at p=317
+  i=10 k=3    impossible at p=83
+
+These preview numbers are not a substitute for a live `modular` run
+on the patched file. They do mean exact E (3.4h m_9 build) is optional
+if the patched scan agrees.
+
+First 40 tiny primes were NOT enough (i=8 only dies at 227).
+Default pmax around 4000 is a search ceiling, not a theorem.
+
+
+6. What to implement (patch the live file)
+------------------------------------------
+Add only. Do not rewrite nearby/collide/invert/classify.
+
+Functions:
+  primes_upto(limit)
+  binom_mod_lucas(n, k, p) -> 0 .. p-1
+  column_image_mod(k, p) -> set   ONLY for p>k
+      For x in 0..p-1 use math.comb(x,k)%p (x<p). Not Lucas on x.
+      Lucas is for the big (N,K).
+  column_possible(m_mod, k, p) -> bool
+      k==2: Euler/Legendre on 8*m_mod+1
+      else: m_mod in image
+  obstructing_prime(N, K, k, primes) -> p or None
+      m_mod = lucas(N,K,p); never build m
+  obstructing_prime_for_value(m, k, primes) -> p or None
+      m already in RAM; m%p
+
+Scan driver: prime is the OUTER loop. One Lucas(N,K,p) per prime,
+shared across every still-open column. Drop a column from the open
+set when it dies. Do not recompute Lucas once per (k,p). This is
+cheap at k<=12 and is what makes k<=300 sane.
+
+For k<=12, per-(k,p) image cache (lru_cache) is enough. Do not delay
+i=9 for a full Pascal table on F_p. That table is for a later k<=300
+sweep if we do one.
+
+column_image_mod: math.comb(x,k)%p for x in 0..p-1. NOT binom_mod_lucas
+on x. Lucas is only for the big family pair (N,K).
+
+extra_reps(..., primes=None):
+  if primes: skip invert_binomial on columns with a witness
+  returned (n,k) set MUST equal primes=None on every small case
+
+modular_extra_scan(i, k_extra, primes) -> dict
+  fib_member(i, compute_m=False)
+  for k=2..k_extra: impossible or possible
+  central: "exact_only"
+  NEVER compute_m
+
+CLI:
+  python singmaster_intersect.py modular --imin I --imax I --kextra K [--pmax 4000] [--json_out PATH]
+
+CLI unpack: if run_modular returns (hits, certs, reports), the
+dispatch MUST unpack three values. Claude crashed a sandbox on
+ValueError: too many values to unpack. Catch that by running the
+command after the patch, not by reading the diff.
+
+JSON keys:
+  Keep existing "hits" / "certificates" / "discoveries" untouched.
+  Add a NEW key "modular_reports" for the column rows.
+  Do not put possible-columns into "certificates".
+  Optional: one short scan-level summary object with a "result"
+  string, so the existing SUMMARY loop does not print
+  "modular_impossible: None". Column detail stays in modular_reports.
+
+  Cosmetic SUMMARY fix (either is OK):
+    * give the scan-level object a "result" string, or
+    * in the print loop, if "result" missing, print
+      i=... k=... p=... from witness_p
+
+Scan-level JSON (scope, not a proof):
+  pmax: 4000          (or whatever was asked)
+  n_primes_tried: N   (count of primes in the list, including those skipped for p<=k)
+Do not dump the prime list. Do not dump image sets.
+A reader must be able to tell "possible after primes<=4000, p>k"
+from an accidental half-run.
+
+Impossible column JSON (certificate). Include:
+  i, N, K, k, status=impossible, witness_p, m_mod_p
+Do not store the whole image of F_p.
+
+Possible column JSON (NOT a certificate):
+  k, status=possible, witness_p=null
+Do not call this a certificate.
+
+cross_check_modular_vs_json(i, k_extra, path to D json):
+  BUG if modular says impossible and exact extra_reps contains that k
+  OK if modular says possible and exact found nothing
+
+
+7. Tests (must pass on THIS PC with real gmpy2)
+-----------------------------------------------
+  python singmaster_intersect.py sanity
+
+A Python shim / fake gmpy2 does not count.
+
+Keep every existing sanity check.
+Add:
+  Lucas vs int(m)%p for i=1..4, many primes, zero mismatches
+  i=1 k=2 never rejected (3003)
+  i=2..7 and i=8 k=2 rejected (known; regression)
+  extra_reps filter on vs off: identical sets of (n,k) on the catalog,
+    not merely the same N
+  all classifier tests still PASS
+
+If i=1 k=2 dies, stop. Do not scan i=9.
+
+
+8. Research order after tests pass
+----------------------------------
+2a. Modular i=9, k=2..12. Seconds. No bincoef of m_9.
+      python singmaster_intersect.py modular --imin 9 --imax 9 --kextra 12 --json_out results\modular_i9_k12.json
+
+    If every k=2..12 is impossible: i=9 has no extra in that window.
+    Skip the 3.4h E rebuild unless the user asks for an exact second method.
+    fibonacci_i9.json already exact-checked k<=5.
+
+    If some k stays possible: then (and only then) exact invert those k,
+    and if you build m_9 write cache\fib_i9.bin on C: immediately.
+
+2b. Optional: modular i=8 k=2..300 as a cross-check of D.
+    Then cross_check against results\fibonacci_i8_k300.json.
+
+2c. Modular i=10, k=2 and k=3 only. No 61MB file, no week-long bincoef.
+      python singmaster_intersect.py modular --imin 10 --imax 10 --kextra 3 --json_out results\modular_i10_k3.json
+
+2d. Exact E only if leftover possibles or the user asks.
+      python singmaster_intersect.py intersect --imin 9 --imax 9 --kextra 12 --json_out results\fibonacci_i9_k12.json
+    Write run_e.bat only when you actually start it.
+
+Then, if still nothing, old section 6 one sitting at a time:
+  nearby k=2M-8M d,e<=8
+  nearby k=1B-2B d,e<=6
+  collide (3,5) thin slice from m~4.13e12 (not an exhaustion)
+Do not increase --max-steps and call that a (3,5) proof.
+
+
+9. Hardware / files
+-------------------
+C:  NVMe, ~749 GB free. Live code, JSON, any m cache.
+D:  SanDisk USB, ~40 MB/s. Copy results after a run if you want.
+    Type-C ports are the fast ones; black USB-A is USB 2; cheap C-C
+    cables were also USB 2. Irrelevant to this CPU work.
+
+m sizes if we ever build (we should not, for i=10 k=2):
+  i=8   ~3.1e6 digits   ~3 MB text    build ~4 min
+  i=9   ~2.14e7 digits  ~21 MB        build ~3.4 h
+  i=10  ~1.47e8 digits  ~61 MB        build ~6.5-7.5 days
+Cache is secondary. Modular obstruction is the project.
+
+
+10. How to read results
+-----------------------
+  discoveries: []              that search found nothing new
+  extra_reps: []               no extra in the window you asked
+  status: known_fibonacci      still only the family 6-fold in that window
+  ALERT / NEW_FAMILY_PLUS_EXTRA / N>=8
+                               STOP, that is the result
+  modular impossible + p       no extra in that column, any n (certificate)
+  modular possible             not a hit; this prime list did not kill it
+  nearby new_hits: 0           no sampled root; not a Diophantine theorem
+  collide slice hits: 0        nothing in that m interval
+
+
+11. Claude (Reviewer #2 / implementer)
+--------------------------------------
+Timed out twice (21:00, then 02:00). He never delivered a patch file.
+Desktop copy C:\Users\wwwsa\Desktop\Singmaster-for-Claude\ is a
+read-only snapshot of the LIVE engine (same SHA256 as
+singmaster_intersect.py at 12:24). He confirmed the classifier
+fix was already in that file (is_fib, is_fibonacci_pair,
+classify_status, fib_hit in _nearby_chunk). He did not add those.
+He timed out before applying modular.
+
+If he comes back: pieces only, not a full file. Do not overwrite
+the live engine from him while D is running. Save any dump under
+Singmaster-for-Claude\, then review after D's JSON passes section 2.
+
+Accepted from his later reply (implementation detail, not a new plan):
+  * prime-outer, one Lucas per p, drop dead columns
+  * image = math.comb(x,k)%p ; Lucas only for (N,K)
+  * impossible: status, witness_p, m_mod_p
+  * possible: witness_p = null
+  * new key modular_reports; old certificates untouched
+  * CLI must unpack whatever run_modular returns
+  * shim passing does not count; run sanity on this PC after the patch
+  * SUMMARY "modular_impossible: None" is cosmetic; fix as in section 6
+
+Rejected until after D:
+  * merging any full file
+  * treating his sandbox i=9/i=10 JSON as the project result
+  * applying code while D is still running
+
+Claude's complete patch (extracted, not applied):
+  C:\Users\wwwsa\Desktop\Singmaster-for-Claude\singmaster_intersect_claude.py
+  1730 lines = live 1428 + modular. No live function missing.
+  classify_status / is_fib / nearby / collide match live.
+  ChatGPT reviewed that patch (Reviewed again by ChatGPT.txt).
+  Verdict: keep essentially as-is. No false-negative seen in the
+  obstruction. Apply AFTER D gate + live sanity, with these
+  small fixes if we touch the file:
+
+  MUST (cheap, do when applying):
+    1. cross_check_modular_vs_json: missing hit for i is NOT ok=True.
+       Return json_record_found; ok = found and not contradictions.
+    2. Sanity: column_image_mod(k,p) vs math.comb(x,k)%p for x=0..5p
+       on small p,k. Guards the F_p polynomial claim.
+
+  NICE (do not block i=9 scan):
+    3. Certificate extras: obstruction=..., and for k=2
+       qr_test_value=(8*m_mod_p+1)%p. No full image dump.
+       Optional column_image_size.
+    4. JSON: pmax_bound (requested, e.g. 4000) vs
+       largest_prime_tested (e.g. 3989). Current "pmax": max(list)
+       is slightly misleading.
+    5. Document: column-image is a bounded-p prefilter, not for
+       --pmax 1000000. No hard cap required now.
+
+  ChatGPT could not verify Claude's byte-for-byte round-trip claim.
+  We already compared functions against the live file; that is enough.
+
+First command after tests: modular i=9 k=12, not k=300 on i=1..10.
+
+
+12. Next session opener
+-----------------------
+"Read docs/modular-spec.txt and docs/campaign-log.txt.
+Confirm results\fibonacci_i8_k300.json against section 2.
+Then patch the live singmaster_intersect.py (modular layer only).
+Do not start E. Do not replace the file."

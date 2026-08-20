@@ -1,0 +1,14 @@
+# Source is LF in both trees; do not let autocrlf rewrite it on checkout.
+# A CRLF/LF flip makes a one-line change look like a whole-file rewrite, and
+# it has already caused confusion once on this project.
+*.py   text eol=lf
+*.md   text eol=lf
+*.bat  text eol=lf
+*.txt  -text
+
+# Generated artifacts: keep byte-exact. results/*.json are natively CRLF
+# (json.dump on Windows) and their bytes are hashed in certificates, so no
+# conversion of any kind.
+*.json  -text
+*.jsonl -text
+*.npz   binary

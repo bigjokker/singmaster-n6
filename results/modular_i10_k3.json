@@ -1,0 +1,125 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 0.0,
+  "cmd": "modular",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": null,
+  "hits": [],
+  "discoveries": [],
+  "certificates": [
+    {
+      "search": "modular_impossible",
+      "i": 10,
+      "N": 507544127,
+      "K": 193864605,
+      "k": 2,
+      "status": "impossible",
+      "witness_p": 317,
+      "m_mod_p": 23,
+      "obstruction": "qr_8m_plus_1_nonsquare",
+      "result": "i=10 k=2 impossible p=317",
+      "qr_test_value": 185
+    },
+    {
+      "search": "modular_impossible",
+      "i": 10,
+      "N": 507544127,
+      "K": 193864605,
+      "k": 3,
+      "status": "impossible",
+      "witness_p": 83,
+      "m_mod_p": 77,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=10 k=3 impossible p=83"
+    }
+  ],
+  "modular_reports": [
+    {
+      "search": "modular_report",
+      "i": 10,
+      "N": 507544127,
+      "K": 193864605,
+      "k_extra": 3,
+      "pmax_bound": 4000,
+      "largest_prime_tested": 3989,
+      "pmax": 3989,
+      "n_primes_tried": 550,
+      "columns": [
+        {
+          "k": 2,
+          "status": "impossible",
+          "witness_p": 317,
+          "m_mod_p": 23,
+          "obstruction": "qr_8m_plus_1_nonsquare",
+          "qr_test_value": 185
+        },
+        {
+          "k": 3,
+          "status": "impossible",
+          "witness_p": 83,
+          "m_mod_p": 77,
+          "obstruction": "m_mod_p_not_in_column_image"
+        }
+      ],
+      "possible_ks": [],
+      "central": "exact_only"
+    }
+  ]
+}

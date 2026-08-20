@@ -1,0 +1,229 @@
+{
+  "search": "i4_sweep",
+  "i": 4,
+  "N": 4895,
+  "K": 1869,
+  "d": 3026,
+  "k_max": 2347,
+  "log10_m": 1411.661824,
+  "k_z": [
+    201,
+    1868
+  ],
+  "k_bii": [
+    1871,
+    2347
+  ],
+  "n_z": 1668,
+  "n_bii": 477,
+  "primes_bii": [
+    2459,
+    2467,
+    2473,
+    2477,
+    2503,
+    2521,
+    2531,
+    2539,
+    2543,
+    2549,
+    2551,
+    2557,
+    2579,
+    2591
+  ],
+  "workers": 8,
+  "phases": {
+    "bandii": [
+      {
+        "prime_index": 1,
+        "p": 2459,
+        "n": 43,
+        "even": 0.6047,
+        "mean_k": 2090,
+        "expected": 47.8726,
+        "escalate": false
+      },
+      {
+        "prime_index": 2,
+        "p": 2467,
+        "n": 5,
+        "even": 1.0,
+        "mean_k": 2001,
+        "expected": 4.8674,
+        "escalate": false
+      },
+      {
+        "prime_index": 3,
+        "p": 2473,
+        "n": 0,
+        "even": null,
+        "mean_k": null,
+        "expected": 0.8683,
+        "escalate": false
+      }
+    ],
+    "zjump": [
+      {
+        "round": 1,
+        "n_primes": 134,
+        "n": 37,
+        "even": 0.7838,
+        "mean_k": 975,
+        "n_nolive": 0,
+        "expected": 40.285,
+        "escalate": false
+      },
+      {
+        "round": 2,
+        "n_primes": 13,
+        "n": 1,
+        "even": 0.0,
+        "mean_k": 1148,
+        "n_nolive": 0,
+        "expected": 2.7809,
+        "escalate": false
+      },
+      {
+        "round": 3,
+        "n_primes": 1,
+        "n": 0,
+        "even": null,
+        "mean_k": null,
+        "n_nolive": 0,
+        "expected": 0.0365,
+        "escalate": false
+      }
+    ]
+  },
+  "n_bii_alive": 0,
+  "n_z_alive": 0,
+  "n_z_nolive": 0,
+  "z_nolive": [],
+  "witness": {
+    "source": "i4_sweep.jsonl",
+    "i": 4,
+    "N": 4895,
+    "K": 1869,
+    "k_max": 2347,
+    "claimed_ranges": [
+      [
+        1871,
+        2347
+      ],
+      [
+        201,
+        1868
+      ]
+    ],
+    "excluded": [],
+    "n_unresolved": 0,
+    "unresolved": [],
+    "primes_bii": [
+      2459,
+      2467,
+      2473,
+      2477,
+      2503,
+      2521,
+      2531,
+      2539,
+      2543,
+      2549,
+      2551,
+      2557,
+      2579,
+      2591
+    ],
+    "schema": 1,
+    "n_witnesses": 2145,
+    "sha256": "17f4ebadbfa27e7a41c81cf86e965caff0cacdec73733379b4b57f5bd697b324"
+  },
+  "escalation": {
+    "bandii": {
+      "phase": "bandii",
+      "threshold": 0.01,
+      "rounds": [
+        {
+          "round": 1,
+          "entered": 477,
+          "expected": 47.87262878844881,
+          "observed": 43,
+          "poisson_tail": 0.778495029923373,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 2,
+          "entered": 43,
+          "expected": 4.867410250468871,
+          "observed": 5,
+          "poisson_tail": 0.535941594340899,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 3,
+          "entered": 5,
+          "expected": 0.8682507108295641,
+          "observed": 0,
+          "poisson_tail": 1.0,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        }
+      ],
+      "evaluated": true,
+      "escalate": false,
+      "escalating_rounds": [],
+      "note": "Escalation is on expected count, not run length. A long run in a high-g/p regime is ordinary; see scripts/sizelaw.py."
+    },
+    "zjump": {
+      "phase": "zjump",
+      "threshold": 0.01,
+      "rounds": [
+        {
+          "round": 1,
+          "entered": 1668,
+          "expected": 40.28504997480724,
+          "observed": 37,
+          "poisson_tail": 0.7188056215828698,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 2,
+          "entered": 37,
+          "expected": 2.7809299221212784,
+          "observed": 1,
+          "poisson_tail": 0.9380191567872764,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 3,
+          "entered": 1,
+          "expected": 0.03651829680252335,
+          "observed": 0,
+          "poisson_tail": 1.0,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        }
+      ],
+      "evaluated": true,
+      "escalate": false,
+      "escalating_rounds": [],
+      "note": "Escalation is on expected count, not run length. A long run in a high-g/p regime is ordinary; see scripts/sizelaw.py."
+    }
+  },
+  "bii_survivors": [],
+  "z_survivors": [],
+  "clean": true,
+  "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=4 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i4_witness.npz (sha256 17f4ebadbfa27e7a); re-check with: python scripts/witness.py verify --file results/i4_witness.npz",
+  "seconds": 1.789
+}

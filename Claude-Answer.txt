@@ -1,0 +1,902 @@
+## Headline: the 0.355 is an arithmetic slip, and fixing it answers Q-size and Q-cascade outright
+
+`New_Data.txt` infers `|I_g|/g ≈ 0.355` from `n1/g_max = 0.0626`. That step treats every scanned `g` as if it were `g_max`. But the hunt scans `g = 1..g_max`, and `|I_g|` grows with `g`, so
+
+$$\frac{n_1}{g_{\max}} \;\approx\; \frac{1}{g_{\max}}\sum_{g\le g_{\max}}\frac{|I_g|}{p}\;\approx\;\frac{c}{2}\cdot\rho ,\qquad |I_g|\approx c\,g .$$
+
+With `ρ = 0.176` that gives `c ≈ 0.71`, not 0.355. So the "image collisions" that looked mysterious are a factor-of-two smaller than believed — and they have a completely elementary source.
+
+**Q-size — the law.** `I_g` is the coefficient set of `(1−X)^{g−1}` over `F_p`. Since `g−1 < p`, no coefficient vanishes, and the *only* systematic collision is the Pascal reflection `j ↔ n−j` with `n = g−1`:
+
+- `n` even (**g odd**): `(−1)^{n−j}C(n,n−j) = (−1)^{j}C(n,j)` — exact 2-to-1 folding, so `|I_g| ≈ (g+1)/2`.
+- `n` odd (**g even**): the reflection sends `v ↦ −v`, no folding, so `|I_g| ≈ g` (and `I_g` is symmetric under negation).
+
+On top of that, random collisions in `F_p`: `|I_g| ≈ p\,(1−(1−1/p)^M)` with `M = g` or `(g+1)/2`. I computed the actual rows at your parameters:
+
+| cell | g | p | \|I_g\| | \|I\|/g | \|I\|/p | model ratio |
+|---|---|---|---|---|---|---|
+| (3,1) g_max | 475282 (even) | 2700967 | 435720 | 0.9168 | 0.1613 | 1.0002 |
+| (3,1) g_max−1 | 475281 (odd) | 2700967 | 227550 | 0.4788 | 0.0843 | 0.9997 |
+| (2,1) g_max−1 | 262708 (even) | 3601237 | 253496 | 0.9649 | 0.0704 | 0.9994 |
+| (5,2) g_max | 131355 (odd) | 1800619 | 64397 | 0.4903 | 0.0358 | 1.0015 |
+
+Zero free parameters, agreement to 0.1%. **There is no anomalous collision structure. `|I_g|` is Pascal symmetry plus birthday collisions, nothing else.** Prime gaps are even, so parity of `g` is invariant along a chain — even-`g` columns are permanently ~2× easier to survive.
+
+## Q-cascade — size predicts the whole cascade; 369 triples are arithmetic
+
+Using only that law (again zero fitted parameters), summing `∏ᵢ |I_{g+hᵢ}|/pᵢ` over `g = 1..g_max` with your actual primes:
+
+| cell | n1 pred / meas | n2 pred / meas | n3 pred / meas |
+|---|---|---|---|
+| (3,1) | 29889 / 29731 | 2729 / 2672 | 299 / **324** |
+| (2,1) | 7043 / 6978 | 277 / 253 | 13.2 / 9 |
+| (5,2) | 3522 / 3467 | 139 / 132 | 6.6 / 11 |
+
+Conditional rates on (3,1): predicted `0.0629 → 0.0913 → 0.1098`, measured `0.0626 → 0.0899 → 0.1213`. The rising cascade is *entirely* the large-`g` selection you suspected, sharpened by the parity carry-over. Pooled over the three cells, triples come out 344 observed vs 319 predicted — **+1.4σ. Not correlation.** Answering the data question as asked: the 324 triples on (3,1) are size, and Q1 is not needed to explain them.
+
+**Free confirmation test, no new run.** The model predicts the fraction of survivors with **even `g`**: 0.660 of `n1`, 0.789 of `n2`, **0.878 of `n3`**. Your existing `fat_image_hunt.json` already has `k` and `p0`, so this is a one-line grep. All three triples printed in the packet have even `g` (99956, 98180, 50724) and 4 of the 6 known doubles do too. If the census comes back near 0.66/0.79/0.88, the size law is confirmed and Q1/Q-cascade are closed. If it comes back near 0.5, I'm wrong and everything above should be discarded.
+
+## Q1 — the sum, and why it is the wrong shape (two independent reasons)
+
+Fix a frozen cell `(α,β)`, consecutive primes `p1 < p2` in the window with `r(pᵢ) ≠ 0`, `h = p2 − p1` (even), targets `aᵢ = C(α,β)·C(N−αpᵢ, K−βpᵢ) mod pᵢ`, and `g = p1 − k ∈ [1, g_max]`. Write `e_p(z) = exp(2πiz/p)`; the additive characters of `F_p` are `ψ_t(z) = e_p(tz)`, `t ∈ F_p`. Let
+
+$$R_p(a,g)=\#\{0\le j<g:\ (-1)^jC(g-1,j)\equiv a\ (p)\},\qquad A_p(t,n)=\sum_{j=0}^{n}e_p\!\big(t\,[X^j](1-X)^n\big).$$
+
+Then, with `1[a ∈ I_g] ≤ R_p(a,g)`,
+
+$$\sum_{g\le g_{\max}}R_{p_1}(a_1,g)\,R_{p_2}(a_2,g+h)=\frac{1}{p_1p_2}\sum_{t_1\in\mathbf F_{p_1}}\sum_{t_2\in\mathbf F_{p_2}}e_{p_1}(-t_1a_1)e_{p_2}(-t_2a_2)\sum_{g\le g_{\max}}A_{p_1}(t_1,g-1)\,A_{p_2}(t_2,g+h-1).$$
+
+The `t1 = t2 = 0` term is `≈ g_max³/(3p₁p₂) = ρ₁ρ₂g_max/3`. Nontrivial cancellation in the remaining `p₁p₂ − 1` terms would give exactly the bound you asked for — **with the old null.**
+
+**Reason 1 (fatal, and it is your own 0.06 vs 0.176).** At (3,1) that main term is **4906**, while the size-corrected null is **2729** and the truth is **2672**. Passing from the indicator to the multiplicity `R` discards precisely the Pascal folding, and the row's mean multiplicity (≈1.80 here) is the entire gap between 0.176 and 0.06. So even a *perfect* bound on every nonzero-`t` term proves only `D ≪ ρ₁ρ₂ g_max` — the null you already know is wrong by 1.8×. The corrected constant is not recoverable from this sum; it lives in `|I_g|`, which is combinatorics, not analysis. **Completion loses the 0.06. You said stop there; I agree.**
+
+**Reason 2 (independently fatal).** The needed cancellation is in `A_p(t,n)`, an exponential sum over a full Pascal row mod `p`. Along `n` at fixed `j`, `C(n,j)` is a degree-`j` polynomial and Weil gives `(j−1)√p` — vacuous once `j > √p ≈ 1643`, i.e. for 99.65% of the `j`-range. Along `j` at fixed `n` there is no polynomial at all: `C(n,j) = n!/(j!(n−j)!)` is a hypergeometric term, and sums of the shape `Σⱼ e_p(n!/(j!(n−j)!))` sit in the same family as exponential sums over factorials mod `p`, where nothing near square-root strength is available. Both completions fail.
+
+**Reason 3 (structural).** There is no averaging variable. `a₁, a₂` are two fixed constants — reductions of one fixed integer `m` — and `k` enters only by selecting the *set* `I_g`. This is not a character sum over `k`; it is a pair-correlation statement about two Pascal rows of lengths `g` and `g+h` over two different primes. The theorem-shaped version worth having is the size law above (provable: reflection + a birthday count), plus a CRT-independence heuristic that is not provable for a specific `m` and is now confirmed empirically to 1.4σ. I would not spend more time on Q1.
+
+## Q-alg — one paragraph, as requested
+
+There *is* an exact identity, and it is exactly why it transmits nothing. With `n₀ = N−αp`, `k₀ = K−βp` linear in `p`, moving to `p+h` gives, as an identity in **Z**,
+
+$$C(n_0-\alpha h,\;k_0-\beta h)\;=\;C(n_0,k_0)\cdot\frac{(k_0)_{\beta h}\,(n_0-k_0)_{(\alpha-\beta)h}}{(n_0)_{\alpha h}},$$
+
+falling factorials. But `r(p)` is that left side reduced mod `p+h`, while all you know about `C(n₀,k₀)` is its class mod `p`. The moduli are coprime, the reduction maps `Z → F_p` and `Z → F_{p+h}` are jointly surjective, and CRT says knowing one class constrains the other not at all. There is no map `F_p → F_{p+h}`, and no `Γ_p`/Gross–Koblitz route either, since `n₀/p = N/p − α` drifts continuously rather than sitting at a fixed rational as `p` varies. **So: no relation beyond CRT — but note the reason is not "we couldn't find one," it's that the identity exists and provably lives in the wrong ring.** Independence is the right model.
+
+## What I'd add: pre-register the walk-the-369
+
+Since size explains the first three primes, the walk becomes a *test* rather than a fishing trip. Extending the (3,1) chain with the next primes above 2700989, the model gives conditional rates `0.122, 0.131, 0.136, 0.140`, hence from your 369 triples:
+
+- **~44 survive prime 4** (≈40 from (3,1); 2σ band roughly 32–58)
+- **~6 survive prime 5**
+- **~0.8 survives prime 6**
+- **~0.1 at prime 7**; whole-window survival is `10^{-many}`, not "unknown-but-possible"
+
+So `max_run` should land at **5 or 6**. A 7 is mild, an 8 is real correlation and worth Q1 after all; 100+ quadruples would mean the size law is incomplete. Either way, I'd run the parity census first — it's seconds, uses data you already have, and decides whether to trust any of this before you spend hours on the walk.
+
+One caveat I can't model: as you walk upward, a `k` eventually leaves the frozen `(α,β)` cell, at which point the digit-0 clause takes over and the image test isn't the right null anymore. If the walk is capped inside the cell, the numbers above stand; if it crosses out, expect artificial survivors that are digit-0, not image, and they must not be counted as run length.
+
+Want this as a `CLAUDE-ANSWER.txt` formatted to sit next to `New_Data.txt`?
+
+===========================================================================================================================================================================================================================
+
+# Which one, and why
+
+**ChatGPT's #2 — a rigorous uniform bound on |I_{p,k}|.** It's the only item on the list that admits a *complete* answer rather than a research program, it's load-bearing under #1 and #3, and — as it turns out — answering it properly collapses several of the others and hands you a free 2× on the machine.
+
+Why not the others: #1 (finite kill bound), #3 (decorrelation), #5 (family theorem) all founder on the same rock, and it's the same rock I hit on Q1 back in August. `m` is a *fixed integer*. There is no probability space. Any statement of the form "survival probability ≤ |I|/p" is a heuristic no matter how sharp the |I| bound is, because it needs an equidistribution input about `m mod p` that nobody can supply for a specific `m`. #7 is already answered by the size law. #10 is engineering you have specced.
+
+---
+
+# Answer
+
+## Theorem 1 (the identity)
+
+$$(k-1-x)_k \;=\; (-1)^k\,(x)_k \qquad\text{in } \mathbb{Z}[x].$$
+
+One line: `(k−1−x)_k = ∏_{i=0}^{k−1}(k−1−i−x) = ∏_{j=0}^{k−1}(j−x) = (−1)^k ∏_{j=0}^{k−1}(x−j)`.
+
+## Corollary (what I_{p,k} actually is)
+
+For `p > k`, `k!` is invertible mod `p`, so with `f_k(x) = (x)_k/k!`:
+
+$$I_{p,k} \;=\; f_k(\mathbb{F}_p) \quad\text{— the value set. Exactly.}$$
+
+The `∪{0}` in your definition is redundant: `0 = f_k(0)`. The row-of-Pascal picture and the value-set picture are the same object; the `j ↔ g−1−j` reflection you observed is the substitution `x ↦ k−1−x` in Theorem 1.
+
+## Theorem 2 (uniform image bound — the requested answer)
+
+For every prime `p > k ≥ 2`, with `g = p − k`:
+
+| | | |
+|---|---|---|
+| **k odd** | `f_k(k−1−x) = −f_k(x)` | `I_{p,k} = −I_{p,k}`, and `\|I_{p,k}\| ≤ g+1` |
+| **k even** | `f_k(k−1−x) = +f_k(x)` | `f_k` is 2-to-1 off one point, `\|I_{p,k}\| ≤ ⌈g/2⌉+1` |
+
+Uniform in `p` and `k`, exact, no error term, no hypothesis. In particular `|I_{p,k}| < p` for all `k ≥ 2`: **every prime above `k` is capable of killing**; the test never degenerates.
+
+**Your size law's leading term is not empirical.** `|I_g| ≈ g` / `≈ g/2` is a theorem, and the birthday deficit is the only further loss.
+
+**One correction that matters: the parity is in `k`, not `g`.** They're equivalent (`p` odd ⟹ `g = p−k` even ⟺ `k` odd), but `k`-parity is the invariant — it's a property of the column, fixed once and for all. So "prime gaps are even, therefore g-parity is frozen along a chain" is true but backwards: `k` never changes, and the fold is a property of the polynomial `f_k`. Odd `k` = no fold = full image = the survivors. Your record columns are `k = 2227205` and `k = 4155257` — both odd.
+
+## Theorem 3 (exact structure, of which "then birthday" is the heuristic)
+
+Put `y = x − (k−1)/2`. Theorem 1 says `f_k` is even or odd in `y`, so
+
+$$k \text{ even}:\; f_k = h(y^2),\ \deg h = k/2;\qquad k \text{ odd}:\; f_k = y\,h(y^2),\ \deg h = (k-1)/2.$$
+
+So `I_{p,k}` is the value set of `h` restricted to the squares (`k` even), or its `±`-symmetrisation (`k` odd). That is the exact object; "birthday" is the random-map model for `h`. Checked at the endpoint `g ≈ p`, `p = 10007`:
+
+| k | \|V\|/p | birthday | | k | \|V\|/p | birthday |
+|---|---|---|---|---|---|---|
+| 5 | 0.6277 | 0.6321 | | 6 | 0.3939 | 0.3935 |
+| 7 | 0.6333 | 0.6321 | | 8 | 0.3924 | 0.3935 |
+| 11 | 0.6397 | 0.6321 | | 12 | 0.3960 | 0.3935 |
+
+Within ~1% for `k ≥ 5`; for tiny `k` you get the exact rationals (`k=3 → 2/3`, `k=4 → 3/8`) from the low-degree value-set problem. `1 − 1/e` and `1 − e^{−1/2}` are the two parity endpoints.
+
+---
+
+# The practical payoff: an exact 2×, free
+
+Theorem 1 halves every scan, with no approximation:
+
+- **`k` even:** the value set is `f_k` on a half-period. Scan `b ∈ [0, ⌈g/2⌉)`, test `F[k+b] ≡ s·F[b]` with `s = r·F[k]`.
+- **`k` odd:** the other half contributes exactly `−f_k`. Scan the same range, test against **both** `s` and `s′ = (−r)·F[k]`.
+
+Verified end-to-end against the straggler benchmark at `p = 5401853`: half-scan returns exactly `{4126624, 4126638, 4126642, 4126643}`, same as full-scan, and **measured 1.99× on the 40 hardest Band II columns**.
+
+That's ~8 hours off i=9 Band II and the same fraction off the Z-jump. **Do not restart the running job for it** — bank it for the readout, the verifier, and any re-run.
+
+---
+
+# What this does *not* give, stated plainly
+
+**It does not give a stopping theorem.** Averaged over targets `r ∈ F_p`, the number of surviving columns at a fixed `p` is exactly `(1/p)Σ_n |I_n| ≈ (3/8)p` — rigorous as an average, and completely silent about *our* `r`. No sharpening of Theorem 2 changes that.
+
+**But the reformulation gives ChatGPT's #1 in its qualitative half.** From the Corollary:
+
+> Column `k` survives `p` ⟺ `F_k(x) = (x)_k − m·k!` has a root mod `p`.
+> Column `k` represents `m` ⟺ `F_k` has an integer root.
+
+So the census is a search for a prime witnessing that a monic degree-`k` integer polynomial has no root mod `p`. By the **Frobenius density theorem**, the density of killer primes equals the proportion of elements of `Gal(F_k)` acting without fixed points on the roots. If `F_k` is irreducible of degree ≥ 2, **Jordan's theorem** guarantees such elements exist, so the density is positive (Cameron–Cohen give ≥ `1/k`). **A killer prime provably exists, and the search provably terminates.** That is the theorem ChatGPT wanted — and note it needs no independence assumption at all, which retires #3 as the bottleneck.
+
+The effective half stays out of reach: making Chebotarev quantitative needs `disc(F_k)`, which contains `m` (3.1 million digits), so even under GRH the least-prime bound dwarfs anything testable. Same wall as 2022, for the same reason.
+
+**And it names the program's actual failure mode, which was previously unnamed.** The Frobenius argument needs `F_k` to have a derangement in its Galois group. It can fail only if `F_k` is **intersective** — no rational root, but a root modulo every prime. These exist (`(x²−13)(x²−17)(x²−221)`), and they are necessarily reducible with all factors of degree ≥ 2. So:
+
+> **Can `(x)_k − c` be intersective?**
+
+For `k = 2`, `F_2 = x² − x − 2m` is irreducible iff `8m+1` isn't a square, so no. For general `k` this is a clean, well-posed, attackable question, and it is the *only* logical gap between your census method and a guarantee that the method always works. I'd put that on the whiteboard in place of #3.
+
+---
+
+# Re-ranking
+
+| was | now |
+|---|---|
+| #1 finite kill bound — hardest | **split**: qualitative half is Frobenius+Jordan, done; effective half is unreachable |
+| #2 uniform \|I\| bound — hard | **done**, exactly and uniformly, plus a 2× |
+| #3 decorrelation — very hard | **not needed** — Frobenius bypasses independence |
+| #4 Z-cell skip theorem | already Lemma A |
+| #7 fat survivors | odd `k` (no fold) × large `g` × high-ρ cell — no residual mystery |
+| — | **new: can `(x)_k − c` be intersective?** — the real gap |
+
+=======================================
+
+# Pick: #6 / B — "can `r ∈ I_{p,k}` be decided faster than `O(p−k)`?"
+
+It's the one with a direct machine consequence, it's completely answerable, and answering it settles whether the kernel is finished. It also turns out to close most of the rest of the list as a side effect.
+
+## Answer: No. The kernel is already optimal, and the reason is a clean dichotomy.
+
+The gcd route is `gcd(f_k(x) − r, x^p − x)`, computed as `x^p mod (f_k − r)` by repeated squaring. **Any method that touches the polynomial at all is Ω(k)** — you cannot square, reduce, or even represent `f_k − r` without `k+1` coefficients. Meanwhile the scan is `O(g)`, `g = p − k`. So:
+
+$$\text{polynomial route beats the scan} \iff c\,k\log k\log p < g \iff k \lesssim p/(c\log k\log p).$$
+
+In this project the prime-selection rule is *first live prime above `k`*, which forces `g ≪ k` always:
+
+| regime | k | g | k/p | k/g |
+|---|---:|---:|---:|---:|
+| Band I generic | any | ~15 | 0.99999 | ~10⁵ |
+| Band I under-Z (3,1) | 2 227 205 | 473 762 | 0.82 | 4.7 |
+| Band II (i=8) | 4 126 649 | 1 275 204 | 0.76 | 3.2 |
+
+Even in the most favourable case the polynomial route loses by a factor of **3.2 before any log factors**, and with a realistic NTT constant by ~10⁴. Concretely for Band II i=8: `2·log₂p·9·k·log₂k ≈ 3.7×10¹⁰` operations against `g = 1.27×10⁶`.
+
+**The dichotomy is structural, not an artifact:** the polynomial route only wins when `k ≲ p/10⁴`, i.e. when the prime is chosen enormously far above the column — and there `|I|/p → 1 − e^{−1}`, so you'd have traded a `O(g)` test with ~100% kill rate for an `O(k log k log p)` test with 37%. There is no operating point where the trade is good.
+
+And there is no clever third route. Writing `c_j = (−1)^j C(g−1,j)` in factorial form,
+
+$$r \in I_{p,k} \iff \exists j:\ j!\,(g-1-j)! \equiv (-1)^j (g-1)!\,r^{-1} \pmod p,$$
+
+which mixes the additive variable `j` with a multiplicative factorial condition. That is the same shape as "find `n` with `n! ≡ c (mod p)`" — no subexponential algorithm is known for that family, and no baby-step/giant-step split exists because `F(a+b)` does not factor across the split.
+
+**Verdict: `O(g)` is linear in the true domain, and the only improvement available was the factor 2 from Theorem 1 last round. The kernel is done. Stop looking for a speedup here.**
+
+---
+
+# The verdict that closes most of the list
+
+Every citation on ChatGPT's list — Wan's value-set bounds, small-value-set classification, monodromy results — is parametrized by **degree `d` with `d` fixed or `d ≪ p^{1/4}`**. Here `d = k` and `k/p ∈ [0.76, 1)`. Weil-type errors run `O(k²√p) ≫ p`. **All of it is vacuous in this project's regime**, exactly as Weil was vacuous for the Q1 exponential sum a month ago. This is the third time the same wall has appeared, and it's worth naming permanently:
+
+> **The project lives at `deg ≈ p`. No algebraic-geometric machinery parametrized by degree applies. The correct complexity parameter is `g = p − k`, and nothing in the classical literature is parametrized by `g`.**
+
+That kills **#2, #5, #8, #12, #13 and the meta-question** outright. (#5 specifically: recovering `|V|` from power sums needs moments up to order `p−1`, each costing `p` evaluations — `p²` work to learn something you can enumerate in `p`.)
+
+---
+
+# Three by-products, all verified
+
+**(a) #11 answered — there are no further symmetries.** The roots of `f_k` are exactly `{0,…,k−1}`, a complete interval in `F_p`. Any symmetry `x ↦ ax+b` must permute that set; an AP of length `k` with difference `a` is an interval only for `a = ±1`; `a=1` forces `b=0`, `a=−1` forces `b=k−1`. So the affine symmetry group is exactly `{id, ι}` with `ι(x) = k−1−x`. Confirmed by exhaustive search over all `(a,b)` for `p ∈ {23,31,101}`, `k ∈ {3,4,7,12,20}` — nothing else ever appears.
+
+**(b) #9/#3 answered empirically to 0.2% — involution + birthday is complete.** Across the entire operating range at `p = 1000003`:
+
+| g/p | k parity | \|I\| | birthday | ratio |
+|---|---|---:|---:|---:|
+| 0.030 | odd / even | 29576 / 14885 | 29554 / 14889 | 1.0007 / 0.9997 |
+| 0.100 | odd / even | 95264 / 48852 | 95163 / 48772 | 1.0011 / 1.0016 |
+| 0.176 | odd / even | 161426 / 84314 | 161382 / 84240 | 1.0003 / 1.0009 |
+| 0.236 | odd / even | 210590 / 111329 | 210219 / 111305 | 1.0018 / 1.0002 |
+
+No third mechanism exists at any `g/p` you use. The symmetry bound is **never** sharp (#3's answer: equality would need zero birthday collisions, which happens only for `g = O(√p)`).
+
+**(c) #10 answered for free, by an identity.** In `F_p[x]`:
+
+$$(x)_k \cdot (x-k)_g \;=\; x^p - x .$$
+
+So `f_k` vanishes on `{0,…,k−1}` and the "g-point tail" `{k,…,p−1}` is not a restriction of the domain — it *is* the entire non-vanishing locus. There is no restricted-domain theorem hiding, because there is no restriction.
+
+---
+
+# A real improvement I found along the way: a table-free verifier
+
+The Job-2 verifier spec builds `F[x] = x! mod p` — a `p`-sized table, 43 MB for i=8, 300 MB for i=9. That is unnecessary. Using `c_j = (−1)^j (g−1)_j / j!`, maintain
+
+$$A_j = (g-1)_j, \qquad B_j = j!$$
+
+by one modmul each per step, and test `A_j ≡ (−1)^j · r · B_j`. **Two modmuls per step, no inverses, no table, O(1) memory, O(g) time.**
+
+Verified against the straggler certificates at `p = 5401853`, with `r = −(K+1) mod p = 1275205` from the closed form: returns exactly `{4126624, 4126638, 4126642, 4126643}` with witnesses `j = 273671, 268500, 2006, 554555` — the machine's logged values, in order, in pure Python with no table.
+
+This matters for the proof-object goal. A referee can now check any single certificate on a laptop in constant memory, from `N`, `K`, `k`, `p` alone. Total independent verification of the whole i=8 census ≈ `2·Σg` modmuls ≈ the same order as the search that produced it — **the census is checkable in roughly the time it took to make.** That's the sentence for a paper, and it should replace the F-table paragraph in `docs/`.
+
+---
+
+# Ranked: come back to these
+
+1. **Can `(x)_k − c` be intersective?** (mine, from last round) — no rational root but a root mod every prime. This is the *only* logical gap between your method and a guarantee it always works. For `k=2`, `x²−x−2m` is irreducible iff `8m+1` isn't square, so never. General `k` is open and genuinely attackable.
+2. **#7 — deterministic criterion for `(x)_k ≡ c`.** Equivalent to the factorial equation above. Hard, probably very hard, but it's the one question whose answer would be worth more than another bat.
+3. **#9 made rigorous** — proving the birthday deficit rather than measuring it. Note the payoff is limited: it yields a *lower* bound on `|I|`, which improves pre-registrations but not kill guarantees. Worth doing for the writeup, not before it.
+4. **#4 — fiber sizes.** Mostly already known: `≥2` forced for even `k`, `≲ log g/log log g` by birthday, `≤ k` trivially. A uniform constant bound is provably false. Low value.
+5. **#14 — better `B(k,g)`.** Reduces to #3/#9; no rigorous improvement without lower-bounding collisions.
+6. **#15 — resultant/invariant route.** Closed by the `Ω(k)` argument above, but if you ever change the prime-selection rule it's worth re-checking.
+
+# Not worth it
+
+**#1, #2, #5, #8, #12, #13, and the meta-question ("how close can `|I|` get to `p`").** All degree-parametrized, all vacuous at `k/p ≥ 0.76`. The meta-question in particular: in your regime `|I| ≤ g+1 ≤ 0.236p`, so the extremal-`|I|≈p` case is a regime you never visit.
+
+# Questions I'd add
+
+**Q-α. Does the max kill index grow linearly in `i`, at ≈ +1 per family step?** The size law predicts `r_max ≈ ln(#columns)/ln(1/c)` with `c ≈ 0.12`. For i=8 Band II: `ln(1.056×10⁶)/2.12 = 6.5` → observed 7. For i=9: `ln(7.24×10⁶)/2.12 = 7.45` → predicts death at pass 9. Since `#columns ∝ φ⁴ⁱ`, this says **max kill index rises by `4lnφ/ln(1/c) ≈ 0.91` per family step**. You can test that *right now* against i=2…8 data you already have, at zero machine cost, and it's a genuine family-level law that needs no 2022 theorem.
+
+**Q-β. Is the Band I sweep computing `r(p)` by the cheaper of the two indices?** The cost is `min(k₀, n₀−k₀) = min(K−βp, d−(α−β)p)`, and near the top of a cell the second is far smaller. `r(p)` — not the scans — is the asymptotic bottleneck for Band I (213 000 primes × ~`p/4`). A one-line check; possibly a large constant factor.
+
+**Q-γ. Retrofit the half-scan and the table-free verifier into the spec now, not after i=9.** Combined they give 2× on search and remove the table from verification. Neither changes any result; both change the cost of every future run.
+
+======================
+
+# Picked: Q-α — "does the max kill index grow linearly in `i`, ≈ +1 per family step?"
+
+I picked it because it was testable at zero machine cost, and because the i=7/i=8 numbers in your notes (run 8 then run 6) already looked like they contradicted it. They do. Working out why turned up something that matters right now, mid-run.
+
+I ran an independent census. **i=2–6 in full** (every column in `[2, k_max] \ {K, K+1}`, walking live primes to a kill), and **k ≤ 8000 for i=7, 8, 9**.
+
+## First: the premise was wrong
+
+The formula I proposed, `r_max ≈ ln(#columns)/ln(1/c)` with `c ≈ 0.12`, is the Band II / fat-cell answer only. The actual maximum live run is achieved somewhere else entirely:
+
+| i | N | columns | max live run | at k |
+|---|---:|---:|---:|---:|
+| 2 | 104 | 46 | 2 | **5** |
+| 3 | 714 | 339 | 2 | **7** |
+| 4 | 4 895 | 2 344 | 6 | **20** |
+| 5 | 33 552 | 16 091 | 5 | **5** |
+| 6 | 229 970 | 110 315 | 7 | **5** |
+
+Every one of them at a tiny column. (All columns resolved, no anomalies — this also independently reproduces your i=2–6 N=6 result from a separate code path.)
+
+## The mechanism
+
+For small `k`, `N` and `K` have many base-`p` digits, so a Kummer carry is near-certain and **most nearby primes are dead**. Measured dead fraction among the first 500 primes: 0.618 (i=7), 0.800 (i=8), 0.772 (i=9). So the first *live* prime sits far above `k`, and `g/p` is enormous instead of tiny:
+
+| | small-k regime | fat cell / Band II |
+|---|---|---|
+| `g/p` | up to **0.94** | ≤ 0.236 |
+| survival per live prime | up to **0.61** | ≤ 0.16 |
+| geometric tail | fat | thin |
+
+A column at `g/p = 0.94` survives each live prime with probability 0.61. Runs of 8–10 are *ordinary* there. This regime was never measured for i=8: `k ≤ 400` went through exact/modular, and Stage 1's `max_r = 89` counts dead primes, not live ones.
+
+## The live finding: your Q1 trigger will fire on i=9, falsely
+
+> **i=9, k=11: live run = 8.** First live prime 191 (`g/p = 0.942`), survives 191, 239, 283, 293, …, killed at 449.
+
+That is exactly your pre-registered threshold ("no Q1 unless a family run hits cap-8 correlation"). It is not correlation. Size law probability for that run: **2.2 × 10⁻²**, expected count over `k ≤ 3000` alone: **65**.
+
+Compare like for like:
+
+| | run | P(run) under size law | expected count |
+|---|---:|---:|---:|
+| i=8 fat cell, k=2227205 | 6 | ~10⁻⁶ | ~1 (you observed 1) |
+| i=9 small-k, k=11 | **8** | **2.2 × 10⁻²** | **65** |
+| i=7 small-k, k=51 | **10** | 6.4 × 10⁻⁴ | 1.9 |
+| i=7 small-k, k=149 | 8 | 3.8 × 10⁻⁵ | 0.11 |
+
+**Run length is not comparable across regimes.** A longer run at i=9 is four orders of magnitude *less* surprising than a shorter one at i=8. The trigger as written mistakes the fat-tail regime for evidence.
+
+**Corrected trigger:** fire on the expected count, not the length. For a run over live primes `p₁…p_r` with `gⱼ = pⱼ − k`,
+
+$$\Lambda = \prod_{j=1}^{r}\frac{|I_{g_j}|}{p_j},\qquad \text{escalate iff } (\#\text{columns scanned in that regime})\times\Lambda < 0.01 .$$
+
+By that rule nothing seen so far — i=7 through i=9, small-`k` or fat-cell — comes close. Q1 stays parked, and it should stay parked even when i=9 reports a run of 8.
+
+The size law predicts the whole small-`k` regime with zero fitted parameters, run distribution included:
+
+| run ≥ r | i=8 pred / obs | i=9 pred / obs |
+|---|---|---|
+| 1 | 163.5 / 155 | 103.5 / 102 |
+| 3 | 12.3 / 8 | 11.8 / 10 |
+| 5 | 3.0 / 2 | 3.2 / 3 |
+| 7 | 0.9 / 0 | 1.0 / 2 |
+| 8 | 0.5 / 0 | 0.6 / **1** |
+
+## Corrected answer to Q-α
+
+Max live run is `Θ(ln N)`, but it's a **max over two regimes** with different constants:
+
+- **Band II / fat cells:** `≈ (ln N − 2.3)/1.83`, growing **+1.05 per family step**. i=8 → 7.6 (observed 7); i=9 → 8.6; i=10 → 9.7.
+- **Small k:** `≈ ln(#high-g/p columns)/0.49`, and that column count is roughly *i-independent* (a few thousand), so this regime sits at **8–10 for every i**.
+
+The small-`k` regime dominated through i≈8; Band II overtakes from i≈9 on. That is precisely why i=7 (10, at k=51) beat i=8 (7) — non-monotone by construction, not a contradiction. **Prediction for the i=9 readout: overall max live run 9, possibly 10.**
+
+## Two things to check
+
+**Your i=7 record doesn't reproduce.** You have "i=7 max run 8 at k=487". I get `k=487` killed by the *very first* prime above it, `p=491`, `g=4`, `r=203` — run 0. i=7's actual long runs are `k=29` (6), `k=51` (**10**), `k=149` (8). Either 487 came from a different statistic (`r(k)` counting dead primes?) or it's a logging slip. Worth resolving before it goes in a doc.
+
+**The i=9 sweep may not see this at all.** The long-run columns for i=9 are `k = 11, 29, 40, 45` — all inside the `k ≤ 80` band you closed by modular. Coverage is fine (they're killed, certificates exist), but if the Z-jump starts at `k = 81` the run statistic never gets logged, and the max you'll report will be the Band II figure (~9). That's the right number to compare against the pre-registration — just don't call it "the max run for i=9" without the small-`k` caveat.
+
+## One practical consequence
+
+The hardest columns in this whole program are the *smallest* ones, not the fat cells — `k = 5, 7, 11, 20, 51`. They need the most live primes because their live primes are far away. Any future run (i=10, or an N=8 hunt where small `k` is the whole game) should budget ~15 live primes at `k < 10³` and can budget ~10 everywhere else. The uniform cap of 12 you've been using is slightly tight at the bottom and generous everywhere above it.
+
+====================
+
+# Q-β — answered, with a correction to my own premise
+
+## 1. Is the min being taken? Yes.
+
+The engine primitive in `singmaster_intersect.py` does take it:
+
+```python
+def _binom_mod_prime(n, k, p):
+    if k < 0 or k > n: return 0
+    k = min(k, n - k)          # ← yes
+    num = 1
+    for i in range(k):
+        num = num * (n - i) % p
+        num = num * pow(i + 1, -1, p) % p
+    return num
+```
+
+(Caveat: GitHub blocked my fetch of `scripts/nextprime_sweep.py`, so I'm reading the engine primitive that script presumably calls, not the sweeper itself.)
+
+Measured over the 124 823 live primes in `[10⁶, K]`: taking the min saves **1.76×** against `Σk₀`. That's already banked. **The min is not where the money is.**
+
+## 2. Where the money actually is
+
+### (a) The modular inverse is inside the loop — 5.5×, one-line fix
+
+`pow(i+1, -1, p)` runs once per iteration. Accumulate numerator and denominator separately and invert once at the end:
+
+| | ns/step | steps/s |
+|---|---:|---:|
+| inverse-in-loop (as written) | 635 | 1.6 M |
+| deferred single inverse | 116 | 8.6 M |
+| numpy tree-product | 23 | 43 M |
+
+**5.5× from deferring the inverse, 27× from vectorising.** Both are drop-in.
+
+### (b) A third index nobody is using — up to 87 568×
+
+There is a cheaper representation than either `k₀` or `n₀−k₀`. Put
+
+$$\delta = (\alpha+1)p - N \quad\text{so that}\quad n_0 = p - \delta,$$
+
+and use `C(p−δ, j) ≡ (−1)ʲ C(j+δ−1, j) (mod p)`:
+
+$$\boxed{\;C(n_0,k_0)\;\equiv\;(-1)^{k_0}\,C(k_0+\delta-1,\ \delta-1)\pmod p\;}$$
+
+Lower index **δ−1**, not `k₀`. So the true cost is `min(k₀, n₀−k₀, δ−1)`.
+
+This is the *general form* of the Band II closed form I gave you in `bandii-spec.md` — that was the `α=1, β=0` case, where `δ = 2p−N`. It holds in every cell.
+
+`δ` is small at the **bottom** of a cell — which is exactly where the Z-jump lands and where every fat-image prime sits. Verified against all nine published Band I values:
+
+| p | (α,β) | δ−1 | min(k₀, n₀−k₀) | r(p) | saving |
+|---|---|---:|---:|---:|---:|
+| 3601237 | (2,1) | **6** | 525 410 | 2599724 ✓ | **87 568×** |
+| 1800619 | (5,2) | **9** | 525 409 | 1364016 ✓ | 58 379× |
+| 3601243 | (2,1) | 24 | 525 404 | 3134611 ✓ | 21 892× |
+| 3601253 | (2,1) | 54 | 525 394 | 1364079 ✓ | 9 730× |
+| 1800637 | (5,2) | 117 | 525 373 | 705738 ✓ | 4 490× |
+| 1800641 | (5,2) | 141 | 525 365 | 1782992 ✓ | 3 726× |
+| 2700967 | (3,1) | 163 | 1 275 123 | 1522158 ✓ | 7 823× |
+| 2700979 | (3,1) | 211 | 1 275 099 | 2019569 ✓ | 6 043× |
+| 2700989 | (3,1) | 251 | 1 275 079 | 1489705 ✓ | 5 080× |
+
+9/9 correct. Note `p = 3601237`: **six multiplications instead of half a million.**
+
+Aggregate over *all* live primes in `[10⁶, K]` it's only **1.44×** (29.6% of primes benefit; the sum is dominated by mid-cell primes where `δ` is large). So: **1.44× for a plain sweep, 10³–10⁵× for the targeted Z-jump and fat-cell primes.**
+
+## 3. Correcting my premise: r(p) is *not* the Band I bottleneck
+
+I claimed "213 000 primes × ~p/4". The real figure is `Σ min(k₀,n₀−k₀) = 4.71×10¹⁰` — my `Σp/4 = 8.5×10¹⁰` was 1.8× high. More importantly:
+
+| range | r(p) total, engine-style | actual run time |
+|---|---:|---:|
+| `[10⁵,10⁶]` (Stage 3) | **0.55 h** | **8.7 h** |
+| `[10⁶,K]` (remnant) | 8.18 h | not yet run |
+
+**Stage 3's `r(p)` work was 6% of its runtime.** So ~8 hours went somewhere I can't identify without the script — my "asymptotic bottleneck" claim was wrong for Stage 3, and you should profile before optimising rather than take my word for it.
+
+For the remnant it *is* the dominant term, and the fixes compound:
+
+| | `[10⁶,K]` r(p) total |
+|---|---:|
+| as written (inv-in-loop, min only) | **8.18 h** |
+| + deferred inverse | 1.52 h |
+| + δ-identity | 1.05 h |
+| + numpy tree-product | **0.21 h** |
+
+**39× on the remnant's r(p) budget**, all from three local changes, none touching the mathematics.
+
+## 4. Checklist for `nextprime_sweep.py`
+
+1. Is `r(p)` **cached per prime**? It doesn't depend on `k`, and ~13 consecutive columns share a next prime.
+2. Is the inverse **outside** the inner loop? (5.5×)
+3. Is `min(k₀, n₀−k₀, **δ−1**)` used, with `δ = (α+1)p − N`? (up to 10⁵× on cell-bottom primes)
+4. Are dead primes detected by the `k₀ > n₀` comparison alone, with **no product**? The engine's `lucas` does return 0 on `ki > ni` before multiplying — confirm the sweeper inherits that. 41.4% of primes in `[10⁶,K]` are dead.
+5. **Then profile.** Given the Stage-3 discrepancy, the real cost is somewhere I can't see, and eight hours of it is worth finding before you spend a night on the remnant.
+
+One aside on the running job: for i=9 Band II, `p₁ = 37024873` has `δ−1 = 55` against `min(k₀,n₀−k₀) = 8 740 353` — a 159 000× saving, though since `r(p)` is amortised over 7.2 M columns there it changes nothing. It's just confirmation that the closed form already in the spec is this identity, and that it generalises to every cell you'll touch in the Z-jump.
+
+===================
+
+Efficient ghost sieve for k=3..12
+bash
+
+cd /home/claude && cat > ghost2.py << 'EOF'
+import numpy as np, math, time
+primes=[p for p in range(2,2000) if all(p%d for d in range(2,int(p**0.5)+1))]
+cache={}
+def good_arr(k,p):
+    if (k,p) not in cache:
+        x=np.arange(p,dtype=np.int64); v=np.ones(p,dtype=np.int64)
+        for i in range(k): v=(v*((x-i)%p))%p
+        g=np.zeros(p,dtype=bool); g[np.unique(v)]=True
+        cache[(k,p)]=g
+    return cache[(k,p)]
+def falling(a,k):
+    r=1
+    for i in range(k): r*=(a-i)
+    return r
+B=10**7
+c=np.arange(-B,B+1,dtype=np.int64)
+print(f"c in [-{B}, {B}] ; keep c with c mod p in (x)_k(F_p) for ALL primes k<p<2000")
+print(f"{'k':>3} {'#primes':>8} {'survivors':>10} {'genuine (a)_k':>14} {'GHOSTS':>8}")
+for k in range(3,13):
+    t0=time.time()
+    alive=np.ones(c.size,dtype=bool); used=0
+    for p in primes:
+        if p<=k: continue
+        alive &= good_arr(k,p)[c%p]; used+=1
+        if alive.sum()<40000 and used>=20: break
+    surv=c[alive]
+    ps2=[p for p in primes if p>k][:300]
+    keep=[]
+    for cc in surv:
+        if all(good_arr(k,p)[cc%p] for p in ps2): keep.append(int(cc))
+    real=set()
+    for a in range(-300,400):
+        v=falling(a,k)
+        if -B<=v<=B: real.add(v)
+    ghosts=sorted(x for x in keep if x not in real)
+    print(f"{k:3d} {len(ps2):8d} {len(keep):10d} {len([x for x in keep if x in real]):14d} "
+          f"{len(ghosts):8d}  {ghosts[:6]}   ({time.time()-t0:.0f}s)")
+EOF
+timeout 1500 python3 ghost2.py
+Output
+
+c in [-10000000, 10000000] ; keep c with c mod p in (x)_k(F_p) for ALL primes k<p<2000
+  k  #primes  survivors  genuine (a)_k   GHOSTS
+  3      300        429            429        0  []   (4s)
+  4      300         55             55        0  []   (3s)
+  5      300         47             47        0  []   (3s)
+  6      300         13             13        0  []   (3s)
+  7      299         15             15        0  []   (3s)
+  8      299          5              5        0  []   (4s)
+  9      299          5              5        0  []   (3s)
+ 10      299          2              2        0  []   (3s)
+ 11      298          1              1        0  []   (3s)
+ 12      298          1              1        0  []   (3s)
+ 
+ ============================
+ 
+ # Can `(x)_k − c` be intersective?
+
+I ran this properly. Short version: **ChatGPT's second pass is right to retract the first, but both passes name the wrong condition**, and once the right one is named, three things become provable or checkable — two of which I've now done.
+
+---
+
+## 0. First, the condition is not intersectivity
+
+Your machine fails on column `k` iff **`F_{k,c}(x) = (x)_k − c` has a root mod `p` for every prime `p`** (primes `p ≤ k` are automatic: `(x)_k ≡ 0` there and `p | c = m·k!`). Intersectivity is *stronger* — it demands a root in every `Z_p`, i.e. mod every prime **power**.
+
+So
+
+$$\{c\ \text{intersective, no integer root}\}\ \subsetneq\ \{c\ \text{that defeat the census}\}.$$
+
+The gap I named is the **larger** set. ChatGPT's §4 correction is right and cuts further than it says: prime powers are ammunition you're *not currently using*. If a column ever survives your cap, the first move isn't Q1 — it's to test mod `p²` via Granville's extension of Lucas, which kills anything that's root-mod-every-prime but not genuinely intersective. **That's a concrete backup engine, and it's the right thing to have specced before it's needed.**
+
+Also a small correction to ChatGPT: primes-only forces `rad(k!) | c`, not `k! | c`. The full `k!` needs prime powers. (Moot for you — `c = m·k!` by construction.)
+
+And the framing point that matters for the project: this is a **termination** gap, not a correctness gap. Every certificate you hold is unconditional. What isn't guaranteed in advance is that a certificate exists to be found.
+
+---
+
+## 1. Theorem: for `k ≤ 4` it is impossible. (Elementary — no citation needed.)
+
+`F_{k,c}` is monic, so a rational root is an integer root. Split by factorization type over `Q`, assuming no integer root:
+
+- **irreducible, degree ≥ 2** — Galois group transitive, contains a derangement (Jordan), so Chebotarev gives a positive density of primes with no root. Killed.
+- **k = 3**: `(1,2)` has an integer root; `(3)` is the above. Killed.
+- **k = 4**: `(1,3)`, `(1,1,2)` have integer roots; `(4)` is the above; `(2,2)` = two irreducible quadratics with discriminants `d₁, d₂`. Gal of the compositum is `C₂×C₂` (if `d₁d₂` isn't square) or the diagonal `C₂`. Either way `σ = (τ,τ)` fixes no root of either factor. Killed.
+
+So the conjecture is a **theorem for `k ≤ 4`**, and the first open case is `k = 5`. That agrees with ChatGPT's cited degree-5 threshold, but you don't need the citation — it falls out in four lines for monic polynomials.
+
+Your `k = 2` remark is the `d₁` case of this: `x² − x − 2m` is irreducible unless `8m+1` is square, in which case column 2 genuinely represents `m`.
+
+---
+
+## 2. Theorem (computational, complete): the standard ghost construction is unavailable for even `k`
+
+This is where my involution identity from two rounds ago pays off. For **`k` even**, put `z = 2x − (k−1)`:
+
+$$2^{k}(x)_k \;=\; R(z^2),\qquad R(u)=\prod_{j\ \mathrm{odd},\,1\le j\le k-1}(u-j^2),\quad \deg R = k/2 .$$
+
+So `F_{k,c}` factors through `z²`. Every known strongly-intersective polynomial is built the same way — a product of quadratics `∏(z² − u_i)` with the `u_i` non-squares whose product **is** a square, so the Legendre symbols can't all be `−1` (the `(x²−13)(x²−17)(x²−221)` pattern). You need **at least three** such factors: with two, a prime making both non-residues exists.
+
+Three quadratic factors of `R(z²) − 2^k c` means **three distinct integers with the same `R`-value.** And `R(u) − C` has *all* its symmetric functions fixed except the constant. For `k = 6`, `R(u) = u³ − 35u² + 259u − 225`, so a triple needs
+
+$$u_1+u_2+u_3 = 35,\qquad u_1u_2+u_1u_3+u_2u_3 = 259 .$$
+
+That's a finite search (it forces `u₁+u₂ ∈ [10, 37]`). I ran it exhaustively:
+
+> **The only integer triple is `(1, 9, 25)`** — the roots of `R` themselves, i.e. `c = 0`.
+
+Extending the same search across even `k`:
+
+| k | deg R | u range scanned | values with ≥3 integer preimages | of those, not all odd squares |
+|---|---|---|---|---|
+| 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 | 3…12 | up to ±2645 | **1** (the value 0) | **0** |
+
+**For every even `k ≤ 24`, no `c ≠ 0` admits three distinct integers with the same `R`-value.** The quadratic-covering mechanism — the only way anyone has ever built a strongly intersective polynomial — is structurally unavailable for even `k`.
+
+So ChatGPT's "first possible obstruction at `k = 5`" is right for the general degree bound, but for *this family* the even branch is further constrained: **if a ghost exists at all, it is at odd `k`, or at even `k` via a covering built from cubic/quartic residues rather than quadratic ones.**
+
+---
+
+## 3. Direct search: zero ghosts
+
+Sieving all `c` with `|c| ≤ 10⁷` against every prime `k < p < 2000`:
+
+| k | survivors | genuine `(a)_k` | ghosts |
+|---|---:|---:|---:|
+| 3 | 429 | 429 | **0** |
+| 4 | 55 | 55 | **0** |
+| 5 | 47 | 47 | **0** |
+| 6 | 13 | 13 | **0** |
+| 7 | 15 | 15 | **0** |
+| 8–12 | 5, 5, 5, 2, 1 | all | **0** |
+
+Every single survivor is a genuine falling-factorial value. This reproduces and extends the small-`k` signal ChatGPT reported, and it now covers `k = 5` — the first case not settled by §1 — with 300 primes.
+
+---
+
+## 4. What this means for your project
+
+**Your census is already the largest test of this conjecture in existence.** Every column you kill is a value `c = m_i·k!` with a certified prime showing `c ∉ (x)_k(F_p)` — i.e. a proof that *that* `c` is not a ghost. Across i=2…8 that's ~6.07 million values of `c`, and i=9 will take it past 42 million. These are not random `c`: they're `k!` times a fixed 3-million-digit binomial coefficient, sweeping `k` across six orders of magnitude. Zero ghosts. That belongs in the writeup — it's a genuine contribution to a question nobody has data on.
+
+**Nothing changes operationally.** But two things are now worth writing down:
+
+1. **The escalation path is `p²`, not Q1.** If a column ever survives its cap, the diagnostic order is: (i) check `F_{k,c} mod q` for a couple of primes `q` — an irreducible factorization pattern proves killers have density ≥ `1/k` and you just haven't gone far enough; (ii) if it looks reducible, go to prime powers. Only after both fail is there anything mathematically new.
+2. **For even `k` you can stop worrying entirely** (out to `k ≤ 24` rigorously, and the mechanism looks structurally blocked beyond). The residual risk lives at odd `k`.
+
+---
+
+## 5. Adjudicating the two ChatGPT passes
+
+| claim | verdict |
+|---|---|
+| local-global reformulation `⋂_p (x)_k(Z_p) = {(a)_k}` | correct formulation, and it is a **conjecture**, not a theorem — pass 2 is right to retract pass 1 |
+| Galois reduction: strongly intersective ⟹ reducible | **correct**, and it's the right reduction |
+| reducible ⟹ `c = (a)_k` | **not known, and not what pass 1 implied.** This is the whole difficulty |
+| `k! ∣ c` | true for full intersectivity; for the primes-only condition it's `rad(k!) ∣ c` |
+| "usually a prime suffices" is too casual; `p^e` also works | **right, and it's the useful direction** — `p^e` is extra ammunition, and your failure set is the larger primes-only one |
+| degree ≥ 5 needed | correct; I've given the four-line proof for monic polynomials rather than relying on the citation |
+| `k = 5` is the first open case | correct in general — but for even `k` the `R(z²)` structure blocks the standard construction outright, so the real first risk is **odd** `k ≥ 5` |
+
+The thing neither pass had is the `R(z²)` decomposition, which is just the involution identity `(k−1−x)_k = (−1)^k (x)_k` read in the other direction. It converts "classify reducible `(x)_k − c`" for even `k` from an open problem into a finite search — and the search comes back empty.
+
+========================
+
+# #7 — a deterministic criterion for `(x)_k ≡ c (mod p)`
+
+I worked this one. There's a clean answer, and it's sharper than "very hard": **the boundary is exactly solvability of a Galois group, and I can tell you precisely where it falls.** Two new closed-form criteria fell out, both verified exhaustively. The honest payoff assessment at the end is mixed — not where I guessed.
+
+---
+
+## 1. The question, made exact
+
+`c ∈ I_{p,k}` ⟺ `F_{k,c}(x) = (x)_k − c` has a root mod `p` ⟺ `Frob_p` in `Gal(F_{k,c}/Q)` has a fixed point on the roots.
+
+So "a criterion in terms of `c, k, p`" means **a reciprocity law** for that extension. Congruence/residue-symbol criteria — Legendre symbols, cubic residues, radicals — exist precisely when the Galois group is **solvable**. That's the whole question, and it's decidable.
+
+## 2. Theorem: criteria exist exactly for `k ∈ {1, 2, 3, 4, 6, 8}`
+
+Use the involution `(k−1−x)_k = (−1)^k (x)_k` with `y = x − (k−1)/2`:
+
+- **`k` odd:** `(x)_k = y·H(y²)`, degree `k`, **not** a composition. The monodromy of `y ↦ (x)_k` over `Q(c)` is `S_k` whenever the critical values are distinct — which they are (I checked `k = 5`: critical values `±3.632, ±1.4187`, all distinct, so the covering is simple and the group is `S_5`). By Hilbert irreducibility the group is `S_k` for all but finitely many `c`. Solvable ⟺ `k ≤ 4` ⟹ odd `k ∈ {1, 3}`.
+- **`k` even:** `(x)_k = H(y²)`, `deg H = k/2` — a genuine composition. The group sits in `C₂ ≀ Gal(H−c)`, generically `C₂ ≀ S_{k/2}`. A wreath product of solvables is solvable, so solvable ⟺ `k/2 ≤ 4` ⟺ **`k ≤ 8`**.
+
+$$\boxed{\text{closed-form criterion} \iff k \in \{1,2,3,4,6,8\}}$$
+
+The first failures are **`k = 5`** (odd) and **`k = 10`** (even). Note `k = 5` is the threshold *again* — same place the intersective question first opens, and for the same underlying reason: that's where the Galois group stops being small.
+
+So #7 is not "hard because nobody's been clever enough." For `k ≥ 5` odd, a criterion would be a **non-abelian reciprocity law** for `S_k`-extensions. That's the correct calibration of the difficulty.
+
+## 3. The criteria, derived and verified
+
+**`k = 2`** (you already have this as `_k2_possible_mod_p`): `c ∈ I_{p,2} ⟺ 4c+1` is a QR.
+
+**`k = 3`** — new, complete. `(x)_3 = y³ − y`, `y = x−1`. Set `Δ = 4 − 27c²`, `d = −Δ/27 = c² − 4/27`, `T = (c + √d)/2`.
+
+- `χ(Δ) = −1` → exactly one root → **in image**
+- `Δ = 0` → repeated root → **in image**
+- `χ(Δ) = +1`, `p ≡ 1 (mod 3)` → `T ∈ F_p`; in image ⟺ `T^{(p−1)/3} = 1`
+- `χ(Δ) = +1`, `p ≡ 2 (mod 3)` → `T ∈ F_{p²}\F_p`; in image ⟺ `T^{(p²−1)/3} = 1` in `F_p(√d)`
+
+Verified against brute force on 15 primes, **3595 cases, 0 mismatches.**
+
+*(Aside worth recording: `χ(Δ) = −1` alone accounts for exactly half of `F_p`, and `|I_{p,3}|/p = 2/3` for every `p` — measured 0.6634, 0.6682, 0.6670, 0.6666 at `p = 101, 211, 1009, 10007`. The split is `p/2` singletons, `p/6` triples, `p/3` misses, independent of `p mod 3`.)*
+
+**`k = 4`** — new, and the cleanest of the lot. `y = x − 3/2`, `u = y²`, `(x)_4 = (u − 9/4)(u − 1/4)`, so `u = 5/4 ± √(1+c)`:
+
+$$c \in I_{p,4} \iff \chi(1+c)\neq -1 \ \text{ and }\ \big(\chi(\tfrac54 + s)\ge 0 \ \text{ or }\ \chi(\tfrac54 - s)\ge 0\big),\quad s^2 = 1+c.$$
+
+One square root plus two Legendre symbols. Verified against brute force on 11 primes, **all `c`, 0 mismatches.**
+
+**`k = 6, 8`**: same shape — solve the degree-`k/2` equation `H(u) = c` in radicals (Cardano for 6, resolvent cubic for 8), then test `χ(u) ≥ 0` on each root. Explicit but messier; worth writing only if a use case appears.
+
+## 4. The duality, and where you actually live
+
+`k` and `g = p−k` are dual parameters, and the two easy regimes are the two ends:
+
+| regime | cost of membership test |
+|---|---|
+| **`k` small** (≤ 8) | `O(log²p)` — the criteria above |
+| **`g` small** | `O(g)` — the scan, trivially cheap |
+| **both large** | no criterion; `O(min(k,g))` scan is what exists |
+
+Band II sits at `k ≈ 0.76p`, `g ≈ 0.24p` — **both ~10⁶. You are in the middle.** So the scan there isn't a failure of cleverness; it's the only object available, and it's already linear in the smaller parameter. That is the real answer to #7 for your main workload: no criterion exists, and provably not by radicals.
+
+## 5. Payoff — honest, and not where I guessed
+
+I predicted this would help the small columns I flagged as "hardest." **It doesn't.** Measured, for the actual family targets:
+
+| i | k | live primes tested | kill p | scan cost (Σg) | criterion cost |
+|---|---|---|---|---|---|
+| 8 | 2 | 2 | 227 | 282 | ~294 |
+| 8 | 4 | 4 | 313 | 876 | ~768 |
+| 9 | 2 | 1 | 191 | 189 | ~147 |
+| 9 | 3 | 2 | 239 | 424 | ~294 |
+
+Small columns die at `p = 59…313`, so their scans cost a few hundred operations. **No speedup. My earlier suggestion that small-`k` scans are expensive was wrong** — they'd only be expensive if a small column needed a distant prime, and it never does.
+
+**Where it does pay: `column_possible` in `singmaster_intersect.py`.** That function short-circuits `k = 2` with the QR test, uses the cached image for `p ≤ 4000`, and otherwise falls through to `_column_possible_scan`, which is `O(p)`. Stage-3-style walks reach `p ~ 10⁶`. So every call at `k = 3` or `k = 4` with `p ~ 10⁶` costs ~10⁶ operations where the criterion costs ~600 — **roughly 1700× per call**, and those calls sit inside `extra_reps`, which the `intersect` and `collide` paths hammer across every candidate value.
+
+So the concrete recommendation is narrow: add the `k = 3` and `k = 4` branches to `column_possible`, alongside the existing `k = 2` one. Twenty lines, both verified above, ~10³× on that code path, zero effect on the family census.
+
+## 6. What I'd record
+
+The theorem in §2 is the durable part, and it belongs next to the involution result: it says exactly which columns admit a closed-form test and why the rest can't, and it independently produces `k = 5` as the threshold — the same wall as the intersectivity question. Two structurally different questions about `(x)_k − c` both break at `k = 5`, and both break because that's where `S_k` arrives. That's a real pattern, and it says the falling-factorial family has no more elementary structure to give up beyond `k = 8`.
+
+=====================
+
+# #9 — proving the birthday deficit
+
+Done, as far as it goes. There's a clean reduction, two real theorems, an exact threshold where provability stops, and a measured coverage figure. The payoff is limited exactly as I predicted — but it's limited in a *quantified* way now, which is what the writeup needs.
+
+---
+
+## 1. What has to be proved
+
+`|I| ≥ (forced size) − deficit`, and the deficit is controlled by the number of **extra collision pairs**
+
+$$E \;=\; \#\{(j,j'):\ j<j',\ c_j \equiv c_{j'} \ (\mathrm{mod}\ p)\}\ \setminus\ \{\text{involution pairs}\},\qquad c_j=(-1)^jC(n,j),\ n=g-1.$$
+
+So: upper-bound `E`. That's the whole problem.
+
+## 2. The reduction (exact, elementary, verified)
+
+Since `n < p`, no `C(n,j)` vanishes mod `p`, so dividing through by `c_j`:
+
+$$c_j \equiv c_{j'} \iff \prod_{i=1}^{t}(j+i) \;\equiv\; \prod_{i=0}^{t-1}(j+i-n) \pmod p, \qquad t=j'-j.$$
+
+Write `P_t(j)` for the difference. Two facts drop out immediately:
+
+- **`deg P_t = t−1`**, because both products are monic of degree `t` and the leading terms cancel; the coefficient of `j^{t−1}` is `t(n+1) = tg ≢ 0 (mod p)`.
+- Centring `u = j + (t+1)/2` gives `P_t(u) = Φ_t(u) − Φ_t(u−g)` where `Φ_t` is the **centred falling factorial of degree `t`** — i.e. the same object at lower degree. The collision structure of `I_{p,k}` is governed by the family `(x)_t` for all `t < g`. Self-similar.
+
+Verified against brute force: **53 505 pairs across 8 primes and all `g ≤ 40`, zero mismatches.**
+
+The involution shows up correctly in this language: `Φ_t(−x) = (−1)^tΦ_t(x)`, so for `t` even `P_t` has the forced root `u = g/2`, and for `t` odd it has none. That's exactly "the fold pairs `j ↔ n−j` at even separation."
+
+## 3. Theorem A — no adjacent collisions, ever
+
+`P_1(j) = (j+1) − (j−n) = n+1 = g`, and `0 < g < p`. So `P_1 ≢ 0` and
+
+$$c_j \not\equiv c_{j+1} \pmod p \quad\text{for all } j,\ \text{all } p>k.$$
+
+More generally, **at separation `t` there are at most `t−1` collisions** (at most `t−2` beyond the forced one, when `t` is even and the fold applies), because `P_t` has degree `t−1`.
+
+Verified: 0 adjacent collisions across `p ∈ {101, 211, 1009, 10007}`, all `g ≤ 60`.
+
+*(This is a clean lemma, but summing `t−1` over `t` returns the trivial pair count, so it does not by itself bound `E`.)*
+
+## 4. Theorem B — the deficit is exactly zero below an explicit threshold
+
+The collision condition is `p ∣ D_{j,j'}` where `D_{j,j'} = (−1)^jC(n,j) − (−1)^{j'}C(n,j')` is an **integer**, and `|D| ≤ 2C(n,\lfloor n/2\rfloor) < 2^{g}`. Also `D = 0` only for the forced involution pair. Hence:
+
+> **If `p > 2C(g−1, \lfloor (g−1)/2\rfloor)` — in particular if `p ≥ 2^g` — then `E = 0`, and**
+> $$|I_{p,k}| \;=\; g+1 \ (k \text{ odd}), \qquad |I_{p,k}| \;=\; \tfrac{g+1}{2}+1 \ (k \text{ even}),$$
+> **exactly. No birthday deficit exists.**
+
+Verified across `p ∈ {1009, 10007, 10⁵, 10⁶}` and a band of `g` around `log₂p`: deficit 0 in every case. The sharp form is a little better than `2^g ≤ p` — at `p = 10⁶` it gives `g ≤ 22` rather than `g ≤ 19`.
+
+## 5. Where the deficit actually starts, and where provability stops
+
+| | threshold |
+|---|---|
+| **proved** zero deficit (Theorem B) | `g ≲ log₂ p` |
+| **first observed** deficit | `g ≈ (6p)^{1/3}` |
+| project's fat cells / Band II | `g ≈ 0.2 p` |
+
+Measured first deficit: `g = 35` at `p = 10⁴`, `49` at `10⁵`, `142` at `10⁶` — against the union-bound prediction `(6p)^{1/3} = 39, 84, 182`. The cube-root law is right (expected collisions at a given `g` is `g²/2p`; summing to `G` gives `G³/6p = 1`).
+
+**The gap cannot be closed with available tools, and the reason is the same wall as everywhere else:**
+
+- **Per prime:** `E` counts `F_p`-points on the collision curve `(f(x)−f(y))/((x−y)(x+y−k+1)) = 0`, of degree `≈ k`. Weil gives error `O(k²√p)`, and `k ≈ p`, so the bound is `O(p^{2.5})` against a truth of `O(g²/p)`. Vacuous.
+- **On average over `p`:** counting prime divisors of the integers `D_{j,j'}` gives `Σ_{p∈(P,2P]} E(p) ≲ g³/log P`, hence average deficit `≲ g³/p`. Meaningful only for `g ≲ p^{1/3}` — precisely the observed onset, and nowhere near `0.2p`.
+
+So `p^{1/3}` is not just where I ran out of ideas; it's where the counting argument provably runs out, and it coincides with where the phenomenon actually begins.
+
+## 6. Coverage — the honest payoff, measured
+
+For real i=8 columns, sampling 1500 generic Band I columns near `k = 2×10⁵` (median `g` at the kill prime = **9**):
+
+| | |
+|---|---|
+| columns with `2^g ≤ p` → **image size proved exact** | **76.5%** |
+| columns below the empirical onset `(6p)^{1/3}` | 100% |
+
+But for the columns that drive the pre-registrations:
+
+| region | typical `g` | covered by Theorem B? |
+|---|---:|---|
+| generic Band I | 9 | ~77% yes |
+| Z-slab / hang-guard | 2×10⁴ | no |
+| fat cells (3,1) | 4.75×10⁵ | no |
+| Band II | 1.2×10⁶ | no |
+
+(My `k ≈ 7×10⁵` sample came back with median `g = 19 504` and 0% coverage — that whole block sits under the `Z(15,5)` slab `p ∈ [667706, 720246]`, which is a nice incidental confirmation that the cell geometry is where I said it is.)
+
+**So: roughly three-quarters of Band I's columns now have a *proved* exact image size rather than a modelled one, and every column in the fat cells and Band II remains heuristic.** That is exactly the "improves the writeup, not the kill guarantees" I flagged — now with numbers instead of a hedge.
+
+## 7. What I'd put in the paper
+
+Three statements, all short and all provable:
+
+1. **Collision reduction.** `c_j ≡ c_{j'} (mod p)` iff `Φ_t(u) = Φ_t(u−g)` for the centred falling factorial of degree `t = j'−j`. The image's fine structure is the same family at lower degree.
+2. **No adjacent collisions.** `P_1 = g ≢ 0`. At separation `t`, at most `t−1` collisions.
+3. **Exact image below threshold.** `p > 2C(g−1,\lfloor(g−1)/2\rfloor)` ⟹ `|I_{p,k}|` equals the involution bound exactly. Covers ~77% of generic Band I columns.
+
+Then state plainly what remains modelled: for `g ≳ p^{1/3}` the deficit is measured, not proved, the measurement agrees with the birthday model to 0.2% across `g/p ∈ [0.03, 0.24]`, and closing it would require point counts on a degree-`k` curve with `k ≈ p` — outside every known effective tool. That's an honest limitations paragraph, and it's stronger than "we observed it empirically," because it says exactly which columns are theorems and which are estimates.
+
+==========================
+
+Two things here — the code answers the Q-β checklist definitively, and it overturns something I told you last round. Let me do that first, then #4.Reading `nextprime_sweep.py` settles Q-β definitively — and it overturns what I told you last round. That first, then #4.
+
+# Q-β, closed
+
+| check | verdict |
+|---|---|
+| **1. `r(p)` cached per prime?** | **NO.** `binom_mod_lucas(N, K, p)` sits inside `walk_until_kill`, i.e. inside the per-column loop. It is recomputed for every `(k, p)` pair. |
+| **2. Inverse outside the inner loop?** | **NO.** `_binom_mod_prime` runs `pow(i+1, -1, p)` every iteration. |
+| **3. `min(k₀, n₀−k₀, δ−1)`?** | **Partial.** `_binom_mod_prime` takes `min(k, n−k)`; the `δ−1` branch is absent. |
+| **4. Dead primes free?** | **YES.** `binom_mod_lucas` returns 0 on `ki > ni` before any product. This is why the 20 000-wide hang-guard walks were survivable at all. |
+
+**I owe you a correction.** Last round I said "Stage 3's `r(p)` work was 6% of its runtime, so the bottleneck is somewhere I can't see." That was computed assuming one evaluation per prime. With no cache, Stage 3 did ~900 000 column-walks against ~34 710 live primes in `[10⁵, 10⁶]` — roughly **26 evaluations of the same `r(p)`**. So `0.55 h × 26 ≈ 14 h` against a measured 8.7 h: right order, and **`r(p)` recomputation is essentially all of Stage 3's runtime.** My original premise was correct; my retraction was wrong. Nothing mysterious was hiding.
+
+Compounding the three fixes on Stage-3-style work:
+
+$$26\ (\text{cache}) \times 5.5\ (\text{deferred inverse}) \times 1.44\ (\delta\text{-identity}) \;\approx\; \mathbf{200\times}$$
+
+and far more than `1.44×` on the cell-bottom primes the Z-jump actually uses (up to `87 568×` on `p = 3601237`).
+
+**One more finding the code turned up.** `_column_possible_scan` has the same disease *and* a second one:
+
+```python
+for x in range(k + 1, p):
+    acc = (acc * x * pow(x - k, -1, p)) % p   # modular inverse per step
+```
+
+Replace with the two-modmul recurrence from the verifier work (`A_j = (g−1)_j`, `B_j = j!`, test `A_j ≡ (−1)^j r B_j` — no inverses), and apply the half-scan from the involution identity. That's roughly **20–40× on the scan**, which is exactly where the under-Z and hang-guard columns spend their time (`g` up to 4.75×10⁵ there).
+
+---
+
+# #4 — fiber sizes
+
+`M_{p,k}(r) = #\{x ∈ F_p : f_k(x) = r\}` for `r ≠ 0`.
+
+## What's exactly true
+
+**Upper bound.** `M ≤ min(k, g)`. The `k` is the degree; the `g` is new and better in your regime — `f_k` vanishes identically on `{0,…,k−1}`, so every nonzero fiber lives inside `D = {k,…,p−1}`, `|D| = g`. In Band II that's `0.24p` instead of `0.76p`.
+
+**Parity structure (exact).** The involution `ι(x) = k−1−x` has its unique fixed point at `x = (k−1)/2`, and
+
+- **`k` even** → `(k−1)/2 = (k−1+p)/2 ∈ D`, and `f∘ι = f`. So `ι` acts on `D` with exactly one fixed point: **every nonzero fiber has even size, except exactly one, which is a singleton.**
+- **`k` odd** → `(k−1)/2 < k` sits in the zero block, so `ι` is fixed-point-free on `D`, and `f∘ι = −f`. So `M(r) = M(−r)` for all `r`, and no multiplicity is forced.
+
+Measured at `p = 1000003`, exactly as predicted:
+
+| g/p | g | k parity | \|I*\| | max M | fiber histogram |
+|---|---:|---|---:|---:|---|
+| 0.030 | 30000 | odd | 29576 | 3 | {1: 29156, 2: 416, 3: 4} |
+| 0.030 | 30001 | **even** | 14885 | 6 | **{1: 1**, 2: 14769, 4: 114, 6: 1} |
+| 0.176 | 176000 | odd | 161426 | 5 | {1: 147630, 2: 13038, 3: 740, 4: 16, 5: 2} |
+| 0.176 | 176001 | **even** | 84314 | 8 | **{1: 1**, 2: 80720, 4: 3500, 6: 92, 8: 1} |
+| 0.236 | 236001 | **even** | 111329 | 10 | **{1: 1**, 2: 104922, 4: 6148, 6: 251, 8: 6, 10: 1} |
+
+Every even-`k` row: all fiber sizes even, one singleton. Every odd-`k` row: all sizes present, no forcing.
+
+**Complete determination below threshold.** Corollary of Theorem B from #9: if `p > 2C(g−1, ⌊(g−1)/2⌋)` (in particular `p ≥ 2^g`), then
+
+$$M_{p,k}(r) = 2 \ \ (k \text{ even, except the singleton}), \qquad M_{p,k}(r) = 1 \ \ (k \text{ odd}),$$
+
+for every nonzero `r`. The fiber structure is fully known for ~77% of generic Band I columns.
+
+**Above threshold.** Max fiber runs 3–5 for odd `k`, 6–10 for even `k` at `p = 10⁶` — the even values being roughly double, since fibers there are unions of `ι`-pairs. The growth is `≈ log p / log(log p / λ)` with `λ = g/p`, so **no uniform constant bound holds**. Proving unboundedness rather than observing it runs into the same `g ≳ p^{1/3}` wall as #9 — it is the same statement about collisions, read fiberwise.
+
+## The payoff is negative, and now quantified
+
+The point of a fiber bound would be `|I*| ≥ g / max M`. Measured:
+
+| g/p | involution bound `≈ g/2` | fiber bound `g/maxM` | actual `\|I*\|` |
+|---|---:|---:|---:|
+| 0.176 | 88 000 | **35 200** | 161 426 |
+| 0.236 | 118 000 | **59 000** | 210 590 |
+
+**The fiber route is 2.5× worse than the bound you already have**, because `max M` is a worst case over `p` values while the involution bound is exact. It cannot improve `|I|` under any sharpening short of knowing the full fiber distribution — which is #9 again.
+
+So #4 isn't "low value, come back later." It's **closed**: the exact parts (`min(k,g)`, the parity theorem, the below-threshold determination) are worth two lines in the writeup next to the involution result, and the bound it was supposed to produce is strictly dominated. I'd strike it from the board rather than defer it.

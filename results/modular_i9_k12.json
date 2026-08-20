@@ -1,0 +1,296 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 0.006,
+  "cmd": "modular",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": null,
+  "hits": [],
+  "discoveries": [],
+  "certificates": [
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 2,
+      "status": "impossible",
+      "witness_p": 191,
+      "m_mod_p": 161,
+      "obstruction": "qr_8m_plus_1_nonsquare",
+      "result": "i=9 k=2 impossible p=191",
+      "qr_test_value": 143
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 3,
+      "status": "impossible",
+      "witness_p": 239,
+      "m_mod_p": 93,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=3 impossible p=239"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 4,
+      "status": "impossible",
+      "witness_p": 191,
+      "m_mod_p": 161,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=4 impossible p=191"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 5,
+      "status": "impossible",
+      "witness_p": 239,
+      "m_mod_p": 93,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=5 impossible p=239"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 6,
+      "status": "impossible",
+      "witness_p": 191,
+      "m_mod_p": 161,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=6 impossible p=191"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 7,
+      "status": "impossible",
+      "witness_p": 191,
+      "m_mod_p": 161,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=7 impossible p=191"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 8,
+      "status": "impossible",
+      "witness_p": 239,
+      "m_mod_p": 93,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=8 impossible p=239"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 9,
+      "status": "impossible",
+      "witness_p": 191,
+      "m_mod_p": 161,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=9 impossible p=191"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 10,
+      "status": "impossible",
+      "witness_p": 283,
+      "m_mod_p": 247,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=10 impossible p=283"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 11,
+      "status": "impossible",
+      "witness_p": 449,
+      "m_mod_p": 169,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=11 impossible p=449"
+    },
+    {
+      "search": "modular_impossible",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k": 12,
+      "status": "impossible",
+      "witness_p": 283,
+      "m_mod_p": 247,
+      "obstruction": "m_mod_p_not_in_column_image",
+      "result": "i=9 k=12 impossible p=283"
+    }
+  ],
+  "modular_reports": [
+    {
+      "search": "modular_report",
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k_extra": 12,
+      "pmax_bound": 4000,
+      "largest_prime_tested": 3989,
+      "pmax": 3989,
+      "n_primes_tried": 550,
+      "columns": [
+        {
+          "k": 2,
+          "status": "impossible",
+          "witness_p": 191,
+          "m_mod_p": 161,
+          "obstruction": "qr_8m_plus_1_nonsquare",
+          "qr_test_value": 143
+        },
+        {
+          "k": 3,
+          "status": "impossible",
+          "witness_p": 239,
+          "m_mod_p": 93,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 4,
+          "status": "impossible",
+          "witness_p": 191,
+          "m_mod_p": 161,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 5,
+          "status": "impossible",
+          "witness_p": 239,
+          "m_mod_p": 93,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 6,
+          "status": "impossible",
+          "witness_p": 191,
+          "m_mod_p": 161,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 7,
+          "status": "impossible",
+          "witness_p": 191,
+          "m_mod_p": 161,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 8,
+          "status": "impossible",
+          "witness_p": 239,
+          "m_mod_p": 93,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 9,
+          "status": "impossible",
+          "witness_p": 191,
+          "m_mod_p": 161,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 10,
+          "status": "impossible",
+          "witness_p": 283,
+          "m_mod_p": 247,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 11,
+          "status": "impossible",
+          "witness_p": 449,
+          "m_mod_p": 169,
+          "obstruction": "m_mod_p_not_in_column_image"
+        },
+        {
+          "k": 12,
+          "status": "impossible",
+          "witness_p": 283,
+          "m_mod_p": 247,
+          "obstruction": "m_mod_p_not_in_column_image"
+        }
+      ],
+      "possible_ks": [],
+      "central": "exact_only"
+    }
+  ]
+}

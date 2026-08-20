@@ -1,0 +1,1923 @@
+{
+  "search": "sizelaw_scan",
+  "i": 9,
+  "k_range": [
+    2,
+    3000
+  ],
+  "n_with_run": 102,
+  "rows": [
+    {
+      "k": 247,
+      "k_parity": "odd",
+      "run": 3,
+      "primes": [
+        283,
+        293,
+        347
+      ],
+      "g_over_p": [
+        0.1272,
+        0.157,
+        0.2882
+      ],
+      "lambda": 0.004607446924272841,
+      "expected": 13.817733325894249,
+      "observed": 1,
+      "poisson_tail": 0.9999990022202994,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1052,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        1061
+      ],
+      "g_over_p": [
+        0.0085
+      ],
+      "lambda": 0.005641734352314299,
+      "expected": 16.91956132259058,
+      "observed": 1,
+      "poisson_tail": 0.9999999551329122,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2721,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2741
+      ],
+      "g_over_p": [
+        0.0073
+      ],
+      "lambda": 0.007633550660341242,
+      "expected": 22.893018430363384,
+      "observed": 1,
+      "poisson_tail": 0.9999999998857941,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2137,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2153
+      ],
+      "g_over_p": [
+        0.0074
+      ],
+      "lambda": 0.007866687777830497,
+      "expected": 23.59219664571366,
+      "observed": 1,
+      "poisson_tail": 0.9999999999432404,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1082,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        1097
+      ],
+      "g_over_p": [
+        0.0137
+      ],
+      "lambda": 0.008174341780610916,
+      "expected": 24.514851000052136,
+      "observed": 1,
+      "poisson_tail": 0.9999999999774402,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2853,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2879
+      ],
+      "g_over_p": [
+        0.009
+      ],
+      "lambda": 0.00933603154772818,
+      "expected": 27.998758611636813,
+      "observed": 1,
+      "poisson_tail": 0.9999999999993077,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2458,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.018
+      ],
+      "lambda": 0.009544568401460323,
+      "expected": 28.62416063597951,
+      "observed": 1,
+      "poisson_tail": 0.9999999999996296,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1384,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        1409
+      ],
+      "g_over_p": [
+        0.0177
+      ],
+      "lambda": 0.00989041744506289,
+      "expected": 29.661361917743605,
+      "observed": 1,
+      "poisson_tail": 0.9999999999998687,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2477,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.0104
+      ],
+      "lambda": 0.010731216156521166,
+      "expected": 32.18291725340698,
+      "observed": 1,
+      "poisson_tail": 0.9999999999999895,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2444,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.0236
+      ],
+      "lambda": 0.012311201920613902,
+      "expected": 36.921294559921094,
+      "observed": 1,
+      "poisson_tail": 0.9999999999999999,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 40,
+      "k_parity": "even",
+      "run": 4,
+      "primes": [
+        191,
+        239,
+        283,
+        293
+      ],
+      "g_over_p": [
+        0.7906,
+        0.8326,
+        0.8587,
+        0.8635
+      ],
+      "lambda": 0.014360847802922894,
+      "expected": 43.06818256096576,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2467,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.0144
+      ],
+      "lambda": 0.014676450386699198,
+      "expected": 44.014674709710896,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 592,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        607
+      ],
+      "g_over_p": [
+        0.0247
+      ],
+      "lambda": 0.014729685910644831,
+      "expected": 44.17432804602385,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2174,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        2239
+      ],
+      "g_over_p": [
+        0.029
+      ],
+      "lambda": 0.015073975552459096,
+      "expected": 45.20685268182483,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2036,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        2099
+      ],
+      "g_over_p": [
+        0.03
+      ],
+      "lambda": 0.01560251815069903,
+      "expected": 46.79195193394639,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1282,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        1321
+      ],
+      "g_over_p": [
+        0.0295
+      ],
+      "lambda": 0.01577728167539401,
+      "expected": 47.31606774450663,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1236,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        1277
+      ],
+      "g_over_p": [
+        0.0321
+      ],
+      "lambda": 0.017086960174463428,
+      "expected": 51.24379356321582,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 492,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        509
+      ],
+      "g_over_p": [
+        0.0334
+      ],
+      "lambda": 0.019473581419461743,
+      "expected": 58.401270676965765,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2823,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2879
+      ],
+      "g_over_p": [
+        0.0195
+      ],
+      "lambda": 0.01960720892234073,
+      "expected": 58.80201955809984,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1699,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        1733
+      ],
+      "g_over_p": [
+        0.0196
+      ],
+      "lambda": 0.019999327176238545,
+      "expected": 59.9779822015394,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2398,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.0419
+      ],
+      "lambda": 0.021347273312844348,
+      "expected": 64.0204726652202,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 11,
+      "k_parity": "odd",
+      "run": 8,
+      "primes": [
+        191,
+        239,
+        283,
+        293,
+        347,
+        349,
+        421,
+        433
+      ],
+      "g_over_p": [
+        0.9424,
+        0.954,
+        0.9611,
+        0.9625,
+        0.9683,
+        0.9685,
+        0.9739,
+        0.9746
+      ],
+      "lambda": 0.02188482369293458,
+      "expected": 65.63258625511081,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1564,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        1637
+      ],
+      "g_over_p": [
+        0.0446
+      ],
+      "lambda": 0.02295277163741138,
+      "expected": 68.83536214059673,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1693,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        1733
+      ],
+      "g_over_p": [
+        0.0231
+      ],
+      "lambda": 0.02338739881733291,
+      "expected": 70.13880905318139,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 29,
+      "k_parity": "odd",
+      "run": 7,
+      "primes": [
+        191,
+        239,
+        283,
+        293,
+        347,
+        349,
+        421
+      ],
+      "g_over_p": [
+        0.8482,
+        0.8787,
+        0.8975,
+        0.901,
+        0.9164,
+        0.9169,
+        0.9311
+      ],
+      "lambda": 0.026304557924095955,
+      "expected": 78.88736921436377,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2803,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2879
+      ],
+      "g_over_p": [
+        0.0264
+      ],
+      "lambda": 0.026395430286307392,
+      "expected": 79.15989542863586,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 591,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        607
+      ],
+      "g_over_p": [
+        0.0264
+      ],
+      "lambda": 0.0276404979567292,
+      "expected": 82.89385337223086,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 574,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        607
+      ],
+      "g_over_p": [
+        0.0544
+      ],
+      "lambda": 0.029242408174263417,
+      "expected": 87.69798211461598,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 60,
+      "k_parity": "even",
+      "run": 3,
+      "primes": [
+        191,
+        239,
+        283
+      ],
+      "g_over_p": [
+        0.6859,
+        0.749,
+        0.788
+      ],
+      "lambda": 0.031007699158455287,
+      "expected": 92.99208977620741,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 268,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.053
+      ],
+      "lambda": 0.031356306759783945,
+      "expected": 94.03756397259205,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 58,
+      "k_parity": "even",
+      "run": 3,
+      "primes": [
+        191,
+        239,
+        283
+      ],
+      "g_over_p": [
+        0.6963,
+        0.7573,
+        0.7951
+      ],
+      "lambda": 0.03190318624705636,
+      "expected": 95.67765555492203,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2419,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.0336
+      ],
+      "lambda": 0.03339566464124929,
+      "expected": 100.15359825910662,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 537,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        557
+      ],
+      "g_over_p": [
+        0.0359
+      ],
+      "lambda": 0.037032733765387654,
+      "expected": 111.06116856239757,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 273,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.0353
+      ],
+      "lambda": 0.038189750636979596,
+      "expected": 114.5310621603018,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 977,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        1019
+      ],
+      "g_over_p": [
+        0.0412
+      ],
+      "lambda": 0.04134014369414125,
+      "expected": 123.9790909387296,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 1105,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        1153
+      ],
+      "g_over_p": [
+        0.0416
+      ],
+      "lambda": 0.04162512894438591,
+      "expected": 124.83376170421333,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 975,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        1019
+      ],
+      "g_over_p": [
+        0.0432
+      ],
+      "lambda": 0.04322079033562242,
+      "expected": 129.61915021653164,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 2383,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        2503
+      ],
+      "g_over_p": [
+        0.0479
+      ],
+      "lambda": 0.04720132253693605,
+      "expected": 141.5567662882712,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 767,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        811
+      ],
+      "g_over_p": [
+        0.0543
+      ],
+      "lambda": 0.054008116902037565,
+      "expected": 161.97034258921065,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 527,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        557
+      ],
+      "g_over_p": [
+        0.0539
+      ],
+      "lambda": 0.054182187775130806,
+      "expected": 162.4923811376173,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 45,
+      "k_parity": "odd",
+      "run": 5,
+      "primes": [
+        191,
+        239,
+        283,
+        293,
+        347
+      ],
+      "g_over_p": [
+        0.7644,
+        0.8117,
+        0.841,
+        0.8464,
+        0.8703
+      ],
+      "lambda": 0.05728239360046905,
+      "expected": 171.78989840780667,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 477,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        509
+      ],
+      "g_over_p": [
+        0.0629
+      ],
+      "lambda": 0.06283580385075507,
+      "expected": 188.44457574841445,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 248,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.1237
+      ],
+      "lambda": 0.06504483937794732,
+      "expected": 195.06947329446402,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 475,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        509
+      ],
+      "g_over_p": [
+        0.0668
+      ],
+      "lambda": 0.06651456063911,
+      "expected": 199.4771673566909,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 246,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.1307
+      ],
+      "lambda": 0.06834856786071075,
+      "expected": 204.97735501427155,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 107,
+      "k_parity": "odd",
+      "run": 3,
+      "primes": [
+        191,
+        239,
+        283
+      ],
+      "g_over_p": [
+        0.4398,
+        0.5523,
+        0.6219
+      ],
+      "lambda": 0.07163048584891281,
+      "expected": 214.8198270608895,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 263,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.0707
+      ],
+      "lambda": 0.07164062239123828,
+      "expected": 214.8502265513236,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 469,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        509
+      ],
+      "g_over_p": [
+        0.0786
+      ],
+      "lambda": 0.07746441367891746,
+      "expected": 232.31577662307348,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 141,
+      "k_parity": "odd",
+      "run": 2,
+      "primes": [
+        191,
+        239
+      ],
+      "g_over_p": [
+        0.2618,
+        0.41
+      ],
+      "lambda": 0.07979258544379078,
+      "expected": 239.29796374592854,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 354,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        421
+      ],
+      "g_over_p": [
+        0.1591
+      ],
+      "lambda": 0.07986445123142412,
+      "expected": 239.51348924304094,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 160,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.1623
+      ],
+      "lambda": 0.08537309418155482,
+      "expected": 256.0339094504829,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 257,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.0919
+      ],
+      "lambda": 0.09115009644290319,
+      "expected": 273.35913923226667,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 152,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.2042
+      ],
+      "lambda": 0.10437768078908294,
+      "expected": 313.0286646864597,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 305,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        347
+      ],
+      "g_over_p": [
+        0.121
+      ],
+      "lambda": 0.11670691179700486,
+      "expected": 350.0040284792176,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 142,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.2565
+      ],
+      "lambda": 0.12757906946406075,
+      "expected": 382.6096293227182,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 28,
+      "k_parity": "even",
+      "run": 2,
+      "primes": [
+        191,
+        239
+      ],
+      "g_over_p": [
+        0.8534,
+        0.8828
+      ],
+      "lambda": 0.12767773204019225,
+      "expected": 382.90551838853656,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 241,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.1484
+      ],
+      "lambda": 0.14119427637334298,
+      "expected": 423.4416348436556,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 12,
+      "k_parity": "even",
+      "run": 2,
+      "primes": [
+        191,
+        239
+      ],
+      "g_over_p": [
+        0.9372,
+        0.9498
+      ],
+      "lambda": 0.14529288157443462,
+      "expected": 435.7333518417294,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 134,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.2984
+      ],
+      "lambda": 0.1457066786860463,
+      "expected": 436.97432937945285,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 239,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        283
+      ],
+      "g_over_p": [
+        0.1555
+      ],
+      "lambda": 0.14725285163148158,
+      "expected": 441.61130204281324,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 10,
+      "k_parity": "even",
+      "run": 2,
+      "primes": [
+        191,
+        239
+      ],
+      "g_over_p": [
+        0.9476,
+        0.9582
+      ],
+      "lambda": 0.14752467579259887,
+      "expected": 442.42650270200403,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 53,
+      "k_parity": "odd",
+      "run": 3,
+      "primes": [
+        191,
+        239,
+        283
+      ],
+      "g_over_p": [
+        0.7225,
+        0.7782,
+        0.8127
+      ],
+      "lambda": 0.15721639189446543,
+      "expected": 471.4919592915018,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 124,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.3508
+      ],
+      "lambda": 0.16783742617311848,
+      "expected": 503.3444410931823,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 118,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.3822
+      ],
+      "lambda": 0.18083972939817913,
+      "expected": 542.3383484651392,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 116,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.3927
+      ],
+      "lambda": 0.1851285266264609,
+      "expected": 555.2004513527562,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 37,
+      "k_parity": "odd",
+      "run": 3,
+      "primes": [
+        191,
+        239,
+        283
+      ],
+      "g_over_p": [
+        0.8063,
+        0.8452,
+        0.8693
+      ],
+      "lambda": 0.18597281947241773,
+      "expected": 557.7324855977807,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 110,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.4241
+      ],
+      "lambda": 0.19786066133125818,
+      "expected": 593.3841233324433,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 149,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.2199
+      ],
+      "lambda": 0.20206034373266524,
+      "expected": 605.978970854263,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 88,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.5393
+      ],
+      "lambda": 0.24286663242373366,
+      "expected": 728.3570306387772,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 67,
+      "k_parity": "odd",
+      "run": 2,
+      "primes": [
+        191,
+        239
+      ],
+      "g_over_p": [
+        0.6492,
+        0.7197
+      ],
+      "lambda": 0.24821072972434888,
+      "expected": 744.3839784433222,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 137,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.2827
+      ],
+      "lambda": 0.2507739763300563,
+      "expected": 752.071155013839,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 82,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.5707
+      ],
+      "lambda": 0.2546966256686424,
+      "expected": 763.8351803802585,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 135,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.2932
+      ],
+      "lambda": 0.25859873757613644,
+      "expected": 775.5376139908332,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 131,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.3141
+      ],
+      "lambda": 0.2740039529847698,
+      "expected": 821.7378550013246,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 51,
+      "k_parity": "odd",
+      "run": 2,
+      "primes": [
+        191,
+        239
+      ],
+      "g_over_p": [
+        0.733,
+        0.7866
+      ],
+      "lambda": 0.2862001570539469,
+      "expected": 858.3142710047867,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 125,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.3455
+      ],
+      "lambda": 0.29651367727460254,
+      "expected": 889.244518146533,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 56,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.7068
+      ],
+      "lambda": 0.3038607425677243,
+      "expected": 911.2783669606051,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 123,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.356
+      ],
+      "lambda": 0.3038607425677243,
+      "expected": 911.2783669606051,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 121,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.3665
+      ],
+      "lambda": 0.31113107663427114,
+      "expected": 933.0820988261792,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 38,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.801
+      ],
+      "lambda": 0.33598448188203756,
+      "expected": 1007.6174611642306,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 111,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.4188
+      ],
+      "lambda": 0.3463595352481261,
+      "expected": 1038.7322462091302,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 26,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.8639
+      ],
+      "lambda": 0.3565724813600735,
+      "expected": 1069.3608715988605,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 20,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.8953
+      ],
+      "lambda": 0.36662585309755935,
+      "expected": 1099.5109334395804,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 16,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.9162
+      ],
+      "lambda": 0.3732406813635014,
+      "expected": 1119.3488034091408,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 8,
+      "k_parity": "even",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.9581
+      ],
+      "lambda": 0.38626380770860275,
+      "expected": 1158.4051593180995,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 91,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.5236
+      ],
+      "lambda": 0.4115038795079241,
+      "expected": 1234.1001346442645,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 89,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.534
+      ],
+      "lambda": 0.41765001097108245,
+      "expected": 1252.5323829022764,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 81,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.5759
+      ],
+      "lambda": 0.4415993164219253,
+      "expected": 1324.356349949354,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 79,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.5864
+      ],
+      "lambda": 0.4474311373819661,
+      "expected": 1341.8459810085164,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 77,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.5969
+      ],
+      "lambda": 0.4532020520130747,
+      "expected": 1359.152953987211,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 59,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.6911
+      ],
+      "lambda": 0.5025022937053416,
+      "expected": 1507.0043788223195,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 57,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.7016
+      ],
+      "lambda": 0.5076980565983068,
+      "expected": 1522.5864717383222,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 49,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.7435
+      ],
+      "lambda": 0.527944111099366,
+      "expected": 1583.3043891869986,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 47,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.7539
+      ],
+      "lambda": 0.5328741649265951,
+      "expected": 1598.0896206148589,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 43,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.7749
+      ],
+      "lambda": 0.5425803449359426,
+      "expected": 1627.198454462892,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 41,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.7853
+      ],
+      "lambda": 0.547357540971671,
+      "expected": 1641.5252653740413,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 31,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.8377
+      ],
+      "lambda": 0.5705054804328435,
+      "expected": 1710.9459358180977,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 25,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.8691
+      ],
+      "lambda": 0.5838220863003243,
+      "expected": 1750.8824368146725,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 21,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.8901
+      ],
+      "lambda": 0.5924696442878823,
+      "expected": 1776.816463219359,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 17,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.911
+      ],
+      "lambda": 0.6009375188835867,
+      "expected": 1802.2116191318764,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 5,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.9738
+      ],
+      "lambda": 0.6252999915791352,
+      "expected": 1875.2746747458264,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    },
+    {
+      "k": 3,
+      "k_parity": "odd",
+      "run": 1,
+      "primes": [
+        191
+      ],
+      "g_over_p": [
+        0.9843
+      ],
+      "lambda": 0.6292132807764803,
+      "expected": 1887.0106290486644,
+      "observed": 1,
+      "poisson_tail": 1.0,
+      "threshold": 0.01,
+      "escalate": false,
+      "reason": "ordinary"
+    }
+  ]
+}

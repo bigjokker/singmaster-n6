@@ -1,0 +1,109 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 12265.207,
+  "cmd": "intersect",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": null,
+  "hits": [
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          74049689,
+          28284465
+        ],
+        [
+          74049690,
+          28284464
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 21386570,
+      "m_abbrev": "2193147393910396...5578623820800000(21386570 digits)",
+      "m_sha256": "2fe06bc3cd145ae779668e2f727f4879a74a632863448476057fb8cd3b17b1cf",
+      "m": null,
+      "note": "fib i=9  base C(74049690,28284464)=C(74049689,28284465)  extra-scan 47.27s",
+      "meta": {
+        "i": 9,
+        "k_extra": 5,
+        "also_central": true,
+        "past_2017_value_bound": true
+      }
+    }
+  ],
+  "discoveries": [],
+  "certificates": [
+    {
+      "search": "fibonacci_extra_rep",
+      "i_range": [
+        9,
+        9
+      ],
+      "k_extra": 5,
+      "also_central": true,
+      "i_with_no_extra": [
+        9
+      ],
+      "result": "no extra left-half representation with 2<=k<=5 (and no central) for Fibonacci i in [9]"
+    }
+  ]
+}

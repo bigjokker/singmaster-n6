@@ -1,0 +1,225 @@
+{
+  "search": "bandii_sweep",
+  "N": 10803704,
+  "K": 4126647,
+  "d": 6677057,
+  "k_min": 4126649,
+  "k_max": 5182637,
+  "n_columns": 1055989,
+  "primes": [
+    5401853,
+    5401861,
+    5401867,
+    5401897,
+    5401901,
+    5401951,
+    5401969,
+    5401973,
+    5401993,
+    5401999,
+    5402003,
+    5402011,
+    5402021,
+    5402051
+  ],
+  "cap": 14,
+  "n_chunks": 32,
+  "workers": 8,
+  "preregister": {
+    "1": {
+      "alive": 102600.0,
+      "even": 0.658,
+      "mean_k": 4536120,
+      "band": [
+        102000,
+        103200
+      ]
+    },
+    "2": {
+      "alive": 12600.0,
+      "even": 0.786,
+      "mean_k": 4450918,
+      "band": null
+    },
+    "3": {
+      "alive": 1816,
+      "even": 0.875,
+      "mean_k": 4392087,
+      "band": null
+    },
+    "4": {
+      "alive": 289.9,
+      "even": 0.93,
+      "mean_k": 4350633,
+      "band": [
+        257,
+        324
+      ]
+    },
+    "5": {
+      "alive": 49.4,
+      "even": 0.962,
+      "mean_k": 4320257,
+      "band": null
+    },
+    "6": {
+      "alive": 8.78,
+      "even": 0.979,
+      "mean_k": 4297132,
+      "band": [
+        3,
+        15
+      ]
+    },
+    "7": {
+      "alive": 1.61,
+      "even": 0.989,
+      "mean_k": 4278952,
+      "band": null
+    },
+    "8": {
+      "alive": 0.3,
+      "even": 0.994,
+      "mean_k": 4264287,
+      "band": null
+    },
+    "10": {
+      "alive": 0.0108,
+      "even": 0.998,
+      "mean_k": 4242079,
+      "band": null
+    },
+    "12": {
+      "alive": 0.000406,
+      "even": 1.0,
+      "mean_k": 4226056,
+      "band": null
+    },
+    "14": {
+      "alive": 1.56e-05,
+      "even": 1.0,
+      "mean_k": 4213949,
+      "band": null
+    }
+  },
+  "passes": [
+    {
+      "prime_index": 1,
+      "p": 5401853,
+      "n_alive": 102754,
+      "even_g_frac": 0.657,
+      "mean_k": 4535794,
+      "pred": {
+        "alive": 102600.0,
+        "even": 0.658,
+        "mean_k": 4536120,
+        "band": [
+          102000,
+          103200
+        ]
+      }
+    },
+    {
+      "prime_index": 2,
+      "p": 5401861,
+      "n_alive": 12478,
+      "even_g_frac": 0.7905,
+      "mean_k": 4449587,
+      "pred": {
+        "alive": 12600.0,
+        "even": 0.786,
+        "mean_k": 4450918,
+        "band": null
+      }
+    },
+    {
+      "prime_index": 3,
+      "p": 5401867,
+      "n_alive": 1782,
+      "even_g_frac": 0.8771,
+      "mean_k": 4394479,
+      "pred": {
+        "alive": 1816,
+        "even": 0.875,
+        "mean_k": 4392087,
+        "band": null
+      }
+    },
+    {
+      "prime_index": 4,
+      "p": 5401897,
+      "n_alive": 293,
+      "even_g_frac": 0.9181,
+      "mean_k": 4357559,
+      "pred": {
+        "alive": 289.9,
+        "even": 0.93,
+        "mean_k": 4350633,
+        "band": [
+          257,
+          324
+        ]
+      }
+    },
+    {
+      "prime_index": 5,
+      "p": 5401901,
+      "n_alive": 48,
+      "even_g_frac": 0.9583,
+      "mean_k": 4272451,
+      "pred": {
+        "alive": 49.4,
+        "even": 0.962,
+        "mean_k": 4320257,
+        "band": null
+      }
+    },
+    {
+      "prime_index": 6,
+      "p": 5401951,
+      "n_alive": 7,
+      "even_g_frac": 1.0,
+      "mean_k": 4201637,
+      "pred": {
+        "alive": 8.78,
+        "even": 0.979,
+        "mean_k": 4297132,
+        "band": [
+          3,
+          15
+        ]
+      }
+    },
+    {
+      "prime_index": 7,
+      "p": 5401969,
+      "n_alive": 1,
+      "even_g_frac": 1.0,
+      "mean_k": 4155257,
+      "pred": {
+        "alive": 1.61,
+        "even": 0.989,
+        "mean_k": 4278952,
+        "band": null
+      }
+    },
+    {
+      "prime_index": 8,
+      "p": 5401973,
+      "n_alive": 0,
+      "even_g_frac": null,
+      "mean_k": null,
+      "pred": {
+        "alive": 0.3,
+        "even": 0.994,
+        "mean_k": 4264287,
+        "band": null
+      }
+    }
+  ],
+  "n_final_alive": 0,
+  "final_survivors": [],
+  "clean": true,
+  "certificate": "Every k in [4126649, 5182637] carries a modular impossibility certificate r(p) notin I_{p,k} for some prime p in {p1..pr}. Band II contains no extra representation of C(F_18 F_19, F_16 F_19). Unconditional.",
+  "seconds": 1234.778
+}

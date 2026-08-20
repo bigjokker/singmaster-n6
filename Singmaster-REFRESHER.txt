@@ -1,0 +1,824 @@
+SINGMASTER — session refresher (hand this file back FIRST)
+================================================================================
+Updated 2026-08-19 19:35. Family i=2..8 CLOSED (N=6 each). i=1 is
+3003 (N=8), skip. i=9 IS RUNNING (family_sweep.py --i 9; parent
+PID 11936 + 8 spawn workers since 14:43). jsonl exists (~10.5 MB,
+8 of 32 Band II pass-1 chunks, last write 18:25). json does NOT
+exist. Do not start a second copy. Q1 parked. Path FORWARD locked.
+Uncommitted: scripts/bandii_kernel.py Lucas guard + scan_ks_half
+(parked, not wired). Leave it; do not revert while i=9 runs.
+
+Do not start a job unless the user says to run it.
+Do not start a second copy of any bat.
+i=2..8 / fat-image / walk-369 / bandii / zjump json exist => refuse.
+
+
+NEXT
+----
+User-run (Grok does not start it):
+  scripts\run-i9.bat
+  i=9 Band II + Z-jump. NO m_9. Modular already k<=80.
+  N=F_20 F_21=74049690  K=F_18 F_21=28284464  k_max=35522329.
+  Band II ~7.24e6 columns. Z-jump ~2.83e7 columns.
+  Cost: φ^8 ≈ 47× per family step. Band II pass-1 ~4.2e13 elem,
+  ~16 h at i=8's 7.2e8 elem/s aggregate (not "hours possible").
+  Z-jump similar scale; plan **1–3 days total**. Do not kill the
+  window at hour 6. jsonl already exists (first wave of pass 1
+  wrote 8 of 32 equal-Σg chunks at ~18:25, ~3.7 h after start).
+  Next waves continue silently. F table ~300–400 MB/worker.
+  Checkpoint: results\i9_sweep.jsonl
+  Final:      results\i9_sweep.json
+  json exists => refuse. Pre-flight: r(p1)=27989611 (Claude
+  independently confirmed closed form and C(N-p,K); jsonl
+  first record matches). Do NOT start a second copy.
+
+PRE-REGISTERED Band II curve (size law, 0 fitted params):
+  pass 1  p=37024873  alive ~702981  even 0.658  mean_k ~31091031
+          band [701300, 704700]
+  pass 4  ~1987  band [1900, 2075]  even 0.930
+  pass 6  ~60    band [45, 76]      even 0.979
+  death at pass 9–10 (two deeper than i=8). Even-g 0.66→1.
+  Mean k walks DOWN toward K. Pass 8 or earlier death, or
+  even-g ~0.5: suspect the code, not the math.
+
+If json exists: readout vs the table above. Clean i=9 is another
+computational N=6, not a 2022 family theorem. Alive at Z-cap
+k=81..8605: full-Lucas on p<√N, not Q1. A Band II run of 8–10
+is the size-law curve. Do not fire Q1 on length 8.
+Do not start i=10.
+
+CMD: jsonl already appeared. Silent now = remaining pass-1
+chunks (8 workers × 32 chunks ⇒ ~4 waves). 8 python workers
+= alive. Do not close the window. Do not start a second copy.
+
+Sub-√N: i=9 √N=8605. Two-digit r(p) is false for p≤8605.
+family_sweep cells() start at p_two=√N+1, so Z-jump never
+SCANS those p (skips them). Band II p>N/2 is safe. Guard
+added in scan_columns_general: p^2≤N uses full Lucas.
+UNCOMMITTED (working tree M scripts/bandii_kernel.py).
+Readout: if k=81..8605 hit the cap, they may need a small
+full-Lucas rerun on p<√N; do not assume void kills (we did
+not certify with the two-digit formula below √N).
+
+LIVE MACHINE (2026-08-19 19:34, do not touch):
+  parent 11936 (low CPU, orchestrator) + workers
+  5556 6924 7976 10260 10332 14344 19588 19620
+  started 14:43. ~17400 s CPU/worker (~4.8 h). RSS ~400 MB each
+  (F table). 8 python = alive. Silent CMD is normal between chunks.
+  results\i9_sweep.jsonl  10 507 119 bytes, 8 records, last 18:25.
+  First record: p=37024873 r=27989611 (matches pre-flight and
+  Claude). k_lo=29119557 k_hi=29267473 n_cols=147917
+  n_survivors=21798. That is ONE equal-Σg chunk of pass 1
+  (32 chunks, 8 workers ⇒ ~4 waves). Last record k_lo=28831730
+  k_hi=28974356 n_cols=142627 n_survivors=21666. Do NOT parse
+  the whole jsonl (it embeds survivor lists). json absent =
+  not finished. Do not close the window. Do not start a second
+  copy. Do not kill at hour 6; plan 1–3 days.
+
+PowerShell: never use inline python -c (quoting mangles). Script
+files only.
+
+
+PATH FORWARD (locked 2026-08-20; ChatGPT rebuttal folded)
+---------------------------------------------------------
+The asset is the column-kill that never builds m. Not "search
+harder." Not a new G(k). Do not reopen a 20-engine whiteboard.
+
+1. NOW  i=9, no m_9. Already running (user owns CMD). Family
+   experiment, not a first proof-of-concept (i=2..8 already
+   clean). Do not start a second copy. Do not wait on 2022.
+   Do not interpret a clean i=9 as "the family theorem"
+   ((2b) is already DONE: 2022 does not apply).
+
+2. THEN, before any new engine:
+   (a) DONE 2026-08-20 (Claude Job 2, HARD). Full text in
+       Desktop\CLAUDE-JOB2.txt after the prompt.
+       Lemma A (skip): r(p)=0 cannot kill (0 in I). Two-digit
+       r=0 iff p(α-β)>d (p>√N; else Kummer). Q3 cells;
+       PART-lower/NONE live; (2,0)=(K,N/2] is FULL so no kill
+       there; live again on N/2<p≤d. First candidate kill is
+       q(k)=first live prime >k, not nextprime(k). Says
+       nothing about whether q(k) kills. q(k)-k is Z_w, not
+       O(log k).
+       Lemma B (kill): size-law rate only. First live often
+       kills, not always. Two-to-three FALSE. Observed max
+       runs are search caps, not maxima. License: bounded
+       live-prime search with a pre-registered curve; alive
+       at cap = anomaly, never a declared kill.
+       Verifier spec: (k,p,r) independently; p prime, p>k;
+       r recomputed from N,K (Lucas / two-digit / closed
+       form, two routes on (N/2,d]); r≠0; Wilson F[p-1]=p-1;
+       factorial miss for all b in [0,p-k). O(p), no m, no
+       log file. ChatGPT's Job-2 rewrite put N-p<K on the
+       live window — that is p>d, dead. Keep Claude's text.
+       Grok implements the checker later (coverage ledger),
+       not now. Do not send Job 2 again.
+   (b) DONE 2026-08-20 (Claude EXTRA, Job 1). 2022 Thm 1.3
+       (Matomäki–Radziwiłł–Shao–Tao–Teräväinen, QJMath 73).
+       Display inequality K >> exp((ln N)^{2/3+ε}) holds for
+       i=8/9 at ε ≲ 0.31, but the theorem is gated on
+       t > t0(ε) unstated. Binding exponent from the proof
+       (δ = log^{-1/1000} P, margin 1/72) forces
+       ln N ≳ 10^{2274} even at C=1, ε=0.3. ln N8=16.2,
+       ln N9=18.1. Practical answer: NO, not interior as
+       the paper would apply. No effective i this project
+       will name (lower bound i > 10^{2274}). Remark 1.7:
+       authors did not optimize; too large for numerical
+       Singmaster. IF it applied, i=8 edge k*~1.7e5–5e5
+       would already sit in Stages 1–3; Band II and 1e6–K
+       would have been redundant. It does not apply, so
+       the census is the theorem. Do not ask him to redo
+       their §§3–5. Do not send Job 1 again.
+
+3. THEN, if i=9 is clean: i=10 is NOT the same pipeline
+   (φ^8 wall, ~5 weeks). Prefer ledger + (k,p,r) checker
+   (with image_hit_tablefree, already in bandii_kernel.py) + writeup
+   of i=3..9. Optional
+   whiteboard: can (x)_k-c be intersective? Not a bat.
+   2022 does not give a family theorem at any i we compute.
+
+   Coverage ledger (after i=9, not now): Stage 1–2 JSON have
+   rows[].q per k. Stage 3 summary, zjump.json, bandii_sweep.json,
+   and family i{N}_sweep.json do NOT store per-k (k,p,r)
+   witnesses — only phase counts and last survivors. The
+   writeup needs a ledger rebuilt from jsonl (local, gitignored)
+   or a re-scan of the handful of record tails. Grok implements
+   the Job-2 verifier later. Do not ask Claude to spec Job A/B
+   again (that was Z-jump; already ran).
+
+4. THEN, only if the user wants odd multiplicity:
+   central-driven search, m=C(2t,t). That is N=5/7.
+   Not a family extra-rep. Second program.
+
+5. ONLY if the user wants the 2017 collide frontier:
+   put the modular sieve inside collide.
+
+Locked bans (on top of §9):
+  no new G(k); no Q1 on run *length* (cap-8 is the wrong trigger);
+  escalate only if (#cols in that regime)×Λ < 0.01, Λ=Π |I_g|/p;
+  a small-k run of 8 is ordinary (i=9 k=11, P=2.2e-2);
+  no nearby 1B-2B / theory branch as the next project;
+  no Stage 4 until-kill; no exact giant-m; no re-sieve BBW;
+  no triple-column engine until after (1)–(3);
+  no "third pair on the 6-fold" for i=2..8 (already closed).
+  Seeking N=8 via extra family reps is live only at i=9,10,...
+
+Size law: leading term is now a THEOREM (Claude 2026-08-20),
+not empirical. (k-1-x)_k = (-1)^k (x)_k in Z[x], so
+I_{p,k} = f_k(F_p), f_k(x)=(x)_k/k!, 0=f_k(0) (no extra ∪{0}).
+Parity is k, not g (equivalent for odd p: g even iff k odd).
+  k even: fold, |I| ≤ ceil(g/2)+1
+  k odd:  I=-I, no fold, |I| ≤ g+1
+Birthday is the only further loss. Two *regimes* (do not mix):
+  fat/Band II: i=8 last 2227205 (run 6), 4155257 (Band II last)
+  small-k all-prime (Claude, not family_sweep): i=7 run 10 at k=51;
+  i=6 run 7 at k=5; i=9 run 8 at k=11 (not in our sweep, k starts 81).
+  family_sweep i=7 last k=487 is p>√N live-primes only (√N≈1255);
+  Claude's first prime 491 already kills 487. Different p-set.
+"g-parity frozen by even prime gaps" was true but backwards: k
+is the invariant. Every p>k is capable of killing (|I|<p, k≥2).
+Half-scan exact 2×: scripts/bandii_kernel.py :: scan_ks_half.
+Table-free verifier: image_hit_tablefree. δ-identity:
+r_two_digit_delta (general r_closed). NONE of these are wired.
+Do NOT restart i=9. Kernel is done; no further scan speedup.
+Degree wall: deg≈p, Weil/AG vacuous. Math: docs/kernel-ghosts.md.
+
+Frobenius: k survives p iff F_k(x)=(x)_k - m·k! has a root
+mod p; represents m iff F_k has an integer root. If Gal(F_k)
+has a derangement, killer primes have positive density
+(Jordan if irreducible deg≥2). Effective Chebotarev needs
+disc(F_k) containing m — same wall as 2022. Independence
+(#3) is not the bottleneck.
+
+WHITEBOARD (replaces Q1 / independence): two nested gaps.
+  Defeat-census = F_{k,c}=(x)_k−c has a root mod every prime.
+  Strongly intersective = root in every Z_p (prime powers too).
+  {intersective ghosts} ⊂neq {census-defeaters}.
+  Certificates we hold are unconditional. Termination is the gap.
+  CONJECTURE (full local-global): ∩_p (x)_k(Z_p) = {(a)_k}.
+  Theorem, elementary, k≤4: impossible (monic case analysis).
+  Even k≤24: standard quadratic-covering ghosts unavailable
+  (R(z²) identity; only c=0 has 3 integer R-preimages).
+  Closed-form membership for (x)_k iff k∈{1,2,3,4,6,8}
+  (solvable Galois). First fail k=5 and k=10. Same k=5 wall.
+  k=3,4 tests in scripts/falling_criteria.py (verify 0 mismatches).
+  Do not wire into i=9; payoff is column_possible / extra_reps.
+  #4 fibers CLOSED (bound 2.5× worse than involution).
+  #9 Theorem B: |I| exact for ~77% of generic Band I (g≲log₂p);
+  fat cells and Band II remain modelled.
+  Residual risk: odd k≥5, or even k via cubic/quartic residues.
+  Sieve |c|≤1e7, k=3..12, 300 primes: 0 ghosts
+  (scripts/ghost_sieve.py saved table; do not --run unless asked).
+  If a column survives its cap: (i) factor mod q, (ii) p²
+  Granville–Lucas. NOT Q1. Our census only tests F_p.
+  k!|c vacuous (c=m·k!); primes-only would be rad(k!)|c.
+Do not start a job. Do not invent G(k). Do not write the
+intersection as a proved equality.
+
+
+KEEP CODE (until used or retired)
+---------------------------------
+Rule: a load-bearing snippet is written to the repo (scripts/ or
+docs/) in the same turn it is found. The refresher POINTS at the
+file; it does not replace the file. "Bank it" in prose is not
+saving. Delete only when wired in, or when PATH FORWARD retires
+it. Do not park new engines; do park reusable kernels.
+
+Have we been saving it?
+  Yes for anything that actually ran. GitHub last a5984fa.
+  Half-scan / table-free / δ / ghosts / k=3,4 criteria / birthday
+  theorems were Claude prose until saved. Desktop
+  "New Text Document (2).txt" is a scratch pad Claude
+  OVERWRITES — copy into docs/claude-packets/ the same turn.
+
+On disk, keep:
+  scripts/bandii_kernel.py
+    scan_ks (what i=9 uses)
+    scan_ks_half (exact 2×; NOT wired)
+    image_hit_tablefree / scan_ks_tablefree (O(1) mem verifier)
+    binom_mod_deferred / r_two_digit_delta (δ-identity)
+    r_closed / r_from_F / r_two_digit / r_checked
+    scan_columns_general Lucas guard (p^2≤N → binom_mod_lucas)
+  scripts/ghost_sieve.py          saved 0-ghost table; no --run
+  scripts/falling_criteria.py     k=3,k=4 (x)_k tests; verify()=0
+  scripts/family_sweep.py         preflight; cells() start √N+1
+  docs/kernel-ghosts.md
+  docs/criteria-birthday.md       #7 #9 Q-β #4
+  docs/claude-packets/2026-08-19-kernel-ghosts.txt
+  docs/claude-packets/2026-08-19-criteria-birthday-fibers.txt
+  CLAUDE-JOB2.txt                 verifier spec (after i=9:
+    image_hit_tablefree + Wilson + two-route r, not F-table)
+  Scratch 3(b): Desktop\New folder (5)\  copies only.
+
+Not code yet (do not lose the spec):
+  coverage ledger (rebuild from jsonl after i=9)
+  (k,p,r) checker — implement with image_hit_tablefree
+
+Uncommitted: bandii_kernel.py + ghost_sieve.py + falling_criteria.py
++ docs/kernel-ghosts.md + docs/criteria-birthday.md + claude-packets/.
+Commit after i=9. Do not revert. Do not wire.
+
+
+PATHS
+-----
+Live:     C:\Users\wwwsa\Desktop\Singmaster
+GitHub:   https://github.com/bigjokker/singmaster-intersect  (bigjokker, public)
+          last push a5984fa i=2..6 N=6 sweeps + i=9 bat
+          working tree: M scripts/bandii_kernel.py (guard + parked
+          half-scan / table-free / δ) + untracked docs/kernel-ghosts.md
+          docs/claude-packets/ scripts/ghost_sieve.py
+          i=7 is af29bd8; theorem c0e155c; Band II/Z-jump c4af9d5
+This file: C:\Users\wwwsa\Desktop\Singmaster-REFRESHER.txt
+Claude packet: C:\Users\wwwsa\Desktop\New_Data.txt
+Claude answer: C:\Users\wwwsa\Desktop\Claude-Answer.txt
+               (also "New Text Document.txt" = older size-law dump)
+Claude scratch pad: Desktop\New Text Document (2).txt
+  OVERWRITTEN each drop. Always copy to docs\claude-packets\
+  already saved:
+    2026-08-19-kernel-ghosts.txt          + docs\kernel-ghosts.md
+    2026-08-19-criteria-birthday-fibers.txt + docs\criteria-birthday.md
+Archive:  C:\Users\wwwsa\Desktop\Singmaster-archive\
+Engine:   singmaster_intersect.py  Python 3.11, gmpy2, numpy int64,
+          multiprocessing spawn, default 8 workers
+USB D:    ~40 MB/s USB 2, backup only
+
+Claude Job 1 (DONE EXTRA): C:\Users\wwwsa\Desktop\CLAUDE-JOB1.txt
+  (prompt then 2022 answer in the same file; do not send again)
+Claude Job 2 (DONE HARD):  C:\Users\wwwsa\Desktop\CLAUDE-JOB2.txt
+  (lemmas AFTER the prompt in the same file; do not send again)
+Claude split pointer:      C:\Users\wwwsa\Desktop\CLAUDE-NEXT.txt
+Claude residual (STALE):   C:\Users\wwwsa\Desktop\CLAUDE-REST.txt
+  Late Job A/B spec in REST is obsolete (already ran as zjump).
+ChatGPT overnight file: gone from Desktop; content was folded here.
+Theorem: docs\i8-N6.md
+Band I note: docs\band-I.md
+Band II spec: docs\bandii-spec.md
+Z-jump spec: docs\zjump-spec.md
+Scratch: C:\Users\wwwsa\Desktop\New folder (5)\
+  none_image_census / none_image_deep / part3a_geometry / stage3_readout
+  = 2026-08-18 evening 3(b) copies. Live results are in Singmaster\results.
+
+
+0. Status in one paragraph
+--------------------------
+Exact i=8 k<=300 + modular i=8/9/10 small-k: no extra reps.
+Nearby sampled-null on bands we ran (not theorems).
+Band I next-prime for i=8 is a census: Stage 1-3 + 3(b) + stragglers
+25/25 + bounded triple hunt + fat-image overnight (8/8 cells, first
+3 primes, 369 triples, max_run=3 cap). Two-to-three is dead as a
+lemma. Size law closed: |I_g| is Pascal reflection plus birthday,
+even-g columns ~2x easier, 369 triples are arithmetic (+1.4sigma).
+Q1 is the wrong shape and is not needed to explain them.
+Walk-369 registered test passed: max_run=6, s4/s5/s6/s7 =
+42/4/1/0 vs 44/6/0.8/0.1. Whole-window is 10^{-many}.
+Band II p>N/2 sweep clean: 1055989 columns, all killed by p8.
+Z-jump remnant clean: 3215816 columns, 0 anomalies, 51.7 min.
+Tail is the same 42/4/1/0 as walk-369; last k=2227205.
+N=6 for this m. G=(ln k)^2 is dead.
+Family i=2..7 also clean N=6 (family_sweep.py, in git).
+i=9 IS RUNNING: jsonl live (pass-1 chunks), json not yet.
+Do not start anything. Do not close the CMD window.
+
+
+1. Fixed objects
+----------------
+i=8 family:
+  N   = F_18 F_19 = 10803704
+  K   = F_16 F_19 = 4126647      family left column
+  K+1 = F_17 F_18 = 4126648      other family column
+  d   = N-K = F_17 F_19 = 6677057
+  N/2 = 5401852
+  m   = C(N,K) ≈ 3,120,255.22 digits (JSON may say 3120256)
+  m_sha256 = 94bd69e66203e7680bdaa5370937a64a1639fc857ba187135c87e5c5fa194512
+  k_max = 5182637   (C(2k,k) <= m)
+
+i=9 family (RUNNING):
+  N   = F_20 F_21 = 74049690
+  K   = F_18 F_21 = 28284464
+  K+1 = F_19 F_20 = 28284465
+  d   = N-K = 45765226
+  N/2 = 37024845
+  k_max = 35522329
+  p1  = 37024873   r(p1)=27989611
+  √N  = 8605
+  exact/modular already: k<=80. Sweep starts k=81.
+
+Family formula for any i:
+  N = F_{2i+2} F_{2i+3}
+  K = F_{2i}   F_{2i+3}
+  K+1 = F_{2i+1} F_{2i+2}
+Cost ~φ^8 per step (i=8→9 ≈ 47×; i=9→10 another ×47, ~5 weeks).
+
+NEVER use K = F_18 F_17. That is K+1 of i=8.
+NEVER mark K or K+1 impossible.
+Extra left-half only possible for 2 <= k <= k_max, k not in {K, K+1}.
+
+
+2. Two bands (theorem)
+----------------------
+BAND I:  2 <= k < K
+  Next primes p=k+g typically < K. Next-prime obstruction can work.
+  Stages 1-3 + stragglers + fat-image live here (finished).
+  Walk-369 is a test on already-found triples, same band.
+
+BAND II: K+2 <= k <= k_max   (4126649..5182637, 1055989 columns)
+  THEOREM: K < p <= N/2  ⇒  p | m
+  0 is in the image ⇒ those primes cannot kill.
+  Do NOT next-prime-sweep from k.
+  Live window for a kill: p in (N/2, d] = (5401852, 6677057],
+  alpha=1, beta=0, r(p)=C(N-p,K) mod p, never 0.
+  Closed form: delta=2p-N, r(p)=(-1)^K C(K+delta-1, delta-1).
+  At p1=5401853, delta=2, r=1275205 (four independent computations).
+  Sweep DONE 2026-08-19 (1235 s, 8 workers): all 1055989 killed
+  by p8=5401973. Spec docs/bandii-spec.md. Do not rerun.
+
+Single-interval theorem (all extra k <= k_max, G=(ln k)^2) is FALSE.
+Counterexample Band II: k=K+2=4126649; primes 4126651, 4126657 both m≡0.
+
+
+3. I_{p,k} and q(k)
+-------------------
+p = k+g prime ⇒ k ≡ -g (mod p)
+  C(k+j,j) ≡ (-1)^j C(g-1,j) (mod p)   for 0 <= j < g
+  NOT C(k,j). ChatGPT boxed C(k,j) once; that identity is false.
+  I_{p,k} = {0} ∪ {(-1)^j C(g-1,j) mod p}
+Identity checked 4114 trials, 0 mismatches.
+
+KILL iff m notin I_{p,k}.
+m≡0 ⇒ that p SURVIVES (cannot kill).
+
+q(k) in JSON / old census = first prime p>k that KILLS.
+Job 2 Lemma A uses the same letter for the first LIVE prime
+>k (a candidate, not a kill). JSON fields are the killer.
+r(k) = consecutive surviving primes before the killer
+gap  = killer - k
+
+G(k)=ceil((ln k)^2) DEAD in Band I:
+  k=513593 << K, G=173, all 14 primes in (k,k+173] have m≡0.
+  q=514499, gap=906, r=68.
+
+SIZE LAW (Claude 2026-08-19, Grok verified the four |I_g| rows
+and the n1/n2/n3 predictions; exact match):
+  I_g = coefficients of (1-X)^{g-1} over F_p.
+  g-1 < p => no vanishing. Only systematic collision is Pascal
+  reflection j <-> n-j:
+    g odd  (n even): fold, |I_g| ≈ (g+1)/2
+    g even (n odd):  v |-> -v, no fold, |I_g| ≈ g
+  then birthday |I| ≈ p (1-(1-1/p)^M), M = g or (g+1)/2.
+  (3,1) g=475282 even: |I|=435720, |I|/g=0.9168, |I|/p=0.1613,
+  birthday ratio 0.9998. No extra collision structure.
+  Prime gaps even => g-parity is frozen along a chain.
+  Even-g columns stay ~2x easier.
+  n1/g_max = 0.0626 is an AVERAGE over g=1..g_max, not |I_{gmax}|/g.
+  The old 0.355 "collision factor" was that slip. Drop it.
+
+SIZE LAW THEOREM (Claude 2026-08-20, leading term; birthday
+still heuristic). The g-odd/g-even table above is equivalent
+for odd p (g even iff k odd) but the invariant is k, not g:
+  f_k(x) = (x)_k / k! in Q[x]
+  (k-1-x)_k = (-1)^k (x)_k in Z[x]
+  I_{p,k} = f_k(F_p); 0 = f_k(0) (no extra ∪{0} needed)
+  k even: fold, |I| ≤ ceil(g/2)+1
+  k odd:  I = -I, no fold, |I| ≤ g+1
+Record tails: fat/Band II odd k (i=8: 2227205, 4155257).
+family_sweep i=7 k=487 / i=6 k=205 are p>√N counts, not
+all-prime small-k runs (those: i=7 k=51 run 10). Docs:
+kernel-ghosts.md. Every p>k can kill (|I|<p, k≥2).
+Parked in bandii_kernel.py (NOT wired, do not restart i=9):
+  scan_ks_half, image_hit_tablefree, r_two_digit_delta.
+
+
+4. Digit-window / NONE / Z-width
+--------------------------------
+Two-digit p: 3287..K (i=8; generally p>√N). alpha=floor(N/p),
+beta=floor(K/p). Digit-0: C(N,K)≡0 iff p(alpha-beta)>d.
+SCOPE: r=C(α,β)C(n0,k0) is FALSE for p≤√N. Use full Lucas /
+Kummer there. family_sweep cells() start at p_two=√N+1 so
+Z-jump never scans those p; Band II p>N/2 is always two-digit.
+Guard in scan_columns_general (uncommitted): p^2≤N →
+binom_mod_lucas. NONE => r(p) not≡0; survivors image-only.
+PART-lower (p < z_lo) is the same image clause (digit-0 silent).
+Kill in NONE/PART-lower: r(p) notin {(-1)^j C(g-1,j)}.
+Z-slab: no prime in (k,t] => q(k)>u. Tight for k=513593.
+(21,8) is PARTIAL, not fully zero.
+
+Zero-map docs/zeromap-p1e5-1e6.md (68906 primes, 136 windows):
+  FULL 37 / 13491; PART 61 / 20705; NONE 38 / 34710
+  Digit-0 forced 34196 = 49.63%
+
+Z-width (Claude Q3, checked):
+  P_lo = max(N//(a+1)+1, K//(b+1)+1)
+  P_hi = min(N//a, K//b)
+  z_lo = floor(d/(a-b))+1
+  Zw = P_hi - max(P_lo, z_lo)
+  rho = Zw/P_hi = g/p at first NONE for under-Z k
+  Stage-3 map: rho <= 0.039
+  Global two-digit max rho = 0.176 at (4,1), then 0.109 at (7,2)
+  Same geometry as fat-image prize: under-Z k of (4,1), first NONE
+  primes of (3,1), g_max=475282, rho=0.17597.
+  1/20 is NOT a Band I bound.
+  Hang-guard for (4,1) would need > 475240. Do not until-kill that slab.
+
+Two-to-three DEAD as a lemma (fat-image, 369 first-3-prime triples,
+20 of them on genuine NONE cells). They are size, not correlation
+(+1.4sigma vs independence-after-size). CRT still stands as a
+proof-technique remark (Q-alg: falling-factorial identity lives
+in Z and does not descend F_p -> F_{p+h}).
+Low-rho 3(b) still stands: 0 triples, max run 2 on 38 NONE windows
+with p in [1e5,1e6].
+Whole-window: predicted 10^{-many}. Walk-369 confirmed the tail
+dies by run 6. Do not call whole-window open.
+
+
+5. Censuses (do not rerun)
+--------------------------
+3(b) all 38 NONE windows on [1e5,1e6], every k from preceding-Z
+through first_NONE-1:
+  whole-window image-runs = 0
+  max consecutive NONE-prime image-run = 2
+  doubles:
+    (39,15) k=268733: 270097 (j=589), 270121 (j=196), kill 270131
+    (13,5)  12 k's; e.g. 761274 → 771697 / 3436, 771703 / 4909, kill 771739
+    (10,4)   3 k's; e.g. 961361 → 982171 / 11442, 982183 / 5741, kill 982187
+  Enter-k and afterZ: first NONE prime kills 38/38.
+  underZ: 37/38; only (13,5) k=741912 survives 771697 (j=1851) then
+  dies at 771703.
+
+Stage 1  results/nextprime_i8_k401-10000.json
+  9600 cols, all killed. max_r=89 max_gap=726.
+Stage 2  results/nextprime_i8_k10001-100000.json
+  90000 cols, all killed. max_r=80 max_gap=868.
+Stage 3  results/nextprime_i8_k100001-1000000.json  (81MB, local, gitignored)
+  summary: results/nextprime_i8_k100001-1000000_summary.json  (in git)
+  900000 cols, 31420 s, max-gap=20000 (= p-k, NOT 20000 primes).
+  killed=810805. hang-guard=89195 in 7 runs under 6 fat Z:
+    [515813,520186] Z(20,7); [607003,615518]+615520 Z(17,6);
+    [687773,700252] Z(15,5); [741883,751696] Z(14,5);
+    [834629,880328] Z(12,4); [953861,962170] Z(11,4).
+  r=0: 452944 (50.3%). Every killed r>=50: q just after Z_last
+  (306189/306189). Bat exit 2 = hang-guard, not a crash.
+
+Stragglers  results/stragglers_nearK.json  (4.5 s)
+  k=4126622..4126646 (no prime in (k,K]; nextprime(K)=4126651).
+  25/25 killed. 21 at 5401853; 4 image-survive then die at 5401861
+  (j=273671, 268500, 2006, 554555). Not a first-p>N/2 theorem.
+
+Bounded triple hunt  results/triple_hunt_p1e6-K.json  (21.7 s)
+  4 NONE cells P_hi>1e6. triples=0, max_run=2.
+  Only (7,3) exhaustive: k=1335751 → 1350467 / 833, 1350469 / 3128,
+  kill 1350473.
+  (10,4)(5,2)(2,1) three canonical k only. Fat cells were NOT exhaustive.
+  Hole filled by fat-image (next item).
+
+Fat-image overnight  results/fat_image_hunt.json  (6.82 h, 0.42 MB)
+  jsonl checkpoint  results/fat_image_hunt.jsonl
+  Exhaustive first-3-prime image runs, NONE + PART-lower,
+  P_hi>1e6, g_max>25000, largest g first. 8/8 regions.
+  max_run=3 (HUNT CAP: only 3 primes tested).
+  n_triples=369, all kill_p=null (fourth prime not tested).
+  By cell (n1 = first-survivors of p0, n2 = doubles, n3 = triples):
+    (3,1) PART-lower  rho=0.176  gmax=475282  n1=29731 n2=2672 n3=324
+    (2,1) NONE        rho=0.073  gmax=262709  n1=6978  n2=253  n3=9
+    (6,2) PART-lower  rho=0.109  gmax=167842  n1=6601  n2=363  n3=22
+    (5,2) NONE        rho=0.073  gmax=131355  n1=3467  n2=132  n3=11
+    (4,1) PART-lower  rho=0.045  gmax=97426   n1=1718  n2=40   n3=2
+    (8,3) PART-lower  rho=0.073  gmax=87601   n1=2393  n2=105  n3=1
+    (9,3) PART-lower  rho=0.045  gmax=48722   n1=800   n2=13   n3=0
+    (10,4) NONE       rho=0.029  gmax=28306   n1=287   n2=3    n3=0
+  NONE-only triples = 20. Low-rho cells (9,3)(10,4) still max_run=2.
+  (10,4) recovered the known double k=961361 kill 982187 (and the
+  other two 3(b) doubles). Hunt matches 3(b).
+  Prize example: k=2601011 in (3,1), g=99956 (smallest-g triple
+  on that cell):
+    2700967 / j=63592, 2700979 / j=94764, 2700989 / j=15138.
+  Triples large-g selected: (3,1) median g=390256 = 0.821 gmax.
+  Independence-after-size (birthday + parity, 0 fitted params):
+    (3,1) n1/n2/n3  pred 29889/2729/299  meas 29731/2672/324
+    (2,1)           pred 7043/277/13.2   meas 6978/253/9
+    (5,2)           pred 3522/139/6.6    meas 3467/132/11
+  Cascade (3,1) pred 0.0629 -> 0.0913 -> 0.1098,
+           meas 0.0626 -> 0.0899 -> 0.1213.
+  Pooled triples 344 vs 319 = +1.4sigma. Not correlation.
+  Parity of the 369: 332 even / 369 = 0.900 (pred 0.878).
+  Do not rerun. json exists => bat refuses.
+
+Walk-369  results/walk_369.json  (174 s)
+  jsonl checkpoint  results/walk_369.jsonl
+  369/369 killed. No cell_end, no digit-0, cap unused.
+  max_run=6. Histogram: n=3:327, n=4:38, n=5:3, n=6:1.
+    pred     meas
+    s4 ~44   42   (32-58 band; 41 from (3,1), pred ~40)
+    s5 ~6     4
+    s6 ~0.8   1
+    s7 ~0.1   0
+  even-g among s4: 39/42 = 0.929.
+  Record: (3,1) k=2227205 g0=473762 even
+    first 3: 2700967, 2700979, 2700989
+    then 2701007 / j=441662, 2701009 / j=217177, 2701091 / j=70446
+    kill 2701099.
+  Other n=5, all (3,1) even, kill 2701091:
+    k=2243637 g0=457330; k=2342629 g0=358338; k=2425977 g0=274990.
+  One non-(3,1) quadruple: (6,2) k=1405311 g0=138080, kill 1543441.
+  NONE cells (2,1) and (5,2): all 20 died at run 3.
+  Q1 stays parked (max_run 6, not 8). Size law stands.
+  Do not rerun. json exists => bat refuses.
+
+Band II p>N/2  results/bandii_sweep.json  (1235 s, 8 workers)
+  jsonl checkpoint  results/bandii_sweep.jsonl  (local)
+  1055989 columns k=4126649..5182637. Cap 14, died at pass 8.
+  clean=true. n_final_alive=0.
+    pass  alive    pred     even   peven   mean_k    pmean
+    1    102754  102600    0.657  0.658  4535794  4536120
+    2     12478   12600    0.791  0.786  4449587  4450918
+    3      1782    1816    0.877  0.875  4394479  4392087
+    4       293     290    0.918  0.930  4357559  4350633
+    5        48    49.4    0.958  0.962  4272451  4320257
+    6         7    8.78    1.000  0.979  4201637  4297132
+    7         1    1.61    1.000  0.989  4155257  4278952
+    8         0    0.30      —    0.994       —   4264287
+  Pass 1/4/6 all inside Poisson bands. Mean k walks down toward K.
+  Last live: k=4155257 even g=1246712 b=889554, kill p8=5401973.
+  Pass 6 all seven even-g, all near K (4133865..4383777).
+  Certificate: every Band II k has r(p) notin I_{p,k} for some
+  p in {p1..p8}. Unconditional. NOT Singmaster; Band I remnant
+  remains. Do not rerun. json exists => bat refuses.
+
+Z-jump remnant  results/zjump.json  (3102 s / 51.7 min, 8 workers)
+  jsonl checkpoint  results/zjump.jsonl  (21 MB, local)
+  3215816 columns: 89195 hang-guards + 3126621 in 1000001..4126621.
+  cap 12, died at live-prime 7. clean=true. anomalies=0.
+    round  n_primes  alive    even   mean_k   mean_g
+    1      124830    54439   0.662  2197365  220494
+    2          14     3668   0.801  2225014  290905
+    3          14      373   0.898  2256065  345107
+    4           8       42   0.929  2297116  376330
+    5           2        4   1.000  2309862  391147
+    6           1        1   1.000  2227205  473886
+    7           1        0      —        —       —
+  Rounds 4-6 are the walk-369 tail byte-for-byte (same 42 k,
+  same 4, same last k=2227205, even-g 0.9286). Last live prime
+  2701091 / b=70446, then kill (round 7 = 2701099).
+  Coverage now complete for extra k in [2, k_max] except {K,K+1}:
+    2-400 modular/exact; 401-1e6 Stage 1-3 + hang-guard jump;
+    1e6-4126621 zjump; 4126622-4126646 stragglers;
+    Band II 4126649-5182637.
+  N=6 for this m. Not Singmaster. Do not rerun.
+
+Family i=2..7  results/i{i}_sweep.json  (family_sweep.py)
+  Formula: N=F_{2i+2} F_{2i+3}, K=F_{2i} F_{2i+3},
+           K+1=F_{2i+1} F_{2i+2}. Exact k<=200 already in
+           fibonacci_i1-7.json. This job: k=201..k_max except
+           {K,K+1}. Cap 14 Band II / 12 Z-jump. All clean N=6.
+           Not Singmaster. json exists => refuse.
+
+    i    N         K        k_max   n_z    n_bii   BII  Z    last k   sec
+    2      104        39       49      0        9   p2  skip    —    0.45
+    3      714       272      342     71       69   p3  r2    233    0.78
+    4     4895      1869     2347   1668      477   p3  r3   1148    0.92
+    5    33552     12815    16094  12614     3278   p6  r4   6134    1.57
+    6   229970     87840   110318  87639    22477   p6  r6    205    4.71
+    7  1576239    602069   756136 601868   154066   p7  r9    487  110.73
+    8 10803704   4126647  5182637  (zjump) 1055989  p8  r7 2227205   —
+
+  i=2 n_z=0: exact k<=200 already covers Band I (K=39). Z-jump
+  skipped. (N/2,d]=(52,65] has only 3 primes; code now uses
+  whatever live primes exist (do not require 14).
+  i=7 last k=487 survived *two-digit* live-primes 6..8, died at 9.
+  That is NOT Claude's all-prime run: p=491 already kills 487
+  (g=4). family_sweep skipped p≤√N≈1255. Claude's i=7 long runs
+  are k=51 (10), k=149 (8), k=29 (6). Do not mix the two stats.
+  i=6 last Z k=205 is the same p>√N artefact. Fat-cell record
+  remains i=8 k=2227205 run 6.
+  i=1 is 3003, N=8, skip. i=9 running (k starts at 81; modular
+  already k<=80). Do not rerun i=2..7.
+
+Family-sweep gotchas (already patched in family_sweep.py):
+  (a) Band II prime list: use whatever primes exist in (N/2,d],
+      do not require CAP_BII=14 (i=2 has 3).
+  (b) if k0=K_EXACT+1 > K, skip Z-jump (exact already covers).
+  (c) equal_g_chunks(32) on n_bii<2000 produced empty chunks;
+      use one chunk if n_bii<2000.
+  (d) n_z==0 is a skip, not "zjump already complete".
+  (e) two-digit r false for p≤√N — cells() skip them; guard
+      added in scan_columns_general (uncommitted).
+
+Aborted 1e6-2e6 stub jsonl: ignore. Do not resume
+  scripts\run-overnight-k1e6-2e6.bat.
+
+
+6. Other finished (do not rerun)
+--------------------------------
+EXACT  fibonacci_i8_k300.json  extra_reps=[], N=6, ~16.3 h
+MODULAR  i=8 k400 / i=9 k12+k80 / i=10 k3+k20  all impossible
+  Do NOT build m_9 or m_10.
+  i=2..7 extra k<=200 already in fibonacci_i1-7.json (exact).
+  family_sweep K_EXACT = {2..7: 200, 9: 80}. i=8 closed separately.
+NEARBY sampled  2M-8M de6, same k de8, 8M-1B de6  new_hits=0
+  de8 redid the 33 de6 pairs. Do not do that again.
+  Do NOT start 1B-2B unless user asks.
+
+Classifier: is_fibonacci_pair only.
+Lucas digits: _binom_mod_prime, NOT math.comb.
+Large-p column_possible scans; does not cache residue images.
+
+
+7. Repo
+-------
+  docs/band-I.md                   current (fat-image, size law, walk-369)
+  docs/zeromap-p1e5-1e6.md
+  docs/modular-spec.txt
+  docs/campaign-log.txt
+  scripts/nextprime_sweep.py
+  scripts/stragglers_nearK.py      + run-stragglers-nearK.bat
+  scripts/triple_hunt.py           + run-triple-hunt.bat
+  scripts/fat_image_hunt.py        + run-overnight-fat-image.bat
+  scripts/walk_369.py              + run-walk-369.bat
+  scripts/bandii_kernel.py         + bandii_sweep.py + run-bandii-sweep.bat
+                                   parked: scan_ks_half, image_hit_tablefree,
+                                   r_two_digit_delta, binom_mod_deferred
+  scripts/ghost_sieve.py           0-ghost saved table; no --run
+  scripts/falling_criteria.py      k=3/k=4 closed forms; not wired
+  docs/kernel-ghosts.md
+  docs/criteria-birthday.md
+  docs/claude-packets/2026-08-19-kernel-ghosts.txt
+  docs/claude-packets/2026-08-19-criteria-birthday-fibers.txt
+  docs/bandii-spec.md
+  scripts/zjump.py                 + run-zjump.bat
+  docs/zjump-spec.md
+  scripts/family_sweep.py          Band II + Z-jump, any family i
+  scripts/run-i6.bat / run-i7.bat / run-i9.bat
+  scripts/run-stage2-nextprime.bat / run-stage3-nextprime.bat
+  results/*_summary.json, stragglers, triple_hunt, stage 1-2 JSON
+  results/fat_image_hunt.json      in git (0.42 MB)
+  results/walk_369.json            in git
+  results/bandii_sweep.json        in git
+  results/zjump.json               in git
+  results/i2_sweep.json .. i7_sweep.json   in git (N=6 each)
+  docs/i8-N6.md                    i=8 theorem note
+  jsonl checkpoints gitignored. 81MB Stage 3 dump gitignored.
+  Overnight 1e6-2e6 stub + bat gitignored.
+  results/i9_sweep.jsonl           LIVE, gitignored, do not commit.
+
+Pushed a5984fa (i=2..6 + i=9 bat). i=7 is af29bd8.
+Working tree: M scripts/bandii_kernel.py + untracked parked
+scripts/docs/packets. Commit after i=9. Do not revert. Do not wire.
+Do not commit __pycache__, *.bak, live jsonl,
+or run-overnight-k1e6-2e6.bat.
+
+
+8. People
+---------
+Grok: live machine; Stage 3 readout; stragglers; hunt; fat-image
+  readout; |I_g| + n123 + parity verify; walk-369 readout;
+  Band II / Z-jump / family i=2..7; i=9 bat. Pushed a5984fa.
+  Implements verifier / ledger later. Does not start bats.
+ChatGPT: Band II zero theorem; tagged Band I paragraph (accepted;
+  hang-guard is p-k>20000). Picked triple hunt over stragglers;
+  we did both. C(k,j) rewrite was wrong — do not reuse.
+  2022 interior: display inequality holds, t0 ineffective;
+  we independently got the same "no" as Claude Job 1.
+  Intersective / Hensel: folded into WHITEBOARD. Conjecture,
+  not a theorem. F_p miss sufficient not necessary.
+  Job 2 rewrite slipped N-p<K onto the live window — that
+  condition is p>d, the DEAD side of (1,0). Do NOT replace
+  Claude Job 2 with that rewrite. Verifier: keep Wilson
+  F[p-1]=p-1 and two-route r on (N/2,d].
+  20-engine overnight board is not a to-do list.
+Claude: Parts 1-2 NONE lemmas; Q3 Z-width (accepted). Two-to-three
+  CRT obstruction (proof technique; lemma false on the machine).
+  2026-08-19: Q-size (Pascal + birthday), Q-cascade (size predicts
+  369), Q-alg (identity in Z, CRT independence is the model),
+  Q1 wrong shape (completion loses the 0.06; Weil vacuous for
+  j>sqrt(p)). Do not send Q1 again unless a family run hits
+  cap-8 correlation.
+  Band II spec 2026-08-19 (factorial kernel, r(p) closed form,
+  kill curve).
+  Job 1 EXTRA 2026-08-20: 2022 Thm 1.3 does not apply
+  (ln N ≳ 10^{2274}). Full text in CLAUDE-JOB1.txt. Do not
+  send again. Do not ask him to redo their §§3–5.
+  Job 2 HARD 2026-08-20: Lemma A skip / Lemma B kill /
+  verifier paragraph. Full text in CLAUDE-JOB2.txt AFTER
+  the prompt. Size-law leading term is a theorem; parity
+  is k. Do not send again.
+  Late Job A/B (REST) is obsolete — that was Z-jump, already
+  ran. Packets SAVED: kernel-ghosts.md, criteria-birthday.md
+  (Desktop scratch pad is overwritten each drop).
+  Remaining Claude value: none required for i=9 readout.
+  Do not merge full-file dumps.
+
+
+9. Do not
+---------
+  start E; build m_10; second Stage 3
+  nearby 1B-2B unless user asks; redo de6 inside de8
+  Band II next-prime sweep from k; g<=20 on Band II
+  start a second copy of bandii-sweep (json exists)
+  start a second copy of zjump (json exists)
+  1e6-K / 2e6-K until-kill
+  claim Singmaster proved; call nearby nulls certificates
+  call modular "possible" a hit
+  use K=F_18 F_17
+  revive G=ceil((ln k)^2)
+  treat Stage 3 max_gap / survived_all as unkilled
+  treat Claude 1e6-3.5e6 sandbox as live-machine data
+  start a second copy of fat-image (json exists)
+  start a second copy of walk-369
+  rerun fat-image; walk all 29731 first-survivors unless user asks
+  invent a new G(k)
+  ask Claude to prove two-to-three or rerun Q2/Q3
+  send Claude Q1 on a run of length 8 (small-k runs of 8 are size;
+    escalate only if n_cols×Λ < 0.01; see docs/kernel-ghosts.md)
+  run scripts/ghost_sieve.py --run unless the user asks
+  wire falling_criteria into column_possible unless the user asks
+  treat Desktop "New Text Document (2).txt" as the archive
+    (Claude overwrites it; live copies are docs/claude-packets/)
+  rerun Stage 3 to cache r(p) (finished; 200× is for a future remnant)
+  treat family_sweep i=7 k=487 as Claude's max live run (it is not)
+  mix small-k live-run length with fat-cell / Band II length
+  start i=10 before i=9 readout; start i=10 at all unless user asks
+    (φ^8 wall, ~5 weeks, not the same pipeline)
+  start a second copy of run-i9.bat (jsonl exists, python alive)
+  treat i9_sweep.jsonl as finished (json is the finish flag)
+  parse the whole i9 jsonl (survivor lists; 10+ MB already)
+  revert the uncommitted Lucas guard / scan_ks_half in bandii_kernel.py
+  delete parked code until it is wired in or PATH FORWARD retires it
+  leave a load-bearing snippet as refresher prose only (write a file)
+  send Claude Job 1 or Job 2 again
+  replace Claude Job 2 with ChatGPT's rewrite (N-p<K slip)
+  send Claude late Job A/B (obsolete; was Z-jump)
+  start a central / triple / collide-sieve engine before PATH FORWARD 1-3
+  treat ChatGPT's 20 directions as a to-do list
+  claim Z-jump "necessarily" kills in a given cell
+  count digit-0 after cell exit as image-run length
+  reuse the 0.355 collision factor (that was the n1/g_max slip)
+  use two-digit r(p) for p≤√N
+  write ∩_p (x)_k(Z_p) = {(a)_k} as a proved equality
+  claim a clean i=9 is "the 2022 family theorem"
+  use inline python -c in PowerShell
+
+
+10. Next-session opener
+-----------------------
+Read this file first. PATH FORWARD is locked.
+i=2..8 clean N=6, in git. Theorem docs\i8-N6.md.
+Is python family_sweep.py --i 9 running? (parent + 8 spawn = Band II)
+  python alive, jsonl growing or pausing between chunks:
+    do not touch. Silent CMD for hours is expected. First
+    wave of pass 1 already wrote 8 jsonl records (18:25).
+    8 workers + parent 11936 = alive.
+  json exists: readout vs PRE-REGISTERED curve above.
+    (2a) and (2b) DONE. A clean i=9 is another computational
+    N=6, not a 2022 family theorem. Alive at Z-cap among
+    k=81..8605: full-Lucas rerun on p<√N, not Q1 (killers
+    below √N were skipped). Band II run of 8–10 is the curve,
+    not correlation. Small-k run 8 at k=11 is NOT in this
+    sweep (modular ≤80). Then PATH FORWARD 3: ledger +
+    table-free verifier + writeup i=3..9. Do not start i=10.
+  only jsonl, python dead: resume run-i9.bat (user-run).
+  neither, python dead: do not start unless the user says.
+Do not start E, i=2..8 reruns, i=10-before-i=9, nearby, Q1,
+a new G(k), a 20-engine board, Job 1/2 again, or Job A/B.
+Do not call N=6 "Singmaster proved".
+Uncommitted kernel parked fns + kernel-ghosts docs: leave them;
+commit after i=9. KEEP CODE: write snippets the turn they are found.
+Q1 trigger is n_cols×Λ < 0.01, not cap-8 length.

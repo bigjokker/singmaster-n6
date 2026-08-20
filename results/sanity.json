@@ -1,0 +1,86 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 0.0,
+  "cmd": "sanity",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": {
+    "passed": true,
+    "ok": [
+      "catalog 120 N=6",
+      "catalog 210 N=6",
+      "catalog 1540 N=6",
+      "catalog 3003 N=8",
+      "catalog 7140 N=6",
+      "catalog 11628 N=6",
+      "catalog 24310 N=6",
+      "i=1 extra C(78,2) -> N=8",
+      "i=2 no extra k<=40 (agrees with 2017)",
+      "nearby (1,1) k=5 -> n=15",
+      "C(16,2)=C(10,3)",
+      "C(56,2)=C(22,3)",
+      "C(120,2)=C(36,3)",
+      "invert_central C(10,5)=C(10,5)"
+    ],
+    "errors": []
+  },
+  "hits": [],
+  "discoveries": [],
+  "certificates": []
+}

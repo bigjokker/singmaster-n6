@@ -1,0 +1,86 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 0.196,
+  "cmd": "collide",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": null,
+  "hits": [],
+  "discoveries": [],
+  "certificates": [
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 7,
+      "m_range": [
+        1750670297,
+        1752670296
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.195,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,7) for m in [1750670297,1752670296] (values 62..62 digits)"
+    }
+  ]
+}

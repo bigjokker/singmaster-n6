@@ -1,0 +1,238 @@
+SINGMASTER — campaign log (was CLI-Commands.txt)
+================================================================================
+Historical operator notes for the exact / nearby / collide campaign.
+The i=8 k<=300 job (scripts/run-i8-k300.bat) has finished.
+================================================================================
+Project: C:\Users\wwwsa\Desktop\Singmaster
+Engine:  singmaster_intersect.py
+Machine: Intel Ultra 9 275HX, 24 threads. D is one core; do not add --workers.
+Do not run anything from this file while scripts/run-i8-k300.bat is still going.
+
+
+What to tell the next session
+-----------------------------
+"scripts/run-i8-k300.bat finished. Read docs/campaign-log.txt
+and C:\Users\wwwsa\Desktop\Singmaster\results\ . Confirm
+fibonacci_i8_k300.json. Do NOT start E until the checks in section 4
+pass. Then E only. Classifier, sampler, A, B, C are already done.
+Do not rerun them. There is no run_after_long.bat / run_bc.bat /
+run_long.bat left to start."
+
+
+0. How to watch the current job (do not stop it)
+------------------------------------------------
+D prints one [fib] line while it rebuilds C(10803704,4126647), then one
+intersect block for i=8.
+
+  [fib] i=8  C(10803704,4126647)=C(10803703,4126648)  ~3120256 digits
+  [info] i=8  ...  status=known_fibonacci  extras=[]     certificate
+  [ALERT] i=8  ... extras=[...]                          the result
+  **** NEW EXTRA REPRESENTATION ON A FIBONACCI 6-FOLD ****
+
+ALERT = a new left-half (or central) representation of the i=8 value.
+extras=[] is a certificate, not a failure.
+Python still exits 0 on a discovery, so the window will say "D finished"
+even if it printed ALERT. If you see ALERT, stop and paste the lines.
+
+JSON is written only when D ends, not during the run:
+  results\fibonacci_i8_k300.json    appears when D ends
+
+There is no checkpoint. Sleep / hibernate / closing the window loses
+the 3.1M-digit rebuild and the extra-rep scan. Do not start a second
+copy of scripts/run-i8-k300.bat. Do not start E while D is running.
+
+
+1. Research question (do not change this)
+-----------------------------------------
+Not "enumerate Pascal's triangle and hash it".
+
+Intersect the known Fibonacci 6-fold family with extra binomial
+representations, and solve C(n,k)=C(m,l) as Diophantine equations
+in the region Blokhuis–Brouwer–de Weger 2017 did not cover:
+
+  * unsettled nearby (d,e)  — not (1,1),(1,2),(2,1)
+  * unsettled (k,l)         — not SETTLED_KL
+  * rows n > 10^6 and/or values past 60 digits (100 if l>=10)
+
+A second N=8, or the first N=5/7, will not come from re-hashing small rows.
+
+
+2. Already done (do not rerun)
+------------------------------
+These live under results\ and found no new collision.
+
+  sanity                                      sanity.json                 pass
+  nearby     k=333333-800000     d,e<=4       report.json                 ~27 s
+  nearby     k=800001-2000000    d,e<=5       nearby_k333k-2M.json        ~146 s
+  nearby     k=2000001-8000000   d,e<=6       nearby_k2M-8M.json          ~19 min
+  nearby     k=8000001-1e9       d,e<=6       nearby_k8M-1B.json          ~58 h
+  nearby A   k=333333-2000000    d,e<=6       nearby_k333k-2M_de6.json    287 s
+  fib i=1-7  k_extra<=200                     fibonacci_i1-7.json         ~15 min
+  fib i=8    k_extra<=120                     fibonacci_i8.json           ~58 min
+  fib i=9    k_extra<=5                       fibonacci_i9.json           ~3.4 h
+  collide    l<=20, ~80k rows at frontier     collide_l20.json            ~39 s
+  collide    (2,7) 2e6 rows from frontier     collide_2_7.json            0.2 s
+  collide B  l<=20, 20M rows from frontier    collide_l20_deep.json       38 min
+  collide C  (2,7) m=1752670297..1952670296   collide_2_7_deep.json       8.6 s
+
+Confirmed nulls (do not treat as "try again"):
+  nearby_k8M-1B.json          new_hits=0, k_range=[8000001,1000000000]
+  nearby_k333k-2M_de6.json    new_hits=0, k_range=[333333,2000000], dmax=emax=6
+                              33 unsettled (d,e); settled (1,1)(1,2)(2,1) skipped
+  collide_l20_deep.json       discoveries=[], hits=[], 162 certs
+                              (3,5) and (4,5) skipped, frontier m=4128917917336
+                              other 160 certs: hits=0, m_span=20000000
+  collide_2_7_deep.json       discoveries=[], hits=0, m=[1752670297,1952670296]
+  fibonacci_i8.json           extra_reps=[], status=known_fibonacci, k_extra=120
+                              C(10803704,4126647)=C(10803703,4126648), 3120256 digits
+  fibonacci_i9.json           extra_reps=[], status=known_fibonacci, k_extra=5
+                              C(74049690,28284464)=C(74049689,28284465), 21386570 digits
+
+i=1 extras correctly recover C(78,2) -> 3003 is N=8. That is sanity, not news.
+
+Engine work already done this project (in singmaster_intersect.py):
+  classify_status() no longer labels every adjacent-row pair as Fibonacci.
+  Recognition is is_fibonacci_pair / fib_pairs_upto only.
+  run_sanity now tests fib i=1..5, synthetic (1,3)(1,4), 3003, sporadic 120.
+  python singmaster_intersect.py sanity  PASS after that patch.
+
+Sampler check already done (not a JSON file):
+  nearby_solutions vs a straight n-loop, d,e<=3, k=2..150 plus
+  {200,300,500,800,1200,2000}, n up to the 40k+64 cutoff.
+  1395 boxes, identical, missed=0, extra=0. Does not prove k=1e9.
+
+Do NOT run:  python singmaster_intersect.py all --deep
+It redoes weaker ranges than you already have and skips the D/E windows.
+
+Deleted bats (do not look for them, do not recreate them):
+  run_long.bat          already finished (8M-1B nearby + i=9 k<=5)
+  run_bc.bat            already finished (collide B and C)
+  run_after_long.bat    would have rerun A, B, C then D and E
+
+
+3. What scripts/run-i8-k300.bat is doing right now
+------------------------------------
+Step D  intersect --imin 8 --imax 8 --kextra 300
+        Rebuilds the i=8 value (~3.1M digits; the old JSON does not
+        store m, so this rebuild is required), then inverts k=2..300
+        and the centre. Redoes k=2..120 on purpose.
+        One core. A few hours. k=2..120 was 3245 s of extra-scan;
+        k<=300 is more inversions on the same integer.
+
+A null D only certifies "no extra left-half rep with 2<=k<=300
+(and no central) for i=8". It does not end the project.
+
+
+4. After "D finished" — check these first
+-----------------------------------------
+Open results\fibonacci_i8_k300.json.
+
+  file must exist
+  discoveries must be []
+  hits must have length 1
+  hits[0].status must be known_fibonacci
+  hits[0].extra_reps must be []
+  hits[0].N must be 6
+  hits[0].meta.i must be 8
+  hits[0].meta.k_extra must be 300
+  hits[0].meta.also_central must be true
+  hits[0].m_digits should be about 3120256 (digit labels can be off by one)
+  hits[0].left_reps must be the i=8 pair
+      (10803703, 4126648) and (10803704, 4126647)  (order may swap)
+  certificates[0].k_extra must be 300
+  certificates[0].i_range must be [8, 8]
+  certificates[0].i_with_no_extra must be [8]
+
+If the file is missing, or discoveries is not [], or extra_reps is not [],
+or status is not known_fibonacci, stop and paste the SUMMARY / ALERT lines.
+Do not start E.
+
+
+5. Next run, only after section 4 passes
+----------------------------------------
+E. Fibonacci i=9, extra-rep k<=12. One core, day-scale.
+   Rebuilds the 21M-digit value (~3.4 h) then inverts k=6..12.
+   k<=5 is already done in fibonacci_i9.json.
+
+   python singmaster_intersect.py intersect --imin 9 --imax 9 --kextra 12 --json_out results\fibonacci_i9_k12.json
+
+   Write a run_e.bat when you start E. Do not invent one now and do not
+   start E from any leftover after-long bat.
+
+Do not invent a new order. Do not go back to nearby or collide before E.
+
+
+6. After E, if still nothing
+----------------------------
+Still on this PC, still worth doing, one at a time:
+
+  nearby probe of new (d,e):
+    python singmaster_intersect.py nearby --kmin 2000001 --kmax 8000000 --dmax 8 --emax 8 --workers 16 --json_out results\nearby_k2M-8M_de8.json
+    If this is minutes-to-a-few-hours, later run the same d,e on 8M-1B.
+    If (8,8) is already heavy at k~1e6, stop. Degree is d+e.
+
+  nearby next k-band (largest nearby I would still call one sitting):
+    python singmaster_intersect.py nearby --kmin 1000000001 --kmax 2000000000 --dmax 6 --emax 6 --workers 16 --json_out results\nearby_k1B-2B.json
+    1e9-1e10 is weeks. 1e11 is the wrong tool.
+
+  skipped collide columns (3,5) and (4,5), frontier m~4.13e12:
+    python singmaster_intersect.py collide --k 3 --l 5 --min-m 4128917917336 --max-steps 2000000 --workers 16 --json_out results\collide_3_5.json
+    This only samples a thin slice. You will not exhaust m at 10^12.
+
+  i=10 experiment only, k=2 (maybe k=3). ~150 million digits. Not a sweep.
+    python singmaster_intersect.py intersect --imin 10 --imax 10 --kextra 2 --json_out results\fibonacci_i10_k2.json
+
+
+7. What this hardware cannot usefully do
+----------------------------------------
+  * Finish collide for skipped columns all the way out (m of size 10^12+)
+  * i=10+ extra-rep for large k
+  * Re-scan every row n > 10^6 (the 2017 wall; this program is not a row hasher)
+  * SETTLED_KL pairs (2,3)(2,4)(2,5)(2,6)(2,8)(3,4)(3,6)(4,6)(4,8) — theorems
+
+
+8. Known engine caveats (do not forget)
+---------------------------------------
+  Nearby negatives are not complete certificates.
+    nearby_solutions samples n geometrically, bisects sign changes, and
+    stops at n <= 40k+64. Degree d+e (up to 12) can hide roots. Honest
+    claim: no sampled/bracketed root passed the exact check.
+    The small-box sampler check passed; that does not prove k=1e9.
+
+  Digit labels can be off by one.
+    int(bit_length * log10(2))+1 overcounts just below a power of ten.
+    Scan starts (min_m_for_digits) are exact. pair_is_past_2017 and
+    value_digits in JSON are labels only.
+
+  Intersect k_extra is a window, not "no extra representation exists."
+    i=8 k<=120 is done. D is k<=300, not a proof.
+    i=9 k<=5 is done. E is k<=12, not a proof.
+
+  Collide (3,5) and (4,5) were skipped in B. Hard skip at m > 1e11.
+
+  collide JSON past_2017_only is false even on frontier scans.
+    Judge those files by m_range and value_digits, not that flag.
+
+  Classifier is already fixed. Do not "fix the adjacent-row classifier"
+  again and do not redo nearby A because of it.
+
+
+9. How to read a result
+-----------------------
+  discoveries: []                         good (null search)
+  certificates[].hits: 0                  good for collide
+  certificates[].new_hits: 0              good for nearby
+  extra_reps: []                          good for Fibonacci
+  status: known_fibonacci                 that member is still only 6-fold
+                                          in the k_extra you asked for
+  status: NEW_FAMILY_PLUS_EXTRA           i>=2 grew an extra left-half rep
+  N: 6                                    still the family only
+  N: 8+                                   extra representation (ALERT)
+  past_2017_only: false                   ignore this flag on collide JSON
+                                          written by the current engine
+  ALERT / NEW_NEARBY / NEW_COLLISION / NEW_FAMILY_PLUS_EXTRA
+  / THEOREM_COUNTEREXAMPLE                stop, this is the result
+
+
+Do not start E until section 4 passes.
+Hand this file back when scripts/run-i8-k300.bat prints "D finished".

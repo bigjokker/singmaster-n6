@@ -1,0 +1,346 @@
+{
+  "search": "i6_sweep",
+  "i": 6,
+  "N": 229970,
+  "K": 87840,
+  "d": 142130,
+  "k_max": 110318,
+  "log10_m": 66415.595502,
+  "k_z": [
+    201,
+    87839
+  ],
+  "k_bii": [
+    87842,
+    110318
+  ],
+  "n_z": 87639,
+  "n_bii": 22477,
+  "primes_bii": [
+    114997,
+    115001,
+    115013,
+    115019,
+    115021,
+    115057,
+    115061,
+    115067,
+    115079,
+    115099,
+    115117,
+    115123,
+    115127,
+    115133
+  ],
+  "workers": 8,
+  "phases": {
+    "bandii": [
+      {
+        "prime_index": 1,
+        "p": 114997,
+        "n": 2172,
+        "even": 0.6598,
+        "mean_k": 96657,
+        "expected": 2184.606,
+        "escalate": false
+      },
+      {
+        "prime_index": 2,
+        "p": 115001,
+        "n": 268,
+        "even": 0.7015,
+        "mean_k": 94635,
+        "expected": 265.8191,
+        "escalate": false
+      },
+      {
+        "prime_index": 3,
+        "p": 115013,
+        "n": 45,
+        "even": 0.8889,
+        "mean_k": 93225,
+        "expected": 36.9481,
+        "escalate": false
+      },
+      {
+        "prime_index": 4,
+        "p": 115019,
+        "n": 3,
+        "even": 1.0,
+        "mean_k": 91058,
+        "expected": 7.3027,
+        "escalate": false
+      },
+      {
+        "prime_index": 5,
+        "p": 115021,
+        "n": 2,
+        "even": 1.0,
+        "mean_k": 92592,
+        "expected": 0.5636,
+        "escalate": false
+      },
+      {
+        "prime_index": 6,
+        "p": 115057,
+        "n": 0,
+        "even": null,
+        "mean_k": null,
+        "expected": 0.3545,
+        "escalate": false
+      }
+    ],
+    "zjump": [
+      {
+        "round": 1,
+        "n_primes": 4743,
+        "n": 1294,
+        "even": 0.6592,
+        "mean_k": 42449,
+        "n_nolive": 0,
+        "expected": 1332.8661,
+        "escalate": false
+      },
+      {
+        "round": 2,
+        "n_primes": 64,
+        "n": 105,
+        "even": 0.8762,
+        "mean_k": 38719,
+        "n_nolive": 0,
+        "expected": 94.4467,
+        "escalate": false
+      },
+      {
+        "round": 3,
+        "n_primes": 9,
+        "n": 13,
+        "even": 1.0,
+        "mean_k": 29059,
+        "n_nolive": 0,
+        "expected": 15.5451,
+        "escalate": false
+      },
+      {
+        "round": 4,
+        "n_primes": 3,
+        "n": 2,
+        "even": 1.0,
+        "mean_k": 26178,
+        "n_nolive": 0,
+        "expected": 3.1293,
+        "escalate": false
+      },
+      {
+        "round": 5,
+        "n_primes": 2,
+        "n": 1,
+        "even": 1.0,
+        "mean_k": 205,
+        "n_nolive": 0,
+        "expected": 0.5661,
+        "escalate": false
+      },
+      {
+        "round": 6,
+        "n_primes": 1,
+        "n": 0,
+        "even": null,
+        "mean_k": null,
+        "n_nolive": 0,
+        "expected": 0.4795,
+        "escalate": false
+      }
+    ]
+  },
+  "n_bii_alive": 0,
+  "n_z_alive": 0,
+  "n_z_nolive": 0,
+  "z_nolive": [],
+  "witness": {
+    "source": "i6_sweep.jsonl",
+    "i": 6,
+    "N": 229970,
+    "K": 87840,
+    "k_max": 110318,
+    "claimed_ranges": [
+      [
+        87842,
+        110318
+      ],
+      [
+        201,
+        87839
+      ]
+    ],
+    "excluded": [],
+    "n_unresolved": 0,
+    "unresolved": [],
+    "primes_bii": [
+      114997,
+      115001,
+      115013,
+      115019,
+      115021,
+      115057,
+      115061,
+      115067,
+      115079,
+      115099,
+      115117,
+      115123,
+      115127,
+      115133
+    ],
+    "schema": 1,
+    "n_witnesses": 110116,
+    "sha256": "2165869ca530bfda1941d9bbcfcd03eacdec5861615ef917adfcefadfce699e1"
+  },
+  "escalation": {
+    "bandii": {
+      "phase": "bandii",
+      "threshold": 0.01,
+      "rounds": [
+        {
+          "round": 1,
+          "entered": 22477,
+          "expected": 2184.6060094498725,
+          "observed": 2172,
+          "poisson_tail": 1.0,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 2,
+          "entered": 2172,
+          "expected": 265.8190788835767,
+          "observed": 268,
+          "poisson_tail": 0.45493329365065494,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 3,
+          "entered": 268,
+          "expected": 36.94808977653442,
+          "observed": 45,
+          "poisson_tail": 0.10935828370736433,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 4,
+          "entered": 45,
+          "expected": 7.302685684347104,
+          "observed": 3,
+          "poisson_tail": 0.976441591994026,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 5,
+          "entered": 3,
+          "expected": 0.5635529530509739,
+          "observed": 2,
+          "poisson_tail": 0.11005194883033864,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 6,
+          "entered": 2,
+          "expected": 0.3545165867045429,
+          "observed": 0,
+          "poisson_tail": 1.0,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        }
+      ],
+      "evaluated": true,
+      "escalate": false,
+      "escalating_rounds": [],
+      "note": "Escalation is on expected count, not run length. A long run in a high-g/p regime is ordinary; see scripts/sizelaw.py."
+    },
+    "zjump": {
+      "phase": "zjump",
+      "threshold": 0.01,
+      "rounds": [
+        {
+          "round": 1,
+          "entered": 87639,
+          "expected": 1332.8661290968653,
+          "observed": 1294,
+          "poisson_tail": 1.0,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 2,
+          "entered": 1294,
+          "expected": 94.44669343412221,
+          "observed": 105,
+          "poisson_tail": 0.15062441672525684,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 3,
+          "entered": 105,
+          "expected": 15.54508742354379,
+          "observed": 13,
+          "poisson_tail": 0.7750719030801518,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 4,
+          "entered": 13,
+          "expected": 3.129262011725922,
+          "observed": 2,
+          "poisson_tail": 0.8193444881012584,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 5,
+          "entered": 2,
+          "expected": 0.5660547777227267,
+          "observed": 1,
+          "poisson_tail": 0.43223903080861914,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        },
+        {
+          "round": 6,
+          "entered": 1,
+          "expected": 0.479531851146797,
+          "observed": 0,
+          "poisson_tail": 1.0,
+          "threshold": 0.01,
+          "escalate": false,
+          "reason": "ordinary"
+        }
+      ],
+      "evaluated": true,
+      "escalate": false,
+      "escalating_rounds": [],
+      "note": "Escalation is on expected count, not run length. A long run in a high-g/p regime is ordinary; see scripts/sizelaw.py."
+    }
+  },
+  "bii_survivors": [],
+  "z_survivors": [],
+  "clean": true,
+  "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=6 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i6_witness.npz (sha256 2165869ca530bfda); re-check with: python scripts/witness.py verify --file results/i6_witness.npz",
+  "seconds": 8.163
+}

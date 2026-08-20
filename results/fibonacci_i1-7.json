@@ -1,0 +1,285 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 927.224,
+  "cmd": "intersect",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": null,
+  "hits": [
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_3003",
+      "N": 8,
+      "left_reps": [
+        [
+          14,
+          6
+        ],
+        [
+          15,
+          5
+        ],
+        [
+          78,
+          2
+        ]
+      ],
+      "extra_reps": [
+        [
+          78,
+          2
+        ]
+      ],
+      "m_digits": 4,
+      "m_abbrev": "3003",
+      "m_sha256": "7a24738c1004bcc250f2e527aeab5e3b1891d00a5146a54b2e8c20df84a8c09d",
+      "m": null,
+      "note": "fib i=1  base C(15,5)=C(14,6)  extra-scan 0.03s",
+      "meta": {
+        "i": 1,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": false
+      }
+    },
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          103,
+          40
+        ],
+        [
+          104,
+          39
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 29,
+      "m_abbrev": "61218182743304701891431482520",
+      "m_sha256": "e04be0bd837753171d8f4dc126ab71664aa89b7421b2e20f1e2dda1e50aa3824",
+      "m": null,
+      "note": "fib i=2  base C(104,39)=C(103,40)  extra-scan 0.07s",
+      "meta": {
+        "i": 2,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": false
+      }
+    },
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          713,
+          273
+        ],
+        [
+          714,
+          272
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 205,
+      "m_abbrev": "3537835171522765...4090271577807800(205 digits)",
+      "m_sha256": "2cb1176b9a1bd0bda2f16d5a59f4d5ea676455af7c701e22c077e86f835687c6",
+      "m": null,
+      "note": "fib i=3  base C(714,272)=C(713,273)  extra-scan 0.10s",
+      "meta": {
+        "i": 3,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": true
+      }
+    },
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          4894,
+          1870
+        ],
+        [
+          4895,
+          1869
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 1412,
+      "m_abbrev": "4590115540998677...1399690371640000(1412 digits)",
+      "m_sha256": "6816448d20fac54a55903626d8d163ca50845aca4c4539a54f285b6548f36cf2",
+      "m": null,
+      "note": "fib i=4  base C(4895,1869)=C(4894,1870)  extra-scan 0.20s",
+      "meta": {
+        "i": 4,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": true
+      }
+    },
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          33551,
+          12816
+        ],
+        [
+          33552,
+          12815
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 9688,
+      "m_abbrev": "6045533444816533...1345138983344000(9688 digits)",
+      "m_sha256": "3f35546b2fe7e0c22088ac27096fa5e55370f899aa64d4fdf73458390a260672",
+      "m": null,
+      "note": "fib i=5  base C(33552,12815)=C(33551,12816)  extra-scan 1.48s",
+      "meta": {
+        "i": 5,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": true
+      }
+    },
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          229969,
+          87841
+        ],
+        [
+          229970,
+          87840
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 66416,
+      "m_abbrev": "3940051141469064...2187679379740928(66416 digits)",
+      "m_sha256": "b8b254e754a28d12a5d208bb6ff34ca450391feabac63e6d50befcfee65b7679",
+      "m": null,
+      "note": "fib i=6  base C(229970,87840)=C(229969,87841)  extra-scan 43.99s",
+      "meta": {
+        "i": 6,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": true
+      }
+    },
+    {
+      "kind": "intersect_fibonacci",
+      "status": "known_fibonacci",
+      "N": 6,
+      "left_reps": [
+        [
+          1576238,
+          602070
+        ],
+        [
+          1576239,
+          602069
+        ]
+      ],
+      "extra_reps": [],
+      "m_digits": 455237,
+      "m_abbrev": "1837544487528852...2455738757120000(455237 digits)",
+      "m_sha256": "52bec1b8d58c19647be967e9a250c78362ced448dc921347814682612f268dde",
+      "m": null,
+      "note": "fib i=7  base C(1576239,602069)=C(1576238,602070)  extra-scan 876.32s",
+      "meta": {
+        "i": 7,
+        "k_extra": 200,
+        "also_central": true,
+        "past_2017_value_bound": true
+      }
+    }
+  ],
+  "discoveries": [],
+  "certificates": [
+    {
+      "search": "fibonacci_extra_rep",
+      "i_range": [
+        1,
+        7
+      ],
+      "k_extra": 200,
+      "also_central": true,
+      "i_with_no_extra": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "result": "no extra left-half representation with 2<=k<=200 (and no central) for Fibonacci i in [2, 3, 4, 5, 6, 7]"
+    }
+  ]
+}

@@ -1,0 +1,3516 @@
+{
+  "program": "singmaster_intersect",
+  "discoveries": [],
+  "note": "Empty discoveries plus the certificates below are the result: the new engine ran past the 2017 bounds and found no second N=8 and no new collision.",
+  "certificates": [
+    {
+      "search": "fibonacci_extra_rep",
+      "i_range": [
+        1,
+        6
+      ],
+      "k_extra": 80,
+      "also_central": true,
+      "i_with_no_extra": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "result": "no extra left-half representation with 2<=k<=80 (and no central) for Fibonacci i in [2, 3, 4, 5, 6]"
+    },
+    {
+      "search": "nearby_row",
+      "dmax": 4,
+      "emax": 4,
+      "k_range": [
+        333333,
+        800000
+      ],
+      "pairs": [
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "new_hits": 0,
+      "seconds": 27.015,
+      "result": "no unsettled nearby collision for k in [333333,800000], (d,e) in [(1, 3), (1, 4), (2, 2), (2, 3), (2, 4), (3, 1), (3, 2), (3, 3), (3, 4), (4, 1), (4, 2), (4, 3), (4, 4)]"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 5,
+      "result": "skipped, frontier m=4128917917336 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 5,
+      "result": "skipped, frontier m=4128917917336 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 6,
+      "result": "skipped, frontier m=43942903517 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 7,
+      "result": "skipped, frontier m=1750670297 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 7,
+      "result": "skipped, frontier m=1750670297 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 7,
+      "result": "skipped, frontier m=1750670297 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 7,
+      "result": "skipped, frontier m=1750670297 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 7,
+      "result": "skipped, frontier m=1750670297 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 8,
+      "result": "skipped, frontier m=158741353 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 8,
+      "result": "skipped, frontier m=158741353 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 8,
+      "result": "skipped, frontier m=158741353 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 8,
+      "result": "skipped, frontier m=158741353 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 9,
+      "result": "skipped, frontier m=24861613 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 10,
+      "result": "skipped, frontier m=57013316291 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 11,
+      "result": "skipped, frontier m=7461606435 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 12,
+      "result": "skipped, frontier m=1380473526 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 13,
+      "result": "skipped, frontier m=333147805 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 14,
+      "result": "skipped, frontier m=99024688 > max_m=3000000"
+    },
+    {
+      "search": "fibonacci_extra_rep",
+      "i_range": [
+        1,
+        7
+      ],
+      "k_extra": 200,
+      "also_central": true,
+      "i_with_no_extra": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "result": "no extra left-half representation with 2<=k<=200 (and no central) for Fibonacci i in [2, 3, 4, 5, 6, 7]"
+    },
+    {
+      "search": "nearby_row",
+      "dmax": 5,
+      "emax": 5,
+      "k_range": [
+        800001,
+        2000000
+      ],
+      "pairs": [
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "new_hits": 0,
+      "seconds": 146.46,
+      "result": "no unsettled nearby collision for k in [800001,2000000], (d,e) in [(1, 3), (1, 4), (1, 5), (2, 2), (2, 3), (2, 4), (2, 5), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5)]"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 5,
+      "result": "skipped, frontier m=4128917917336 > 100000000000"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 5,
+      "result": "skipped, frontier m=4128917917336 > 100000000000"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 6,
+      "m_range": [
+        43942903517,
+        43942983516
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.219,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,6) for m in [43942903517,43942983516] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 7,
+      "m_range": [
+        1750670297,
+        1750750296
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.12,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,7) for m in [1750670297,1750750296] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 7,
+      "m_range": [
+        1750670297,
+        1750750296
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.185,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,7) for m in [1750670297,1750750296] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 7,
+      "m_range": [
+        1750670297,
+        1750750296
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.197,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,7) for m in [1750670297,1750750296] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 7,
+      "m_range": [
+        1750670297,
+        1750750296
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.199,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,7) for m in [1750670297,1750750296] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 7,
+      "m_range": [
+        1750670297,
+        1750750296
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.205,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,7) for m in [1750670297,1750750296] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 8,
+      "m_range": [
+        158741353,
+        158821352
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.18,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,8) for m in [158741353,158821352] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 8,
+      "m_range": [
+        158741353,
+        158821352
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.202,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,8) for m in [158741353,158821352] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 8,
+      "m_range": [
+        158741353,
+        158821352
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.221,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,8) for m in [158741353,158821352] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 8,
+      "m_range": [
+        158741353,
+        158821352
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.232,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,8) for m in [158741353,158821352] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.132,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.189,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.189,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.204,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.221,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.225,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 9,
+      "m_range": [
+        24861613,
+        24941612
+      ],
+      "value_digits": [
+        62,
+        62
+      ],
+      "hits": 0,
+      "seconds": 0.252,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,9) for m in [24861613,24941612] (values 62..62 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.121,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.184,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.198,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.197,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.218,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.216,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.245,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 10,
+      "m_range": [
+        57013316291,
+        57013396290
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.266,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,10) for m in [57013316291,57013396290] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.128,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.189,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.182,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.201,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.223,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.23,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.246,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.254,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 11,
+      "m_range": [
+        7461606435,
+        7461686434
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.271,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,11) for m in [7461606435,7461686434] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.144,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.188,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.195,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.209,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.225,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.232,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.223,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.264,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.271,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 12,
+      "m_range": [
+        1380473526,
+        1380553525
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.307,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,12) for m in [1380473526,1380553525] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.119,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.187,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.191,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.203,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.217,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.238,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.238,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.246,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.265,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.309,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 13,
+      "m_range": [
+        333147805,
+        333227804
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.327,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,13) for m in [333147805,333227804] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.127,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.183,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.2,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.214,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.217,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.232,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.241,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.265,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.266,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.306,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.314,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 14,
+      "m_range": [
+        99024688,
+        99104687
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.314,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,14) for m in [99024688,99104687] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.106,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.187,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.192,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.213,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.221,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.224,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.243,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.252,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.265,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.298,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.324,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.327,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 14,
+      "l": 15,
+      "m_range": [
+        34761625,
+        34841624
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.342,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,14)=C(m,15) for m in [34761625,34841624] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.116,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.187,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.192,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.199,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.213,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.227,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.234,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.254,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.271,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.297,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.303,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.316,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 14,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.342,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,14)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 15,
+      "l": 16,
+      "m_range": [
+        13964937,
+        14044936
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.361,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,15)=C(m,16) for m in [13964937,14044936] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.138,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.179,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.202,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.191,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.214,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.221,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.234,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.248,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.272,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.293,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.309,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.317,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 14,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.352,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,14)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 15,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.342,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,15)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 16,
+      "l": 17,
+      "m_range": [
+        6267903,
+        6347902
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.371,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,16)=C(m,17) for m in [6267903,6347902] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.117,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.187,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.188,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.203,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.204,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.219,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.232,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.259,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.279,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.29,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.305,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.318,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 14,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.348,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,14)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 15,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.353,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,15)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 16,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.382,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,16)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 17,
+      "l": 18,
+      "m_range": [
+        3084910,
+        3164909
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.376,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,17)=C(m,18) for m in [3084910,3164909] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.122,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.183,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.187,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.204,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.206,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.232,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.234,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.26,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.274,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.287,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.303,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.336,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 14,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.343,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,14)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 15,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.342,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,15)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 16,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.373,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,16)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 17,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.386,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,17)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 18,
+      "l": 19,
+      "m_range": [
+        1640618,
+        1720617
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.428,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,18)=C(m,19) for m in [1640618,1720617] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 2,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.12,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,2)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 3,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.184,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,3)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 4,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.191,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,4)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 5,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.207,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,5)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 6,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.212,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,6)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 7,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.231,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,7)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 8,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.239,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,8)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 9,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.244,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,9)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 10,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.273,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,10)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 11,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.294,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,11)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 12,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.308,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,12)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.321,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 14,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.353,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,14)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 15,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.377,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,15)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 16,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.371,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,16)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 17,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.396,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,17)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 18,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.413,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,18)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    },
+    {
+      "search": "collide",
+      "k": 19,
+      "l": 20,
+      "m_range": [
+        931775,
+        1011774
+      ],
+      "value_digits": [
+        102,
+        102
+      ],
+      "hits": 0,
+      "seconds": 0.422,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,19)=C(m,20) for m in [931775,1011774] (values 102..102 digits)"
+    }
+  ]
+}

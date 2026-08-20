@@ -1,0 +1,38 @@
+__pycache__/
+*.py[cod]
+*.bak
+*.bak-*
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Stage 3 full row dumps (~80MB each). Summary JSON is tracked.
+results/nextprime_i8_k100001-1000000.json
+results/nextprime_i8_k100001-1000000.jsonl
+# Aborted overnight stub. Do not resume.
+results/nextprime_i8_k1000001-2000000.jsonl
+results/nextprime_i8_k1000001-2000000.json
+scripts/run-overnight-k1e6-2e6.bat
+
+# Live checkpoints. Final JSON is tracked.
+#
+# WARNING: a run's jsonl is the ONLY record of which prime killed which column.
+# scripts/witness.py rebuilds results/i{N}_witness.npz from it, and a clean
+# family_sweep now does that automatically before the jsonl stops mattering.
+# Do NOT delete a jsonl until its witness table exists and verifies, or the
+# certificate becomes re-checkable only by repeating the whole sweep.
+results/fat_image_hunt.jsonl
+results/walk_369.jsonl
+results/bandii_sweep.jsonl
+results/zjump.jsonl
+results/i7_sweep.jsonl
+results/i6_sweep.jsonl
+results/i5_sweep.jsonl
+results/i4_sweep.jsonl
+results/i3_sweep.jsonl
+results/i2_sweep.jsonl
+results/i9_sweep.jsonl
+
+# Witness tables ARE the proof object. Never ignore them.
+!results/*_witness.npz
