@@ -441,3 +441,45 @@ pre-Q2 numbers.
 **No MAX from this audit.** Every gap found is bounded engineering or
 documentation accuracy; Q21 is the most structurally important and is still a
 scripting job.
+
+---
+
+## Tier C2 — follow-on research
+
+### Q25. Is `(x)_6 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no) 2026-08-20
+**No.** Q14 settled `k <= 5` and forecast that `k = 6` "will take three
+curves", one per split of the sextic. That route works but is the wrong
+decomposition. For even `k` the roots are symmetric about `(k-1)/2`, so with
+`t = 2x-5` we get `2^6 f_c = g(t^2)` with `g(u) = u^3-35u^2+259u-(225+64c)`,
+and since `t^2` ranges over exactly the squares:
+
+> `f_c` has a root mod `p`  <=>  `g` has a root mod `p` that is a SQUARE mod `p`.
+
+A sextic question becomes a **cubic** question, and the case analysis is a
+trichotomy on `g` rather than five splits of `f_c`:
+
+- **`g` irreducible** -- Jordan + Chebotarev give a prime with no root at all.
+- **`g = (u-beta) x irreducible quadratic`** -- the only infinite case. Both
+  `beta` and `Delta = -3beta^2+70beta+189` are forced non-squares (the first
+  else `f_c` has a rational root, the second else the quadratic splits), so a
+  positive density of primes has both Legendre symbols `-1`; there the
+  quadratic has no root and `beta` is a non-residue, so `f_c` has none.
+  **Closes an infinite family with no finiteness argument.**
+- **`g` splits over Q** -- `e1=35, e2=259` force `-3s^2+140s-1036` to be a
+  square, a BOUNDED conic (28 integers), whose only solution is `{1,9,25}`,
+  i.e. `c=0`. This is exactly where an odd square-relation (Q14 section 4)
+  would have to live, and there is no room for one.
+
+Verified in `scripts/k6_intersective.py`: the equivalence on 1,035 `(c,p)`
+pairs, 273 Case-2 candidates all killed by the predicted prime (largest
+`p=113`), and a brute-force cross-check over `|c| <= 300000` finding no
+unexplained reducible case and no candidate without a killing prime.
+
+**Smallest open degree moves from 6 to 7.** The reduction is general for even
+`k` (`k=8` gives a quartic `g` with `e1=84`), and it inverts the intuition:
+**even `k` is the easy side**, because odd `k` has no `t^2` reduction at all.
+That is why `k=5` needed a Pell equation and `k=6` needed a Legendre symbol.
+
+Operationally this changes nothing -- our `c = k!m` has 3.1M digits and the
+census still relies on Q14 section 6's per-column termination certificate.
+Full write-up in [`q25-k6-intersective.md`](q25-k6-intersective.md).

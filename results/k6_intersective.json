@@ -1,0 +1,30 @@
+{
+  "search": "k6_intersective",
+  "claim": "(x)_6 - c is never intersective",
+  "method": "trichotomy on the factorisation of g(u)=R(u)-64c",
+  "case1_g_irreducible": {
+    "sampled": 201,
+    "max_prime": 19
+  },
+  "case2_linear_times_quadratic": {
+    "n": 273,
+    "max_prime": 113
+  },
+  "case3_g_splits": [
+    {
+      "c": 0,
+      "case": 3
+    }
+  ],
+  "brute_force": {
+    "limit": 60000,
+    "patterns": {
+      "(6,)": 3986,
+      "(2, 4)": 10,
+      "(1, 1, 1, 1, 1, 1)": 1,
+      "(1, 1, 4)": 3,
+      "(3, 3)": 1
+    }
+  },
+  "intersective_found": 0
+}
