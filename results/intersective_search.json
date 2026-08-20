@@ -1,0 +1,4269 @@
+{
+  "search": "intersective",
+  "bound": 1000000000,
+  "n_sieve_primes": 40,
+  "k": {
+    "5": {
+      "k": 5,
+      "rad_k_factorial": 30,
+      "bound": 1000000000,
+      "n_candidates": 66666667,
+      "sieve_primes": [
+        7,
+        11,
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191
+      ],
+      "n_survivors": 125,
+      "survivors": [
+        -991186560,
+        -914941440,
+        -843461640,
+        -776520240,
+        -713897640,
+        -655381440,
+        -600766320,
+        -597766560,
+        -549853920,
+        -502452720,
+        -458377920,
+        -417451320,
+        -379501200,
+        -344362200,
+        -311875200,
+        -281887200,
+        -254251200,
+        -228826080,
+        -205476480,
+        -184072680,
+        -164490480,
+        -146611080,
+        -130320960,
+        -115511760,
+        -102080160,
+        -89927760,
+        -78960960,
+        -69090840,
+        -60233040,
+        -52307640,
+        -45239040,
+        -38955840,
+        -33390720,
+        -28480320,
+        -24165120,
+        -20389320,
+        -17100720,
+        -14250600,
+        -11793600,
+        -9687600,
+        -7893600,
+        -6375600,
+        -5100480,
+        -4037880,
+        -3160080,
+        -2441880,
+        -1860480,
+        -1395360,
+        -1028160,
+        -742560,
+        -524160,
+        -360360,
+        -240240,
+        -154440,
+        -95040,
+        -55440,
+        -30240,
+        -15120,
+        -6720,
+        -2520,
+        -720,
+        -120,
+        0,
+        120,
+        720,
+        2520,
+        6720,
+        15120,
+        30240,
+        55440,
+        95040,
+        154440,
+        240240,
+        360360,
+        524160,
+        742560,
+        1028160,
+        1395360,
+        1860480,
+        2441880,
+        3160080,
+        4037880,
+        5100480,
+        6375600,
+        7893600,
+        9687600,
+        11793600,
+        14250600,
+        17100720,
+        20389320,
+        24165120,
+        28480320,
+        33390720,
+        38955840,
+        45239040,
+        52307640,
+        60233040,
+        69090840,
+        78960960,
+        89927760,
+        102080160,
+        115511760,
+        130320960,
+        146611080,
+        164490480,
+        184072680,
+        205476480,
+        228826080,
+        254251200,
+        281887200,
+        311875200,
+        344362200,
+        379501200,
+        417451320,
+        458377920,
+        502452720,
+        549853920,
+        597766560,
+        600766320,
+        655381440,
+        713897640,
+        776520240,
+        843461640,
+        914941440,
+        991186560
+      ],
+      "sieve_seconds": 14.84,
+      "classified": [
+        {
+          "c": -991186560,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 61",
+            "x**4 - 71*x**3 + 4366*x**2 - 266376*x + 16248960"
+          ]
+        },
+        {
+          "c": -914941440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 60",
+            "x**4 - 70*x**3 + 4235*x**2 - 254150*x + 15249024"
+          ]
+        },
+        {
+          "c": -843461640,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 59",
+            "x**4 - 69*x**3 + 4106*x**2 - 242304*x + 14295960"
+          ]
+        },
+        {
+          "c": -776520240,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 58",
+            "x**4 - 68*x**3 + 3979*x**2 - 230832*x + 13388280"
+          ]
+        },
+        {
+          "c": -713897640,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 57",
+            "x**4 - 67*x**3 + 3854*x**2 - 219728*x + 12524520"
+          ]
+        },
+        {
+          "c": -655381440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 56",
+            "x**4 - 66*x**3 + 3731*x**2 - 208986*x + 11703240"
+          ]
+        },
+        {
+          "c": -600766320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 55",
+            "x**4 - 65*x**3 + 3610*x**2 - 198600*x + 10923024"
+          ]
+        },
+        {
+          "c": -597766560,
+          "degrees": [
+            5
+          ],
+          "rational_root": false,
+          "irreducible": true,
+          "candidate": false,
+          "factors": null
+        },
+        {
+          "c": -549853920,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 54",
+            "x**4 - 64*x**3 + 3491*x**2 - 188564*x + 10182480"
+          ]
+        },
+        {
+          "c": -502452720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 53",
+            "x**4 - 63*x**3 + 3374*x**2 - 178872*x + 9480240"
+          ]
+        },
+        {
+          "c": -458377920,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 52",
+            "x**4 - 62*x**3 + 3259*x**2 - 169518*x + 8814960"
+          ]
+        },
+        {
+          "c": -417451320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 51",
+            "x**4 - 61*x**3 + 3146*x**2 - 160496*x + 8185320"
+          ]
+        },
+        {
+          "c": -379501200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 50",
+            "x**4 - 60*x**3 + 3035*x**2 - 151800*x + 7590024"
+          ]
+        },
+        {
+          "c": -344362200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 49",
+            "x**4 - 59*x**3 + 2926*x**2 - 143424*x + 7027800"
+          ]
+        },
+        {
+          "c": -311875200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 48",
+            "x**4 - 58*x**3 + 2819*x**2 - 135362*x + 6497400"
+          ]
+        },
+        {
+          "c": -281887200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 47",
+            "x**4 - 57*x**3 + 2714*x**2 - 127608*x + 5997600"
+          ]
+        },
+        {
+          "c": -254251200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 46",
+            "x**4 - 56*x**3 + 2611*x**2 - 120156*x + 5527200"
+          ]
+        },
+        {
+          "c": -228826080,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 45",
+            "x**4 - 55*x**3 + 2510*x**2 - 113000*x + 5085024"
+          ]
+        },
+        {
+          "c": -205476480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 44",
+            "x**4 - 54*x**3 + 2411*x**2 - 106134*x + 4669920"
+          ]
+        },
+        {
+          "c": -184072680,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 43",
+            "x**4 - 53*x**3 + 2314*x**2 - 99552*x + 4280760"
+          ]
+        },
+        {
+          "c": -164490480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 42",
+            "x**4 - 52*x**3 + 2219*x**2 - 93248*x + 3916440"
+          ]
+        },
+        {
+          "c": -146611080,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 41",
+            "x**4 - 51*x**3 + 2126*x**2 - 87216*x + 3575880"
+          ]
+        },
+        {
+          "c": -130320960,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 40",
+            "x**4 - 50*x**3 + 2035*x**2 - 81450*x + 3258024"
+          ]
+        },
+        {
+          "c": -115511760,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 39",
+            "x**4 - 49*x**3 + 1946*x**2 - 75944*x + 2961840"
+          ]
+        },
+        {
+          "c": -102080160,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 38",
+            "x**4 - 48*x**3 + 1859*x**2 - 70692*x + 2686320"
+          ]
+        },
+        {
+          "c": -89927760,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 37",
+            "x**4 - 47*x**3 + 1774*x**2 - 65688*x + 2430480"
+          ]
+        },
+        {
+          "c": -78960960,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 36",
+            "x**4 - 46*x**3 + 1691*x**2 - 60926*x + 2193360"
+          ]
+        },
+        {
+          "c": -69090840,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 35",
+            "x**4 - 45*x**3 + 1610*x**2 - 56400*x + 1974024"
+          ]
+        },
+        {
+          "c": -60233040,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 34",
+            "x**4 - 44*x**3 + 1531*x**2 - 52104*x + 1771560"
+          ]
+        },
+        {
+          "c": -52307640,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 33",
+            "x**4 - 43*x**3 + 1454*x**2 - 48032*x + 1585080"
+          ]
+        },
+        {
+          "c": -45239040,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 32",
+            "x**4 - 42*x**3 + 1379*x**2 - 44178*x + 1413720"
+          ]
+        },
+        {
+          "c": -38955840,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 31",
+            "x**4 - 41*x**3 + 1306*x**2 - 40536*x + 1256640"
+          ]
+        },
+        {
+          "c": -33390720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 30",
+            "x**4 - 40*x**3 + 1235*x**2 - 37100*x + 1113024"
+          ]
+        },
+        {
+          "c": -28480320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 29",
+            "x**4 - 39*x**3 + 1166*x**2 - 33864*x + 982080"
+          ]
+        },
+        {
+          "c": -24165120,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 28",
+            "x**4 - 38*x**3 + 1099*x**2 - 30822*x + 863040"
+          ]
+        },
+        {
+          "c": -20389320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 27",
+            "x**4 - 37*x**3 + 1034*x**2 - 27968*x + 755160"
+          ]
+        },
+        {
+          "c": -17100720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 26",
+            "x**4 - 36*x**3 + 971*x**2 - 25296*x + 657720"
+          ]
+        },
+        {
+          "c": -14250600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 25",
+            "x**4 - 35*x**3 + 910*x**2 - 22800*x + 570024"
+          ]
+        },
+        {
+          "c": -11793600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 24",
+            "x**4 - 34*x**3 + 851*x**2 - 20474*x + 491400"
+          ]
+        },
+        {
+          "c": -9687600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 23",
+            "x**4 - 33*x**3 + 794*x**2 - 18312*x + 421200"
+          ]
+        },
+        {
+          "c": -7893600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 22",
+            "x**4 - 32*x**3 + 739*x**2 - 16308*x + 358800"
+          ]
+        },
+        {
+          "c": -6375600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 21",
+            "x**4 - 31*x**3 + 686*x**2 - 14456*x + 303600"
+          ]
+        },
+        {
+          "c": -5100480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 20",
+            "x**4 - 30*x**3 + 635*x**2 - 12750*x + 255024"
+          ]
+        },
+        {
+          "c": -4037880,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 19",
+            "x**4 - 29*x**3 + 586*x**2 - 11184*x + 212520"
+          ]
+        },
+        {
+          "c": -3160080,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 18",
+            "x**4 - 28*x**3 + 539*x**2 - 9752*x + 175560"
+          ]
+        },
+        {
+          "c": -2441880,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 17",
+            "x**4 - 27*x**3 + 494*x**2 - 8448*x + 143640"
+          ]
+        },
+        {
+          "c": -1860480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 16",
+            "x**4 - 26*x**3 + 451*x**2 - 7266*x + 116280"
+          ]
+        },
+        {
+          "c": -1395360,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 15",
+            "x**4 - 25*x**3 + 410*x**2 - 6200*x + 93024"
+          ]
+        },
+        {
+          "c": -1028160,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 14",
+            "x**4 - 24*x**3 + 371*x**2 - 5244*x + 73440"
+          ]
+        },
+        {
+          "c": -742560,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 13",
+            "x**4 - 23*x**3 + 334*x**2 - 4392*x + 57120"
+          ]
+        },
+        {
+          "c": -524160,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 12",
+            "x**4 - 22*x**3 + 299*x**2 - 3638*x + 43680"
+          ]
+        },
+        {
+          "c": -360360,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 11",
+            "x**4 - 21*x**3 + 266*x**2 - 2976*x + 32760"
+          ]
+        },
+        {
+          "c": -240240,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 10",
+            "x**4 - 20*x**3 + 235*x**2 - 2400*x + 24024"
+          ]
+        },
+        {
+          "c": -154440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 9",
+            "x**4 - 19*x**3 + 206*x**2 - 1904*x + 17160"
+          ]
+        },
+        {
+          "c": -95040,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 8",
+            "x**4 - 18*x**3 + 179*x**2 - 1482*x + 11880"
+          ]
+        },
+        {
+          "c": -55440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 7",
+            "x**4 - 17*x**3 + 154*x**2 - 1128*x + 7920"
+          ]
+        },
+        {
+          "c": -30240,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 6",
+            "x**4 - 16*x**3 + 131*x**2 - 836*x + 5040"
+          ]
+        },
+        {
+          "c": -15120,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 5",
+            "x**4 - 15*x**3 + 110*x**2 - 600*x + 3024"
+          ]
+        },
+        {
+          "c": -6720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 4",
+            "x**4 - 14*x**3 + 91*x**2 - 414*x + 1680"
+          ]
+        },
+        {
+          "c": -2520,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 3",
+            "x**4 - 13*x**3 + 74*x**2 - 272*x + 840"
+          ]
+        },
+        {
+          "c": -720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 2",
+            "x**4 - 12*x**3 + 59*x**2 - 168*x + 360"
+          ]
+        },
+        {
+          "c": -120,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 1",
+            "x**4 - 11*x**3 + 46*x**2 - 96*x + 120"
+          ]
+        },
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 120,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 5",
+            "x**4 - 5*x**3 + 10*x**2 + 24"
+          ]
+        },
+        {
+          "c": 720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 6",
+            "x**4 - 4*x**3 + 11*x**2 + 16*x + 120"
+          ]
+        },
+        {
+          "c": 2520,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 7",
+            "x**4 - 3*x**3 + 14*x**2 + 48*x + 360"
+          ]
+        },
+        {
+          "c": 6720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 8",
+            "x**4 - 2*x**3 + 19*x**2 + 102*x + 840"
+          ]
+        },
+        {
+          "c": 15120,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 9",
+            "x**4 - x**3 + 26*x**2 + 184*x + 1680"
+          ]
+        },
+        {
+          "c": 30240,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x**4 + 35*x**2 + 300*x + 3024"
+          ]
+        },
+        {
+          "c": 55440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x**4 + x**3 + 46*x**2 + 456*x + 5040"
+          ]
+        },
+        {
+          "c": 95040,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x**4 + 2*x**3 + 59*x**2 + 658*x + 7920"
+          ]
+        },
+        {
+          "c": 154440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 13",
+            "x**4 + 3*x**3 + 74*x**2 + 912*x + 11880"
+          ]
+        },
+        {
+          "c": 240240,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 14",
+            "x**4 + 4*x**3 + 91*x**2 + 1224*x + 17160"
+          ]
+        },
+        {
+          "c": 360360,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 15",
+            "x**4 + 5*x**3 + 110*x**2 + 1600*x + 24024"
+          ]
+        },
+        {
+          "c": 524160,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 16",
+            "x**4 + 6*x**3 + 131*x**2 + 2046*x + 32760"
+          ]
+        },
+        {
+          "c": 742560,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 17",
+            "x**4 + 7*x**3 + 154*x**2 + 2568*x + 43680"
+          ]
+        },
+        {
+          "c": 1028160,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 18",
+            "x**4 + 8*x**3 + 179*x**2 + 3172*x + 57120"
+          ]
+        },
+        {
+          "c": 1395360,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 19",
+            "x**4 + 9*x**3 + 206*x**2 + 3864*x + 73440"
+          ]
+        },
+        {
+          "c": 1860480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 20",
+            "x**4 + 10*x**3 + 235*x**2 + 4650*x + 93024"
+          ]
+        },
+        {
+          "c": 2441880,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 21",
+            "x**4 + 11*x**3 + 266*x**2 + 5536*x + 116280"
+          ]
+        },
+        {
+          "c": 3160080,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 22",
+            "x**4 + 12*x**3 + 299*x**2 + 6528*x + 143640"
+          ]
+        },
+        {
+          "c": 4037880,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 23",
+            "x**4 + 13*x**3 + 334*x**2 + 7632*x + 175560"
+          ]
+        },
+        {
+          "c": 5100480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 24",
+            "x**4 + 14*x**3 + 371*x**2 + 8854*x + 212520"
+          ]
+        },
+        {
+          "c": 6375600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 25",
+            "x**4 + 15*x**3 + 410*x**2 + 10200*x + 255024"
+          ]
+        },
+        {
+          "c": 7893600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 26",
+            "x**4 + 16*x**3 + 451*x**2 + 11676*x + 303600"
+          ]
+        },
+        {
+          "c": 9687600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 27",
+            "x**4 + 17*x**3 + 494*x**2 + 13288*x + 358800"
+          ]
+        },
+        {
+          "c": 11793600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 28",
+            "x**4 + 18*x**3 + 539*x**2 + 15042*x + 421200"
+          ]
+        },
+        {
+          "c": 14250600,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 29",
+            "x**4 + 19*x**3 + 586*x**2 + 16944*x + 491400"
+          ]
+        },
+        {
+          "c": 17100720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 30",
+            "x**4 + 20*x**3 + 635*x**2 + 19000*x + 570024"
+          ]
+        },
+        {
+          "c": 20389320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 31",
+            "x**4 + 21*x**3 + 686*x**2 + 21216*x + 657720"
+          ]
+        },
+        {
+          "c": 24165120,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 32",
+            "x**4 + 22*x**3 + 739*x**2 + 23598*x + 755160"
+          ]
+        },
+        {
+          "c": 28480320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 33",
+            "x**4 + 23*x**3 + 794*x**2 + 26152*x + 863040"
+          ]
+        },
+        {
+          "c": 33390720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 34",
+            "x**4 + 24*x**3 + 851*x**2 + 28884*x + 982080"
+          ]
+        },
+        {
+          "c": 38955840,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 35",
+            "x**4 + 25*x**3 + 910*x**2 + 31800*x + 1113024"
+          ]
+        },
+        {
+          "c": 45239040,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 36",
+            "x**4 + 26*x**3 + 971*x**2 + 34906*x + 1256640"
+          ]
+        },
+        {
+          "c": 52307640,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 37",
+            "x**4 + 27*x**3 + 1034*x**2 + 38208*x + 1413720"
+          ]
+        },
+        {
+          "c": 60233040,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 38",
+            "x**4 + 28*x**3 + 1099*x**2 + 41712*x + 1585080"
+          ]
+        },
+        {
+          "c": 69090840,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 39",
+            "x**4 + 29*x**3 + 1166*x**2 + 45424*x + 1771560"
+          ]
+        },
+        {
+          "c": 78960960,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 40",
+            "x**4 + 30*x**3 + 1235*x**2 + 49350*x + 1974024"
+          ]
+        },
+        {
+          "c": 89927760,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 41",
+            "x**4 + 31*x**3 + 1306*x**2 + 53496*x + 2193360"
+          ]
+        },
+        {
+          "c": 102080160,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 42",
+            "x**4 + 32*x**3 + 1379*x**2 + 57868*x + 2430480"
+          ]
+        },
+        {
+          "c": 115511760,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 43",
+            "x**4 + 33*x**3 + 1454*x**2 + 62472*x + 2686320"
+          ]
+        },
+        {
+          "c": 130320960,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 44",
+            "x**4 + 34*x**3 + 1531*x**2 + 67314*x + 2961840"
+          ]
+        },
+        {
+          "c": 146611080,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 45",
+            "x**4 + 35*x**3 + 1610*x**2 + 72400*x + 3258024"
+          ]
+        },
+        {
+          "c": 164490480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 46",
+            "x**4 + 36*x**3 + 1691*x**2 + 77736*x + 3575880"
+          ]
+        },
+        {
+          "c": 184072680,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 47",
+            "x**4 + 37*x**3 + 1774*x**2 + 83328*x + 3916440"
+          ]
+        },
+        {
+          "c": 205476480,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 48",
+            "x**4 + 38*x**3 + 1859*x**2 + 89182*x + 4280760"
+          ]
+        },
+        {
+          "c": 228826080,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 49",
+            "x**4 + 39*x**3 + 1946*x**2 + 95304*x + 4669920"
+          ]
+        },
+        {
+          "c": 254251200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 50",
+            "x**4 + 40*x**3 + 2035*x**2 + 101700*x + 5085024"
+          ]
+        },
+        {
+          "c": 281887200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 51",
+            "x**4 + 41*x**3 + 2126*x**2 + 108376*x + 5527200"
+          ]
+        },
+        {
+          "c": 311875200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 52",
+            "x**4 + 42*x**3 + 2219*x**2 + 115338*x + 5997600"
+          ]
+        },
+        {
+          "c": 344362200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 53",
+            "x**4 + 43*x**3 + 2314*x**2 + 122592*x + 6497400"
+          ]
+        },
+        {
+          "c": 379501200,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 54",
+            "x**4 + 44*x**3 + 2411*x**2 + 130144*x + 7027800"
+          ]
+        },
+        {
+          "c": 417451320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 55",
+            "x**4 + 45*x**3 + 2510*x**2 + 138000*x + 7590024"
+          ]
+        },
+        {
+          "c": 458377920,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 56",
+            "x**4 + 46*x**3 + 2611*x**2 + 146166*x + 8185320"
+          ]
+        },
+        {
+          "c": 502452720,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 57",
+            "x**4 + 47*x**3 + 2714*x**2 + 154648*x + 8814960"
+          ]
+        },
+        {
+          "c": 549853920,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 58",
+            "x**4 + 48*x**3 + 2819*x**2 + 163452*x + 9480240"
+          ]
+        },
+        {
+          "c": 597766560,
+          "degrees": [
+            5
+          ],
+          "rational_root": false,
+          "irreducible": true,
+          "candidate": false,
+          "factors": null
+        },
+        {
+          "c": 600766320,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 59",
+            "x**4 + 49*x**3 + 2926*x**2 + 172584*x + 10182480"
+          ]
+        },
+        {
+          "c": 655381440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 60",
+            "x**4 + 50*x**3 + 3035*x**2 + 182050*x + 10923024"
+          ]
+        },
+        {
+          "c": 713897640,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 61",
+            "x**4 + 51*x**3 + 3146*x**2 + 191856*x + 11703240"
+          ]
+        },
+        {
+          "c": 776520240,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 62",
+            "x**4 + 52*x**3 + 3259*x**2 + 202008*x + 12524520"
+          ]
+        },
+        {
+          "c": 843461640,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 63",
+            "x**4 + 53*x**3 + 3374*x**2 + 212512*x + 13388280"
+          ]
+        },
+        {
+          "c": 914941440,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 64",
+            "x**4 + 54*x**3 + 3491*x**2 + 223374*x + 14295960"
+          ]
+        },
+        {
+          "c": 991186560,
+          "degrees": [
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 65",
+            "x**4 + 55*x**3 + 3610*x**2 + 234600*x + 15249024"
+          ]
+        }
+      ],
+      "n_reducible": 123,
+      "candidates": []
+    },
+    "6": {
+      "k": 6,
+      "rad_k_factorial": 30,
+      "bound": 1000000000,
+      "n_candidates": 66666667,
+      "sieve_primes": [
+        7,
+        11,
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191
+      ],
+      "n_survivors": 30,
+      "survivors": [
+        0,
+        720,
+        5040,
+        20160,
+        60480,
+        151200,
+        332640,
+        665280,
+        1235520,
+        2162160,
+        3603600,
+        5765760,
+        8910720,
+        13366080,
+        19535040,
+        27907200,
+        39070080,
+        53721360,
+        72681840,
+        96909120,
+        127512000,
+        165765600,
+        213127200,
+        271252800,
+        342014400,
+        427518000,
+        530122320,
+        652458240,
+        797448960,
+        968330880
+      ],
+      "sieve_seconds": 9.32,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 720,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 6",
+            "x + 1",
+            "x**4 - 10*x**3 + 41*x**2 - 80*x + 120"
+          ]
+        },
+        {
+          "c": 5040,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 7",
+            "x + 2",
+            "x**4 - 10*x**3 + 49*x**2 - 120*x + 360"
+          ]
+        },
+        {
+          "c": 20160,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 8",
+            "x + 3",
+            "x**4 - 10*x**3 + 59*x**2 - 170*x + 840"
+          ]
+        },
+        {
+          "c": 60480,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 9",
+            "x + 4",
+            "x**4 - 10*x**3 + 71*x**2 - 230*x + 1680"
+          ]
+        },
+        {
+          "c": 151200,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x + 5",
+            "x**4 - 10*x**3 + 85*x**2 - 300*x + 3024"
+          ]
+        },
+        {
+          "c": 332640,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x + 6",
+            "x**4 - 10*x**3 + 101*x**2 - 380*x + 5040"
+          ]
+        },
+        {
+          "c": 665280,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x + 7",
+            "x**4 - 10*x**3 + 119*x**2 - 470*x + 7920"
+          ]
+        },
+        {
+          "c": 1235520,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 13",
+            "x + 8",
+            "x**4 - 10*x**3 + 139*x**2 - 570*x + 11880"
+          ]
+        },
+        {
+          "c": 2162160,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 14",
+            "x + 9",
+            "x**4 - 10*x**3 + 161*x**2 - 680*x + 17160"
+          ]
+        },
+        {
+          "c": 3603600,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 15",
+            "x + 10",
+            "x**4 - 10*x**3 + 185*x**2 - 800*x + 24024"
+          ]
+        },
+        {
+          "c": 5765760,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 16",
+            "x + 11",
+            "x**4 - 10*x**3 + 211*x**2 - 930*x + 32760"
+          ]
+        },
+        {
+          "c": 8910720,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 17",
+            "x + 12",
+            "x**4 - 10*x**3 + 239*x**2 - 1070*x + 43680"
+          ]
+        },
+        {
+          "c": 13366080,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 18",
+            "x + 13",
+            "x**4 - 10*x**3 + 269*x**2 - 1220*x + 57120"
+          ]
+        },
+        {
+          "c": 19535040,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 19",
+            "x + 14",
+            "x**4 - 10*x**3 + 301*x**2 - 1380*x + 73440"
+          ]
+        },
+        {
+          "c": 27907200,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 20",
+            "x + 15",
+            "x**4 - 10*x**3 + 335*x**2 - 1550*x + 93024"
+          ]
+        },
+        {
+          "c": 39070080,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 21",
+            "x + 16",
+            "x**4 - 10*x**3 + 371*x**2 - 1730*x + 116280"
+          ]
+        },
+        {
+          "c": 53721360,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 22",
+            "x + 17",
+            "x**4 - 10*x**3 + 409*x**2 - 1920*x + 143640"
+          ]
+        },
+        {
+          "c": 72681840,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 23",
+            "x + 18",
+            "x**4 - 10*x**3 + 449*x**2 - 2120*x + 175560"
+          ]
+        },
+        {
+          "c": 96909120,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 24",
+            "x + 19",
+            "x**4 - 10*x**3 + 491*x**2 - 2330*x + 212520"
+          ]
+        },
+        {
+          "c": 127512000,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 25",
+            "x + 20",
+            "x**4 - 10*x**3 + 535*x**2 - 2550*x + 255024"
+          ]
+        },
+        {
+          "c": 165765600,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 26",
+            "x + 21",
+            "x**4 - 10*x**3 + 581*x**2 - 2780*x + 303600"
+          ]
+        },
+        {
+          "c": 213127200,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 27",
+            "x + 22",
+            "x**4 - 10*x**3 + 629*x**2 - 3020*x + 358800"
+          ]
+        },
+        {
+          "c": 271252800,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 28",
+            "x + 23",
+            "x**4 - 10*x**3 + 679*x**2 - 3270*x + 421200"
+          ]
+        },
+        {
+          "c": 342014400,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 29",
+            "x + 24",
+            "x**4 - 10*x**3 + 731*x**2 - 3530*x + 491400"
+          ]
+        },
+        {
+          "c": 427518000,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 30",
+            "x + 25",
+            "x**4 - 10*x**3 + 785*x**2 - 3800*x + 570024"
+          ]
+        },
+        {
+          "c": 530122320,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 31",
+            "x + 26",
+            "x**4 - 10*x**3 + 841*x**2 - 4080*x + 657720"
+          ]
+        },
+        {
+          "c": 652458240,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 32",
+            "x + 27",
+            "x**4 - 10*x**3 + 899*x**2 - 4370*x + 755160"
+          ]
+        },
+        {
+          "c": 797448960,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 33",
+            "x + 28",
+            "x**4 - 10*x**3 + 959*x**2 - 4670*x + 863040"
+          ]
+        },
+        {
+          "c": 968330880,
+          "degrees": [
+            1,
+            1,
+            4
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 34",
+            "x + 29",
+            "x**4 - 10*x**3 + 1021*x**2 - 4980*x + 982080"
+          ]
+        }
+      ],
+      "n_reducible": 30,
+      "candidates": []
+    },
+    "7": {
+      "k": 7,
+      "rad_k_factorial": 210,
+      "bound": 1000000000,
+      "n_candidates": 9523809,
+      "sieve_primes": [
+        11,
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193
+      ],
+      "n_survivors": 33,
+      "survivors": [
+        -859541760,
+        -586051200,
+        -390700800,
+        -253955520,
+        -160392960,
+        -98017920,
+        -57657600,
+        -32432400,
+        -17297280,
+        -8648640,
+        -3991680,
+        -1663200,
+        -604800,
+        -181440,
+        -40320,
+        -5040,
+        0,
+        5040,
+        40320,
+        181440,
+        604800,
+        1663200,
+        3991680,
+        8648640,
+        17297280,
+        32432400,
+        57657600,
+        98017920,
+        160392960,
+        253955520,
+        390700800,
+        586051200,
+        859541760
+      ],
+      "sieve_seconds": 2.28,
+      "classified": [
+        {
+          "c": -859541760,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 16",
+            "x**6 - 37*x**5 + 767*x**4 - 13007*x**3 + 209736*x**2 - 3357540*x + 53721360"
+          ]
+        },
+        {
+          "c": -586051200,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 15",
+            "x**6 - 36*x**5 + 715*x**4 - 11460*x**3 + 173524*x**2 - 2604624*x + 39070080"
+          ]
+        },
+        {
+          "c": -390700800,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 14",
+            "x**6 - 35*x**5 + 665*x**4 - 10045*x**3 + 142254*x**2 - 1993320*x + 27907200"
+          ]
+        },
+        {
+          "c": -253955520,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 13",
+            "x**6 - 34*x**5 + 617*x**4 - 8756*x**3 + 115452*x**2 - 1502640*x + 19535040"
+          ]
+        },
+        {
+          "c": -160392960,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 12",
+            "x**6 - 33*x**5 + 571*x**4 - 7587*x**3 + 92668*x**2 - 1113780*x + 13366080"
+          ]
+        },
+        {
+          "c": -98017920,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 11",
+            "x**6 - 32*x**5 + 527*x**4 - 6532*x**3 + 73476*x**2 - 810000*x + 8910720"
+          ]
+        },
+        {
+          "c": -57657600,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 10",
+            "x**6 - 31*x**5 + 485*x**4 - 5585*x**3 + 57474*x**2 - 576504*x + 5765760"
+          ]
+        },
+        {
+          "c": -32432400,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 9",
+            "x**6 - 30*x**5 + 445*x**4 - 4740*x**3 + 44284*x**2 - 400320*x + 3603600"
+          ]
+        },
+        {
+          "c": -17297280,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 8",
+            "x**6 - 29*x**5 + 407*x**4 - 3991*x**3 + 33552*x**2 - 270180*x + 2162160"
+          ]
+        },
+        {
+          "c": -8648640,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 7",
+            "x**6 - 28*x**5 + 371*x**4 - 3332*x**3 + 24948*x**2 - 176400*x + 1235520"
+          ]
+        },
+        {
+          "c": -3991680,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 6",
+            "x**6 - 27*x**5 + 337*x**4 - 2757*x**3 + 18166*x**2 - 110760*x + 665280"
+          ]
+        },
+        {
+          "c": -1663200,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 5",
+            "x**6 - 26*x**5 + 305*x**4 - 2260*x**3 + 12924*x**2 - 66384*x + 332640"
+          ]
+        },
+        {
+          "c": -604800,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 4",
+            "x**6 - 25*x**5 + 275*x**4 - 1835*x**3 + 8964*x**2 - 37620*x + 151200"
+          ]
+        },
+        {
+          "c": -181440,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 3",
+            "x**6 - 24*x**5 + 247*x**4 - 1476*x**3 + 6052*x**2 - 19920*x + 60480"
+          ]
+        },
+        {
+          "c": -40320,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 2",
+            "x**6 - 23*x**5 + 221*x**4 - 1177*x**3 + 3978*x**2 - 9720*x + 20160"
+          ]
+        },
+        {
+          "c": -5040,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 1",
+            "x**6 - 22*x**5 + 197*x**4 - 932*x**3 + 2556*x**2 - 4320*x + 5040"
+          ]
+        },
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 5040,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 7",
+            "x**6 - 14*x**5 + 77*x**4 - 196*x**3 + 252*x**2 + 720"
+          ]
+        },
+        {
+          "c": 40320,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 8",
+            "x**6 - 13*x**5 + 71*x**4 - 167*x**3 + 288*x**2 + 540*x + 5040"
+          ]
+        },
+        {
+          "c": 181440,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 9",
+            "x**6 - 12*x**5 + 67*x**4 - 132*x**3 + 436*x**2 + 2160*x + 20160"
+          ]
+        },
+        {
+          "c": 604800,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x**6 - 11*x**5 + 65*x**4 - 85*x**3 + 774*x**2 + 5976*x + 60480"
+          ]
+        },
+        {
+          "c": 1663200,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x**6 - 10*x**5 + 65*x**4 - 20*x**3 + 1404*x**2 + 13680*x + 151200"
+          ]
+        },
+        {
+          "c": 3991680,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x**6 - 9*x**5 + 67*x**4 + 69*x**3 + 2452*x**2 + 27660*x + 332640"
+          ]
+        },
+        {
+          "c": 8648640,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 13",
+            "x**6 - 8*x**5 + 71*x**4 + 188*x**3 + 4068*x**2 + 51120*x + 665280"
+          ]
+        },
+        {
+          "c": 17297280,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 14",
+            "x**6 - 7*x**5 + 77*x**4 + 343*x**3 + 6426*x**2 + 88200*x + 1235520"
+          ]
+        },
+        {
+          "c": 32432400,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 15",
+            "x**6 - 6*x**5 + 85*x**4 + 540*x**3 + 9724*x**2 + 144096*x + 2162160"
+          ]
+        },
+        {
+          "c": 57657600,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 16",
+            "x**6 - 5*x**5 + 95*x**4 + 785*x**3 + 14184*x**2 + 225180*x + 3603600"
+          ]
+        },
+        {
+          "c": 98017920,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 17",
+            "x**6 - 4*x**5 + 107*x**4 + 1084*x**3 + 20052*x**2 + 339120*x + 5765760"
+          ]
+        },
+        {
+          "c": 160392960,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 18",
+            "x**6 - 3*x**5 + 121*x**4 + 1443*x**3 + 27598*x**2 + 495000*x + 8910720"
+          ]
+        },
+        {
+          "c": 253955520,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 19",
+            "x**6 - 2*x**5 + 137*x**4 + 1868*x**3 + 37116*x**2 + 703440*x + 13366080"
+          ]
+        },
+        {
+          "c": 390700800,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 20",
+            "x**6 - x**5 + 155*x**4 + 2365*x**3 + 48924*x**2 + 976716*x + 19535040"
+          ]
+        },
+        {
+          "c": 586051200,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 21",
+            "x**6 + 175*x**4 + 2940*x**3 + 63364*x**2 + 1328880*x + 27907200"
+          ]
+        },
+        {
+          "c": 859541760,
+          "degrees": [
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 22",
+            "x**6 + x**5 + 197*x**4 + 3599*x**3 + 80802*x**2 + 1775880*x + 39070080"
+          ]
+        }
+      ],
+      "n_reducible": 33,
+      "candidates": []
+    },
+    "8": {
+      "k": 8,
+      "rad_k_factorial": 210,
+      "bound": 1000000000,
+      "n_candidates": 9523809,
+      "sieve_primes": [
+        11,
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193
+      ],
+      "n_survivors": 11,
+      "survivors": [
+        0,
+        40320,
+        362880,
+        1814400,
+        6652800,
+        19958400,
+        51891840,
+        121080960,
+        259459200,
+        518918400,
+        980179200
+      ],
+      "sieve_seconds": 1.69,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 40320,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 8",
+            "x + 1",
+            "x**6 - 21*x**5 + 183*x**4 - 847*x**3 + 2304*x**2 - 3780*x + 5040"
+          ]
+        },
+        {
+          "c": 362880,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 9",
+            "x + 2",
+            "x**6 - 21*x**5 + 193*x**4 - 987*x**3 + 3334*x**2 - 7560*x + 20160"
+          ]
+        },
+        {
+          "c": 1814400,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x + 3",
+            "x**6 - 21*x**5 + 205*x**4 - 1155*x**3 + 4834*x**2 - 13944*x + 60480"
+          ]
+        },
+        {
+          "c": 6652800,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x + 4",
+            "x**6 - 21*x**5 + 219*x**4 - 1351*x**3 + 6948*x**2 - 23940*x + 151200"
+          ]
+        },
+        {
+          "c": 19958400,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x + 5",
+            "x**6 - 21*x**5 + 235*x**4 - 1575*x**3 + 9844*x**2 - 38724*x + 332640"
+          ]
+        },
+        {
+          "c": 51891840,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 13",
+            "x + 6",
+            "x**6 - 21*x**5 + 253*x**4 - 1827*x**3 + 13714*x**2 - 59640*x + 665280"
+          ]
+        },
+        {
+          "c": 121080960,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 14",
+            "x + 7",
+            "x**6 - 21*x**5 + 273*x**4 - 2107*x**3 + 18774*x**2 - 88200*x + 1235520"
+          ]
+        },
+        {
+          "c": 259459200,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 15",
+            "x + 8",
+            "x**6 - 21*x**5 + 295*x**4 - 2415*x**3 + 25264*x**2 - 126084*x + 2162160"
+          ]
+        },
+        {
+          "c": 518918400,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 16",
+            "x + 9",
+            "x**6 - 21*x**5 + 319*x**4 - 2751*x**3 + 33448*x**2 - 175140*x + 3603600"
+          ]
+        },
+        {
+          "c": 980179200,
+          "degrees": [
+            1,
+            1,
+            6
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 17",
+            "x + 10",
+            "x**6 - 21*x**5 + 345*x**4 - 3115*x**3 + 43614*x**2 - 237384*x + 5765760"
+          ]
+        }
+      ],
+      "n_reducible": 11,
+      "candidates": []
+    },
+    "9": {
+      "k": 9,
+      "rad_k_factorial": 210,
+      "bound": 1000000000,
+      "n_candidates": 9523809,
+      "sieve_primes": [
+        11,
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193
+      ],
+      "n_survivors": 13,
+      "survivors": [
+        -726485760,
+        -259459200,
+        -79833600,
+        -19958400,
+        -3628800,
+        -362880,
+        0,
+        362880,
+        3628800,
+        19958400,
+        79833600,
+        259459200,
+        726485760
+      ],
+      "sieve_seconds": 2.08,
+      "classified": [
+        {
+          "c": -726485760,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 6",
+            "x**8 - 42*x**7 + 798*x**6 - 9324*x**5 + 78393*x**4 - 537642*x**3 + 3343976*x**2 - 20173440*x + 121080960"
+          ]
+        },
+        {
+          "c": -259459200,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 5",
+            "x**8 - 41*x**7 + 751*x**6 - 8291*x**5 + 63904*x**4 - 386804*x**3 + 2052144*x**2 - 10370304*x + 51891840"
+          ]
+        },
+        {
+          "c": -79833600,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 4",
+            "x**8 - 40*x**7 + 706*x**6 - 7360*x**5 + 51889*x**4 - 274840*x**3 + 1217484*x**2 - 4979520*x + 19958400"
+          ]
+        },
+        {
+          "c": -19958400,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 3",
+            "x**8 - 39*x**7 + 663*x**6 - 6525*x**5 + 42024*x**4 - 193356*x**3 + 698192*x**2 - 2204160*x + 6652800"
+          ]
+        },
+        {
+          "c": -3628800,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 2",
+            "x**8 - 38*x**7 + 622*x**6 - 5780*x**5 + 34009*x**4 - 135302*x**3 + 388728*x**2 - 887040*x + 1814400"
+          ]
+        },
+        {
+          "c": -362880,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 1",
+            "x**8 - 37*x**7 + 583*x**6 - 5119*x**5 + 27568*x**4 - 94852*x**3 + 212976*x**2 - 322560*x + 362880"
+          ]
+        },
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 362880,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 9",
+            "x**8 - 27*x**7 + 303*x**6 - 1809*x**5 + 6168*x**4 - 11772*x**3 + 12176*x**2 + 40320"
+          ]
+        },
+        {
+          "c": 3628800,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x**8 - 26*x**7 + 286*x**6 - 1676*x**5 + 5689*x**4 - 10394*x**3 + 14184*x**2 + 32256*x + 362880"
+          ]
+        },
+        {
+          "c": 19958400,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x**8 - 25*x**7 + 271*x**6 - 1555*x**5 + 5344*x**4 - 8500*x**3 + 24624*x**2 + 161280*x + 1814400"
+          ]
+        },
+        {
+          "c": 79833600,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x**8 - 24*x**7 + 258*x**6 - 1440*x**5 + 5169*x**4 - 5256*x**3 + 55052*x**2 + 551040*x + 6652800"
+          ]
+        },
+        {
+          "c": 259459200,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 13",
+            "x**8 - 23*x**7 + 247*x**6 - 1325*x**5 + 5224*x**4 + 628*x**3 + 126288*x**2 + 1532160*x + 19958400"
+          ]
+        },
+        {
+          "c": 726485760,
+          "degrees": [
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 14",
+            "x**8 - 22*x**7 + 238*x**6 - 1204*x**5 + 5593*x**4 + 11018*x**3 + 272376*x**2 + 3703680*x + 51891840"
+          ]
+        }
+      ],
+      "n_reducible": 13,
+      "candidates": []
+    },
+    "10": {
+      "k": 10,
+      "rad_k_factorial": 210,
+      "bound": 1000000000,
+      "n_candidates": 9523809,
+      "sieve_primes": [
+        11,
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193
+      ],
+      "n_survivors": 4,
+      "survivors": [
+        0,
+        3628800,
+        39916800,
+        239500800
+      ],
+      "sieve_seconds": 1.13,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 9",
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 3628800,
+          "degrees": [
+            1,
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x + 1",
+            "x**8 - 36*x**7 + 556*x**6 - 4806*x**5 + 25579*x**4 - 87174*x**3 + 194904*x**2 - 290304*x + 362880"
+          ]
+        },
+        {
+          "c": 39916800,
+          "degrees": [
+            1,
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x + 2",
+            "x**8 - 36*x**7 + 568*x**6 - 5130*x**5 + 29599*x**4 - 115794*x**3 + 332712*x**2 - 725760*x + 1814400"
+          ]
+        },
+        {
+          "c": 239500800,
+          "degrees": [
+            1,
+            1,
+            8
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x + 3",
+            "x**8 - 36*x**7 + 582*x**6 - 5508*x**5 + 34653*x**4 - 155736*x**3 + 569564*x**2 - 1653120*x + 6652800"
+          ]
+        }
+      ],
+      "n_reducible": 4,
+      "candidates": []
+    },
+    "11": {
+      "k": 11,
+      "rad_k_factorial": 2310,
+      "bound": 1000000000,
+      "n_candidates": 865801,
+      "sieve_primes": [
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193,
+        197
+      ],
+      "n_survivors": 5,
+      "survivors": [
+        -479001600,
+        -39916800,
+        0,
+        39916800,
+        479001600
+      ],
+      "sieve_seconds": 0.19,
+      "classified": [
+        {
+          "c": -479001600,
+          "degrees": [
+            1,
+            10
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 2",
+            "x**10 - 57*x**9 + 1434*x**8 - 21018*x**7 + 199809*x**6 - 1301673*x**5 + 6020276*x**4 - 20450052*x**3 + 53653680*x**2 - 117936000*x + 239500800"
+          ]
+        },
+        {
+          "c": -39916800,
+          "degrees": [
+            1,
+            10
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x + 1",
+            "x**10 - 56*x**9 + 1376*x**8 - 19526*x**7 + 177299*x**6 - 1079354*x**5 + 4496284*x**4 - 12905784*x**3 + 25659360*x**2 - 36288000*x + 39916800"
+          ]
+        },
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 10",
+            "x - 9",
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 39916800,
+          "degrees": [
+            1,
+            10
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x**10 - 44*x**9 + 836*x**8 - 8954*x**7 + 59279*x**6 - 249986*x**5 + 667084*x**4 - 1071576*x**3 + 966240*x**2 + 3628800"
+          ]
+        },
+        {
+          "c": 479001600,
+          "degrees": [
+            1,
+            10
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x**10 - 43*x**9 + 804*x**8 - 8502*x**7 + 55749*x**6 - 233067*x**5 + 620126*x**4 - 967988*x**3 + 1137720*x**2 + 3024000*x + 39916800"
+          ]
+        }
+      ],
+      "n_reducible": 5,
+      "candidates": []
+    },
+    "12": {
+      "k": 12,
+      "rad_k_factorial": 2310,
+      "bound": 1000000000,
+      "n_candidates": 865801,
+      "sieve_primes": [
+        13,
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193,
+        197
+      ],
+      "n_survivors": 2,
+      "survivors": [
+        0,
+        479001600
+      ],
+      "sieve_seconds": 0.19,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 11",
+            "x - 10",
+            "x - 9",
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        },
+        {
+          "c": 479001600,
+          "degrees": [
+            1,
+            1,
+            10
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x + 1",
+            "x**10 - 55*x**9 + 1332*x**8 - 18678*x**7 + 167949*x**6 - 1014255*x**5 + 4198118*x**4 - 11987492*x**3 + 23773080*x**2 - 33264000*x + 39916800"
+          ]
+        }
+      ],
+      "n_reducible": 2,
+      "candidates": []
+    },
+    "13": {
+      "k": 13,
+      "rad_k_factorial": 30030,
+      "bound": 1000000000,
+      "n_candidates": 66601,
+      "sieve_primes": [
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193,
+        197,
+        199
+      ],
+      "n_survivors": 1,
+      "survivors": [
+        0
+      ],
+      "sieve_seconds": 0.01,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 12",
+            "x - 11",
+            "x - 10",
+            "x - 9",
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        }
+      ],
+      "n_reducible": 1,
+      "candidates": []
+    },
+    "14": {
+      "k": 14,
+      "rad_k_factorial": 30030,
+      "bound": 1000000000,
+      "n_candidates": 66601,
+      "sieve_primes": [
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193,
+        197,
+        199
+      ],
+      "n_survivors": 1,
+      "survivors": [
+        0
+      ],
+      "sieve_seconds": 0.01,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 13",
+            "x - 12",
+            "x - 11",
+            "x - 10",
+            "x - 9",
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        }
+      ],
+      "n_reducible": 1,
+      "candidates": []
+    },
+    "15": {
+      "k": 15,
+      "rad_k_factorial": 30030,
+      "bound": 1000000000,
+      "n_candidates": 66601,
+      "sieve_primes": [
+        17,
+        19,
+        23,
+        29,
+        31,
+        37,
+        41,
+        43,
+        47,
+        53,
+        59,
+        61,
+        67,
+        71,
+        73,
+        79,
+        83,
+        89,
+        97,
+        101,
+        103,
+        107,
+        109,
+        113,
+        127,
+        131,
+        137,
+        139,
+        149,
+        151,
+        157,
+        163,
+        167,
+        173,
+        179,
+        181,
+        191,
+        193,
+        197,
+        199
+      ],
+      "n_survivors": 1,
+      "survivors": [
+        0
+      ],
+      "sieve_seconds": 0.01,
+      "classified": [
+        {
+          "c": 0,
+          "degrees": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "rational_root": true,
+          "irreducible": false,
+          "candidate": false,
+          "factors": [
+            "x - 14",
+            "x - 13",
+            "x - 12",
+            "x - 11",
+            "x - 10",
+            "x - 9",
+            "x - 8",
+            "x - 7",
+            "x - 6",
+            "x - 5",
+            "x - 4",
+            "x - 3",
+            "x - 2",
+            "x - 1",
+            "x"
+          ]
+        }
+      ],
+      "n_reducible": 1,
+      "candidates": []
+    }
+  },
+  "n_candidates": 0,
+  "n_unkilled": 0
+}

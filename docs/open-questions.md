@@ -233,7 +233,12 @@ overdue.
 
 ## Tier C — research; would change what the tool can claim
 
-### Q14. Can `(x)_k − c` be intersective? *(difficulty: open, well-posed · **MAX**)*
+### Q14. Can `(x)_k − c` be intersective? *(difficulty: open, well-posed · **MAX**)* — ANSWERED 2026-08-20
+Full answer in [`q14-intersective.md`](q14-intersective.md). **Never for k <= 5** -- and k=5, the first open case, is settled here: a 2+3 split forces 5a^4-10a^2+9 to be square, which is the Pell equation v^2-5u^2=4 with u=a^2-1, so a^2 = F_2j+1; F_n+1 is a square only for n=0,4,6, leaving c in {0,+-210,+-2160}, each killed by an explicit small prime. Open for k >= 6, but constrained by rad(k!)|c, reducibility with all factors >= 2, and (even k) an odd square-relation among the beta_i -- and unobserved across 180 million values of c (k=5..15, |c| <= 1e9).
+
+**The gap is closed operationally regardless.** Irreducibility of (x)_k - k!m over Q implies, by Jordan and Chebotarev, that a killing prime exists with density >= 1/k -- and irreducibility has a one-prime certificate computed by Lucas without ever building m. `scripts/termination_certificate.py` certifies all 29 columns k<=30 of i=8, and all four of i=9's long-run columns k=11,29,40,45. Each such column is upgraded from 'a killing prime was found' to 'a killing prime had to exist'.
+
+*Original text:*
 No rational root, but a root modulo every prime. This is **the only logical gap
 between the census method and a guarantee that it always terminates**: Frobenius
 + Jordan give a killer prime with density ≥ 1/k *provided* F_k has a derangement
