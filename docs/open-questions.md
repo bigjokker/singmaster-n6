@@ -314,3 +314,54 @@ bottleneck, the table-free scan, the parity-fold test threshold, and Q19's 26×
 that measured 13–15× — a plausible claim survived reasoning and died on
 measurement. Q19 adds a sharper version of the rule: a *reuse* factor is not a
 *speedup*. Measure the clock, not the counter.
+
+---
+
+## Tier A2 — from the 2026-08-20 first-principles audit
+
+Full findings in [`audit-2026-08-20.md`](audit-2026-08-20.md). The pipeline's
+mathematics re-derived clean throughout (image characterisation over 146k
+checks, cell geometry over 5,594 primes, Lemma A with no live prime skipped,
+four membership paths in agreement). These are what the audit turned up.
+
+### Q19. Should `first_live_after` bisect into the interval list? *(low - **HARD**)*
+It rescans from index 0 on every call. Measured **142x** (292.5 -> 2.1 us/call)
+with identical answers: 2.3 h of single-threaded parent time at i=9 becomes
+1.2 minutes. That is the stretch during which a running i=9 job looks idle.
+
+### Q20. Should `binom_mod_lucas` take the delta-identity branch? *(low - **HARD**)*
+Measured **33,000-35,000x** at i=9 two-digit primes, same answer.
+`r_two_digit_delta` already exists and the sweeps use it; `binom_mod_lucas`
+does not, and it is the r(p) route for `modular`, `nextprime_sweep`, and
+`witness.lucas_mod_pure`. One sub-question is EXTRA: the verifier uses generic
+Lucas as its *independent* route, so making delta primary would cost
+independence -- the honest answer may be "keep the verifier slow on purpose".
+
+### Q21. Build a machine-checked coverage ledger. *(low-medium - **HARD**)*
+**The one correctness gap found.** `N(m)=6` claims every k in [2,kmax] except
+{K,K+1}, but each artifact self-reports only its own slice and the union is
+assembled by reading three files with three different evidence types.
+`witness.coverage()` checks completeness of the range the sweep *claimed*,
+which is not the same statement. Same shape as the false-`clean` bugs: a local
+check passing while the global claim goes unchecked.
+
+### Q22. Should the Z-jump start at k=2? *(trivial - **HARD**)*
+i=8's re-derivation starts at k=3, leaving k=2 to a separate artifact. k=2 is
+decided by the QR test in O(1), so including it should be free.
+
+### Q23. Is the size law accurate enough at small primes? *(medium - **EXTRA**)*
+The 0.2% figure is a large-p measurement. Against exact images the error is
+5.6% at p~10^3 and 1.9% at p~10^4, and compounds over a run. Irrelevant for
+Band II and the Z-jump; not obviously irrelevant for the small-k census.
+Likely answer: no verdict changes, and the deliverable is a documented accuracy
+bound by regime rather than a code change.
+
+### Q24. Re-derive the phase budget now that the table is gone. *(low - **HARD**)*
+`profile_sweep.py` still times `fact_table`, which Q2 removed from the hot
+path, so the "90.6% table" split and the 29.6 h i=9 Z-jump estimate describe
+the *old* pipeline. This also feeds Q11, whose "i=10 is 65.7 days" rests on
+pre-Q2 numbers.
+
+**No MAX from this audit.** Every gap found is bounded engineering or
+documentation accuracy; Q21 is the most structurally important and is still a
+scripting job.
