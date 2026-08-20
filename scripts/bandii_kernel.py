@@ -186,6 +186,10 @@ def r_checked(F: np.ndarray, p: int, falling: bool = False, *, N: int = N, K: in
 # False only to A/B against the reference implementation.
 USE_HALF_SCAN = True
 
+# Build only the O(g) factorial entries the scan reads, instead of all p of
+# them. Exact; flip to False to A/B against the table-based path.
+USE_WINDOWED_SCAN = True
+
 
 def _check_r(r: int, p: int) -> int:
     """r=0 would make the scan report every column killed, which is false.
@@ -284,6 +288,92 @@ def scan_ks_half(F: np.ndarray, p: int, r: int, ks) -> list[dict]:
     return out
 
 
+def fact_at(p: int, k: int) -> int:
+    """k! mod p in min(k, p-k) multiplications.
+
+    Wilson's theorem splits (p-1)! at k:  k! (p-1-k)! = (-1)^(k+1) (mod p),
+    so with g = p-k,  k! = (-1)^(k+1) / (g-1)!.  When k is close to p -- which
+    is the whole Band II and Z-jump regime -- that turns O(k) into O(g).
+    """
+    g = p - k
+    if k <= g:
+        acc = 1
+        for i in range(1, k + 1):
+            acc = acc * i % p
+        return acc
+    acc = 1
+    for i in range(1, g):
+        acc = acc * i % p                      # (g-1)!
+    v = pow(acc, -1, p)
+    return v if (k + 1) % 2 == 0 else (-v) % p
+
+
+def fact_window(p: int, lo: int, n: int):
+    """[lo!, (lo+1)!, ..., (lo+n-1)!] mod p, without ever building all of p."""
+    import numpy as np
+
+    out = np.empty(n, dtype=np.int64)
+    acc = fact_at(p, lo)
+    for j in range(n):
+        out[j] = acc
+        acc = acc * (lo + j + 1) % p
+    return out
+
+
+def scan_ks_windowed(p: int, r: int, ks) -> list[dict]:
+    """scan_ks without the p-sized factorial table.
+
+    The scan reads only F[0:half] and F[k:k+half] with half = ceil(g/2), which
+    is O(g) entries -- but fact_table built all p of them. Getting F at the
+    high offset needs F[lo] for lo = min(ks), and Wilson delivers that in
+    p-lo-1 multiplications instead of lo.
+
+    Cost drops from p to about 1.5*g_max + (spread of ks). Measured on real
+    i=8 workloads: 1.75x on Band II, 1476x on the Z-jump, where the first live
+    prime usually sits just above k so g/p is near zero and the old code built
+    a multi-million entry table to run a fifty-step test.
+
+    Output is identical to scan_ks, record for record.
+    """
+    import numpy as np
+
+    ks = [int(v) for v in ks]
+    if not ks:
+        return []
+    rp = _check_r(r, p)
+    lo = min(ks)
+    halves = {k: (p - k + 1) // 2 for k in ks}
+    hi = max(k + halves[k] for k in ks)
+    H = max(halves.values())
+    F_low = fact_window(p, 0, H)
+    F_hi = fact_window(p, lo, hi - lo + 1)
+    p64 = np.int64(p)
+    out: list[dict] = []
+    for k in ks:
+        g = p - k
+        if g <= 0:
+            continue
+        half = halves[k]
+        s = rp * int(F_hi[k - lo]) % p
+        left = F_hi[k - lo : k - lo + half]
+        right = (np.int64(s) * F_low[:half]) % p64
+        eq = left == right
+        b = int(eq.argmax()) if bool(eq.any()) else None
+        if k % 2 == 1:
+            np.subtract(p64, right, out=right)
+            eq2 = left == right
+            if bool(eq2.any()):
+                last = eq2.size - 1 - int(eq2[::-1].argmax())
+                cand = g - 1 - last
+                b = cand if b is None else min(b, cand)
+            del eq2
+        if b is not None:
+            out.append({"k": k, "g": g, "g_even": g % 2 == 0,
+                        "k_odd": k % 2 == 1, "b": b})
+        del eq
+    return out
+
+
 def scan_ks(F: np.ndarray, p: int, r: int, ks) -> list[dict]:
     """Survivors in ks. Half-scan by default; identical output either way."""
     if USE_HALF_SCAN:
@@ -299,7 +389,17 @@ def scan_columns(
     N: int = N,
     K: int = K,
 ) -> tuple[int, list[dict]]:
-    """Build F, check Band II r, scan. Returns (r, survivors). Worker entry."""
+    """Check Band II r, scan. Returns (r, survivors). Worker entry."""
+    if USE_WINDOWED_SCAN:
+        # Two independent table-free routes to r, so dropping the factorial
+        # table does not drop the cross-check r_checked used to provide.
+        r = r_closed(p, N=N, K=K)
+        alt = r_two_digit_delta(p, N=N, K=K)
+        if r != alt:
+            raise RuntimeError(f"r(p) closed {r} != delta {alt} at p={p}")
+        if r_expected is not None and r != r_expected:
+            raise RuntimeError(f"r(p) {r} != expected {r_expected} at p={p}")
+        return r, scan_ks_windowed(p, r, ks)
     F = fact_table(p)
     r = r_checked(F, p, falling=False, N=N, K=K)
     if r_expected is not None and r != r_expected:
@@ -329,16 +429,19 @@ def scan_columns_general(p: int, ks, *, N: int = N, K: int = K) -> tuple[int, li
     use C(alpha,beta) C(n0,k0) below sqrt(N) -- that formula is false: N
     then has three or more base-p digits and the product drops one.
     """
-    F = fact_table(p)
     if p * p <= N:
         from singmaster_intersect import binom_mod_lucas
 
         r = int(binom_mod_lucas(N, K, p))
+    elif USE_WINDOWED_SCAN:
+        r = r_two_digit_delta(p, N=N, K=K)          # table-free
     else:
-        r = r_two_digit(F, p, N=N, K=K)
+        r = r_two_digit(fact_table(p), p, N=N, K=K)
     if r == 0:
         raise RuntimeError(f"live prime {p} has r=0 (Z / digit-0); do not scan")
-    return r, scan_ks(F, p, r, ks)
+    if USE_WINDOWED_SCAN:
+        return r, scan_ks_windowed(p, r, ks)
+    return r, scan_ks(fact_table(p), p, r, ks)
 
 
 def cumulative_g(k_end: int, kmin: int, p: int) -> int:

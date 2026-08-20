@@ -65,7 +65,10 @@ Three routes, and the question is which wins:
   at i=9. Worth it on its own for an 8-worker box.
 - **Amortise it** — see Q3.
 
-### Q3. Is per-column prime selection the right schedule? *(difficulty: medium · **EXTRA**)*
+### Q3. Is per-column prime selection the right schedule? *(difficulty: medium · **EXTRA**)* — RESOLVED 2026-08-20
+By Q2, not by measurement of the original trade-off. Batching existed to amortise an O(p) table; the table is now O(g_max + spread of k), which makes first-live-prime optimal on BOTH counts (it minimises g, hence both scan and table) and makes batching actively worse (spread-out k widen the window). No change.
+
+*Original text:*
 The Z-jump gives every column its own next live prime, which maximises kill rate
 per test (smallest g) but also maximises the number of distinct primes, and each
 one costs a table. Band II does the opposite: one shared prime for every column,
@@ -169,7 +172,10 @@ arrives.
 
 ## Tier B — design and scope
 
-### Q8. Should the caps be adaptive? *(difficulty: medium · **EXTRA**)*
+### Q8. Should the caps be adaptive? *(difficulty: medium · **EXTRA**)* — DECLINED 2026-08-20
+Solves a problem that has never occurred: no column has reached a cap (i=8 Band II died at pass 8/14, its Z-jump at 7/12, i=7's at 9/12). Caps are already regime-aware and the escalation ledger already distinguishes a surprising survivor from a long one. The one real gain -- certifying a fat-tail survivor rather than flagging it -- is better served by Q14's termination certificate, which proves a killing prime must exist without testing more primes.
+
+*Original text:*
 Caps are fixed at 12 (Z-jump) and 14 (Band II). Now that Λ is computed per
 round, the natural rule is "keep testing until the expected survivor count drops
 below the threshold" — which is tighter at the bottom (the document recommends
@@ -216,7 +222,10 @@ exhaustive**, and have not been touched in this session's work. An honest
 accounting of what each extra family member buys, against what the same machine
 time buys elsewhere, before committing to i=10.
 
-### Q12. Can the nearby / collide searches be made exhaustive? *(difficulty: medium · **EXTRA**)*
+### Q12. Can the nearby / collide searches be made exhaustive? *(difficulty: medium · **EXTRA**)* — SOLVED 2026-08-20
+Yes, and cheaply. The residual has EXACTLY ONE root on [k+d+e, inf) because d/dn log g < 0 there (every term of the d+e-term sum exceeds every term of the d-term sum), so bracket-and-bisect is complete. Verified: exactly one sign change over 216 (k,d,e); **0 differences from the sampled version across 7,200 pairs**, so the recorded nulls were not missing anything -- now provably. Also **2.0-2.6x faster**. `collide` was already exhaustive on its range; its limit is range, not method.
+
+*Original text:*
 `nearby_solutions` brackets roots with a geometric sample plus targeted probes
 near the attractor `c·k`; the README correctly calls the nulls sampled. What
 would a certified-exhaustive version cost — a proven bracketing argument for the
@@ -249,21 +258,30 @@ in its Galois group, which fails exactly for intersective F_k. For k=2,
 would mean the method can fail; a negative one upgrades every certificate from
 "worked" to "provably had to work."
 
-### Q15. A certificate shorter than the search. *(difficulty: research · **EXTRA**)*
+### Q15. A certificate shorter than the search. *(difficulty: research · **EXTRA**)* — ANSWERED (no) 2026-08-20
+No, structurally. The claim is universal ('no j < g works'), and the natural short proof -- gcd(x^p - x, (x)_k - k!r) = 1 -- is the polynomial route Q7 measured at O(k^2 log p), which LOSES to the O(g) scan above k ~ 150 and by orders of magnitude at Band II's k ~ 0.76p. What is available instead, and already built: per-certificate independence, parallel verification, sampling with separately-checked coverage, and O(g) time in O(1) memory (~32 ms for the hardest i=7 column).
+
+*Original text:*
 Full verification currently costs about what the search cost (≈ 2·Σg modmuls).
 Is there a certificate for a *range* of columns rather than one each — a single
 prime plus an argument covering an interval of k, or a batched aggregate — that
 a referee could check in minutes instead of hours? This is what would turn 4.3M
 certificates into a publishable object rather than a large file.
 
-### Q16. Prove the birthday deficit above `g > p^{1/3}`. *(difficulty: research · **EXTRA**)*
+### Q16. Prove the birthday deficit above `g > p^{1/3}`. *(difficulty: research · **EXTRA**)* — DECLINED 2026-08-20
+Declined on value, not only difficulty. The payoff is a LOWER bound on |I|, which sharpens pre-registrations but cannot improve a kill guarantee -- a larger image makes killing less likely. The size law already matches measurement to 0.2% across g/p in [0.03, 0.24], so a proof would replace an accurate model with a weaker inequality.
+
+*Original text:*
 Theorem B covers ~77% of generic Band I columns exactly, and **0%** of the fat
 cells and Band II — precisely the columns the pre-registrations depend on. The
 counting argument provably runs out at `p^{1/3}`, which is where the phenomenon
 starts. Improves the write-up, not the kill guarantees; worth knowing whether
 `p^{1/3}` is the true barrier or just this argument's.
 
-### Q17. Effective Chebotarev without the discriminant. *(difficulty: research, likely blocked · **EXTRA**)*
+### Q17. Effective Chebotarev without the discriminant. *(difficulty: research, likely blocked · **EXTRA**)* — ANSWERED 2026-08-20
+Still blocked -- disc(F_k) contains m, 3.1M digits, so GRH bounds are unreachable and the shape does not obviously help. But **Q14 removed the need**: an effective bound would say 'checking to X suffices', whereas the census only needs to know it will stop, and Q14's per-column irreducibility certificate gives exactly that (existence, plus a density >= 1/k rate).
+
+*Original text:*
 The qualitative half of "a killer prime exists" is done. The effective half
 needs `disc(F_k)`, which contains m (3.1M digits), so even under GRH the
 least-prime bound dwarfs anything testable. The question worth asking is not
