@@ -40,6 +40,13 @@ The real question underneath it is Q2 below.
 ### Q1. Where does the time actually go? *(difficulty: low · **HARD**)* — DONE 2026-08-20
 `scripts/profile_sweep.py` samples each phase and reports the split between factorial table, image scan, r(p) and prime assignment. The split is decisive and was not guessable: **i=9 Band II is 100% scan; the i=9 Z-jump is 90.6% table** (214 of 237 core-hours). Its distinct-prime count integrates prime density over the live intervals -- a window sample near the range start is ~2x high -- and recovers i=8's recorded 124,830 primes to 0.2%. Wall-clock projection is good to about a factor of 2; the split is the reliable part.
 
+**Superseded the same day, by its own consequence.** That split is what
+motivated Q2, and Q2 then removed the factorial table from the hot path — so
+the 90.6% figure now describes a pipeline that no longer exists. Both phases
+are scan-dominated today; see Q24 for the re-derived budget, which also
+corrected two measurement errors in the profiler itself. The *method* stands
+and the ~2x projection caveat stands; only the number is historical.
+
 *Original text:*
 There is still no profiling harness. `Claude-Answer.txt` was wrong twice about
 the bottleneck (claimed r(p) dominated Stage 3, retracted, then un-retracted),
@@ -51,7 +58,12 @@ Deliverable: per-phase, per-function wall-clock for a real i=7 run, plus a
 ### Q2. Can `fact_table` be made cheap, or avoided? *(difficulty: medium · **EXTRA**)* — SOLVED 2026-08-20
 **Solved by Wilson's theorem.** `k!(p-1-k)! = (-1)^(k+1)` mod p, so `k!` mod p costs `g-1` multiplications rather than `k`. Since the scan reads only O(g) entries anyway, the p-sized table goes away entirely. Measured on real i=8 workloads: **1476x fewer multiplications on the Z-jump** (median g/p ~ 0 there -- the old code built a multi-million entry table to run a fifty-step test) and 1.75x on Band II. End to end on real Z-jump buckets: **11.8x, identical output**; memory 282 MB/worker at i=9 becomes O(g). Implemented as `fact_at` / `fact_window` / `scan_ks_windowed` behind `USE_WINDOWED_SCAN`. Full write-up in [`extra-questions.md`](extra-questions.md).
 
-`scripts/profile_sweep.py --i 9` now quantifies it: the i=9 Z-jump is **90.6% factorial-table construction** (214 of 237 core-hours, ~989,000 distinct live primes), against Band II which is 100% scan. So this is the single biggest remaining cost in the pipeline, and the three routes in the original text are still the options. Not yet fixed.
+*The paragraph that used to sit here* said the Z-jump was 90.6% table, that
+this was the single biggest remaining cost, and that it was "not yet fixed".
+That was written before the Wilson route landed and is exactly what the route
+removed. Kept only as the motivation: the profile is what identified the
+target, and the target is gone. Q24 re-derived the budget afterwards and
+downgraded the Band II half of Q2's claim from 1.75x to a wash.
 
 *Original text:*
 It is a pure-Python loop over p — **282 MB and several seconds per prime at
@@ -79,7 +91,22 @@ trading a slightly worse per-test kill rate for far fewer tables. Given a cost
 model (Q1) and the size law (already implemented, `sizelaw.survival`), what is
 the optimal batching, and how much does it save at i=9/i=10 scale?
 
-### Q4. Re-derive i=8's witnesses. *(difficulty: low · **HARD**)*
+### Q4. Re-derive i=8's witnesses. *(difficulty: low · **HARD**)* — DONE 2026-08-20
+**Re-derived, and the table is bigger than the one that was lost.** One uniform
+pass over \(k=2..k_{\max}=5{,}182{,}637\) — Band II, the Z-jump remnant, the
+stragglers and the small-\(k\) band all by the same method rather than four —
+returned `clean=True` in 7,508 s on 4 workers and wrote **5,182,634
+certificates** to `results/i8_witness.npz`. That is every extra column except
+\(\{K,K+1\}\), so i=8 is now covered by a single evidence type instead of a
+union of three, and `coverage_ledger.py` reports COMPLETE against a \(k_{\max}\)
+recomputed from \(N,K\).
+
+The count is larger than the 4.27M quoted below because the lost runs had
+excluded the bands that other artifacts covered; re-deriving in one pass
+absorbed them. Verification samples clean, and the run's jsonl carries the
+schema header, so this table is reproducible in a way its predecessor was not.
+
+*Original text:*
 i=8 is the headline result and the **only member with no witness table** — its
 `bandii_sweep.jsonl` and `zjump.jsonl` were deleted, so its 4.27M certificates
 exist nowhere. The `build --i 8` path is implemented and its format adapters are
@@ -185,7 +212,7 @@ below the threshold" — which is tighter at the bottom (the document recommends
 outcome, and does it cost or save time?
 
 ### Q9. Make the ghost census a first-class output. *(difficulty: low-medium · **HARD**)* — DONE 2026-08-20
-`scripts/ghost_census.py` reads the witness tables and reports the census with its claim stated exactly: for each recorded (k,p), c = k! C(N,K) is outside (x)_k(F_p), hence outside the intersection over all primes, hence a certified NON-ghost. 884,236 values over k = 41..756,136 before i=8's re-derivation. Verified exactly on a spot-check (k=201, p=211, c a 582-digit number).
+`scripts/ghost_census.py` reads the witness tables and reports the census with its claim stated exactly: for each recorded (k,p), c = k! C(N,K) is outside (x)_k(F_p), hence outside the intersection over all primes, hence a certified NON-ghost. **6,067,902 values over k = 2..5,182,637**, re-run after Q4 rebuilt i=8's table (it read 884,236 over k = 41..756,136 before that). Verified exactly on a spot-check (k=201, p=211, c a 582-digit number).
 
 The output carries its own caveats, because the honest reading is narrower than 'largest test in existence': this is not a targeted ghost hunt (these are the c the Singmaster search happens to produce, not ghost-like candidates), each column stops at its FIRST killing prime so the census records that c fails somewhere rather than how nearly it passed, and 'ghosts found: 0' is the only possible answer -- a surviving column would be an unresolved anomaly, since ghosthood needs failure at every prime.
 
@@ -234,7 +261,21 @@ would a certified-exhaustive version cost — a proven bracketing argument for t
 degree-(d+e) residual, or an interval/Sturm method — and is it reachable for
 k up to 10⁷?
 
-### Q13. Version control, and the two trees. *(difficulty: trivial · **HARD**)*
+### Q13. Version control, and the two trees. *(difficulty: trivial · **HARD**)* — DONE 2026-08-20
+**Local repository initialised**, deliberately with no remote — linking to
+GitHub is a separate decision and is being deferred. `.gitattributes` pins
+`*.py` and `*.md` to `eol=lf` before the first commit, because
+`pathlib.write_text` on Windows had been silently converting LF to CRLF and
+would otherwise have baked that into history. `.gitignore` excludes the live
+checkpoints: `results/i8_sweep.jsonl` was committed once by mistake and had to
+be untracked — a running job's jsonl changes under the repository and does not
+belong in it.
+
+This does not by itself fix the two-tree divergence that motivated the
+question; it makes divergence *detectable*, which is the part that was missing.
+The live tree `Desktop\Singmaster` remains the authority while its i=9 job runs.
+
+*Original text:*
 Still not a git repository. `Desktop\Singmaster` and `Desktop\Claude-Singmaster`
 have already diverged silently once (the sub-√N guard existed in one and not the
 other for a day). This is the cheapest risk reduction available and it is

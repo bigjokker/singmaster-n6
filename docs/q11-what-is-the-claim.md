@@ -39,8 +39,10 @@ Band II pre-registration (102600 / 12600 / 1816 / 289.9 / ...) and tracked the
 i=7 Z-jump round by round inside Poisson noise.
 
 A member therefore tests the method, not the mathematics. The method is now
-well tested: seven members, ~884k recorded certificates before i=8's
-re-derivation, and an escalation trigger that has never fired.
+well tested: seven members, **6,067,902 recorded certificates** after i=8's
+re-derivation (Q4), a coverage ledger that checks they union to exactly
+\([2,k_{\max}]\setminus\{K,K+1\}\) for every member (Q21), and an escalation
+trigger that has never fired.
 
 Concretely, i=10 would answer: *"does the size law continue to hold for a
 family member whose behaviour it already predicts?"* That is worth something.
@@ -61,11 +63,21 @@ grows as **phi^8 = 47x per family step**. Measured base: i=9 is 268 core-hours
 | 10 | 507,544,127 | 243,473,668 | 12,609 | **65.7 days** |
 | 11 | 3,478,759,200 | 1,668,793,361 | 592,359 | 8.5 years |
 
-Optimisation does not rescue this. The i=9 Z-jump is 90.6% factorial-table
-construction, so even solving Q2 outright -- say a 10x cheaper table -- takes
-i=10 from 65.7 days to roughly 36. The half-scan (2x, exact) applies mostly to
-Band II, which is only ~12% of the cost. **The curve is the problem, not the
-constants.**
+**Update 2026-08-20: Q2 was solved, and the argument survives it.** The table
+is gone — Wilson's theorem made `k!` cost `g-1` multiplications — which removes
+~208 of i=9's 236.7 Z-jump core-hours. That is a ~4.5x cut overall, so the
+table above should now be read as roughly 60 core-hours at i=9 and **i=10 near
+two weeks rather than 65 days**, with i=11 still around two years.
+
+That is the strongest optimisation this project has found, and it does not buy
+**one** family step. A step costs 47x; Q2 bought 4.5x. Q19's 142x and Q20's
+34,000x are larger ratios on smaller pieces and change the totals less. So the
+conclusion is not weakened by having been tested — it is sharpened: **the curve
+is the problem, not the constants**, and the recommendation below now rests on
+what a member is *worth*, not on its being unaffordable.
+
+Quote all of these as orders of magnitude. Q24 re-derived the budget on the
+windowed path and found extrapolation good only to about a factor of two.
 
 ---
 
@@ -93,10 +105,17 @@ pairs; everything else is open. A hit there is a new collision. A hit on the
 family would be a new N=8 -- but the family is precisely the case the 2022
 theorem morally covers and where the structure makes a surprise least likely.
 
-**The honest caveat on `nearby`:** its nulls are *sampled*, not exhaustive
-(Q12). Extending its range without fixing that buys more sampled coverage, not
-proof. That makes Q12 the better companion to this recommendation than raw
-range extension.
+**The caveat on `nearby` has since been removed.** Its nulls were *sampled*,
+not exhaustive, and this section argued Q12 was the necessary companion to any
+range extension. Q12 was then solved: the residual
+\((k+e)_e(n)_d-(n-k)_{d+e}\) is strictly monotone on \(n>k+d+e\), so it has
+exactly one root, and a bracket-and-bisect is complete. The exhaustive routine
+found **0 differences** from the sampled one across 7,200 \((k,d,e)\) pairs and
+runs 2.0–2.6x faster.
+
+So the recorded nulls were never missing anything, and extending the range now
+buys proof rather than more sampled coverage — which is what this
+recommendation was waiting on.
 
 ---
 

@@ -228,8 +228,9 @@ What can be said honestly:
   small-value regions; MRSTT (2022) closed the interior for sufficiently large
   `t`, ineffectively (see `interior-2022.md`).
 - **What this project adds.** Effectiveness in a range the 2022 theorem cannot
-  reach, plus ~884k recorded certificates (before i=8's re-derivation) and a
-  ghost census as a by-product.
+  reach, plus **6,067,902 recorded certificates** — every extra column of every
+  member i=2..8, checked to union to exactly \([2,k_{\max}]\setminus\{K,K+1\}\)
+  — and a ghost census of the same size as a by-product.
 - **How to attack it.** Not head-on. Through named sub-questions with decidable
   answers, which is exactly what Q14 was: it did not settle Singmaster, but it
   did settle `k <= 5` completely and closed the termination gap operationally.
