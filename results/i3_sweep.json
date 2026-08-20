@@ -249,5 +249,5 @@
   "z_survivors": [],
   "clean": true,
   "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=3 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i3_witness.npz (sha256 028be3a55d945913); re-check with: python scripts/witness.py verify --file results/i3_witness.npz",
-  "seconds": 1.547
+  "seconds": 1.389
 }

@@ -136,13 +136,18 @@ def main() -> int:
         print(f"  {args.chk}: missing or empty")
         return 1
 
-    from family_sweep import CAP_BII, CAP_Z, K_EXACT
+    # Built exactly as family_sweep builds it, so the header written here is
+    # the one the sweep will check against on resume. Importing the constants
+    # rather than restating them is the point: a future cap change lands in
+    # both at once.
+    from family_sweep import CAP_BII, CAP_Z, CAP_Z_SMALL_K, K_EXACT, SMALL_K
 
     fam = make_fam(args.i)
     kmax, _ = kmax_of(fam)
     ident = dict(i=args.i, N=fam.N, K=fam.K, k_max=kmax,
                  k_lo_z=K_EXACT.get(args.i, 2) + 1,
-                 cap_bii=CAP_BII, cap_z=CAP_Z)
+                 cap_bii=CAP_BII, cap_z=CAP_Z,
+                 cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K)
 
     print(f"  checkpoint : {args.chk}")
     print(f"  size       : {args.chk.stat().st_size:,} bytes")

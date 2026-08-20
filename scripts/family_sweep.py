@@ -261,8 +261,15 @@ def main() -> int:
     )
     print(f"    log10 m={logm:.4f}  p1={primes[0]}", flush=True)
 
+    # cap_z alone does not describe the loop: the Z-jump runs to
+    # CAP_Z_SMALL_K when k_lo_z < SMALL_K (which is every member, since the
+    # exact band never reaches 1000), so a header claiming cap_z=12 for a run
+    # that tested up to 15 rounds under-describes it. Record both. Adding a
+    # key is backward compatible -- check_checkpoint only compares keys that
+    # are present in the recorded header, so pre-existing headers still pass.
     ident = dict(i=i, N=fam.N, K=fam.K, k_max=kmax, k_lo_z=k_lo_z,
-                 cap_bii=CAP_BII, cap_z=CAP_Z)
+                 cap_bii=CAP_BII, cap_z=CAP_Z,
+                 cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K)
     check_checkpoint(chk, **ident)
     if not chk.exists() or chk.stat().st_size == 0:
         write_jsonl(chk, checkpoint_identity(**ident))
