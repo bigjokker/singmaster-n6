@@ -123,6 +123,35 @@ ceil+1\) for even) minus
 birthday collisions. It reproduces the recorded Band II pre-registration and
 the i=7 Z-jump round by round.
 
+
+## Profiling
+
+Four performance claims on this project survived reasoning and died on
+measurement, so the pipeline now carries a profiler rather than an argument:
+
+```text
+python scripts/profile_sweep.py --i 9
+```
+
+It samples each phase and reports the split between factorial-table
+construction, the image scan, r(p), and prime assignment. The split is the
+part to trust (wall-clock projection is good to about a factor of two), and
+it is decisive: at i=9 Band II is 100% scan, while the Z-jump is **90.6%
+table**. A faster scan does nothing for the second.
+
+The distinct-prime count integrates prime density over the live intervals
+rather than sampling a window near the range start, which is biased low at
+small k; the integrated form recovers i=8's recorded 124,830 primes to 0.2%.
+
+## Checkpoints
+
+Every run's jsonl opens with a schema header pinning the version and the
+run's parameters (`i`, `N`, `K`, `k_max`, `k_lo_z`, caps). Resume verifies it
+and refuses on mismatch, or on a checkpoint with no header at all. Resume
+merges old records with new ones, so a silent format or parameter change
+would produce a certificate over columns that were never all tested the same
+way.
+
 ## Notes
 
 - [`docs/modular-spec.txt`](docs/modular-spec.txt) — Lucas/modular layer: what a certificate is, how to run scans, what not to rebuild
@@ -150,7 +179,7 @@ ceil\) is tested. 4-7x on a large-\(g\) membership test.
   `_column_possible_scan_ref` is the superseded version, kept because sanity
   checks the two agree
 - Lucas digits use `binom_mod_prime`, not `math.comb`. Large-\(p\) column tests scan and do not cache residue images
-- `nextprime_sweep` memoises \(r(p)=C(N,K)mod p\) per prime (`RCache`), not per
+- `nextprime_sweep` memoises \(r(p)=C(N,K) mod p\) per prime (`RCache`), not per
   \((k,p)\) pair: it does not depend on \(k\), and consecutive columns share their
   next prime. 7.3x on the Stage-2 range, 13-15x on Stage-3-style \(k\). The table
   is pruned of \(p\le k\) every 1000 columns, so it stays the width of the walk

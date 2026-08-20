@@ -45,7 +45,10 @@ only by measuring. Everything below is guesswork until a profile exists.
 Deliverable: per-phase, per-function wall-clock for a real i=7 run, plus a
 `--profile` flag.
 
-### Q2. Can `fact_table` be made cheap, or avoided? *(difficulty: medium · **EXTRA**)*
+### Q2. Can `fact_table` be made cheap, or avoided? *(difficulty: medium · **EXTRA**)* — MEASURED 2026-08-20
+`scripts/profile_sweep.py --i 9` now quantifies it: the i=9 Z-jump is **90.6% factorial-table construction** (214 of 237 core-hours, ~989,000 distinct live primes), against Band II which is 100% scan. So this is the single biggest remaining cost in the pipeline, and the three routes in the original text are still the options. Not yet fixed.
+
+*Original text:*
 It is a pure-Python loop over p — **282 MB and several seconds per prime at
 i=9**, rebuilt for every distinct prime. At i=7's Z-jump that is 27,622 primes
 at ~22 columns each, making the table **29%** of the work; at i=9 it is worse.
@@ -77,7 +80,10 @@ half the recorded 1235 s. Question: cheapest complete re-derivation covering
 Band II, the Z-jump remnant, the stragglers, and the modular small-k band — and
 does the rebuilt table verify?
 
-### Q5. Wire the banked r(p) work. *(difficulty: low · **HARD**)*
+### Q5. Wire the banked r(p) work. *(difficulty: low · **HARD**)* — DONE 2026-08-20
+The delta identity is wired via `bandii_kernel.r_two_digit_delta`, used by `lucas_digits`/`r_of`. It reproduces all nine published Band I r(p) values and matches exact `m mod p` on 400 primes. Measured **7,554-14,123x** on cell-bottom primes and **1.47x aggregate** over the primes the i=8 Z-jump actually uses (the doc said 1.44x). The per-prime ratio is below the doc's 87,568x because the deferred inverse below already sped the baseline 4-5x, so the two overlap. Deferred inverse landed in both `binom_mod_prime` copies and in `r_closed`: **3.1-5.0x**, approaching the doc's 5.5x at large lower index.
+
+*Original text:*
 The live tree has `r_two_digit_delta` and `binom_mod_deferred`, written and
 spot-checked, both unwired. The δ-identity
 `C(n₀,k₀) ≡ (−1)^{k₀} C(k₀+δ−1, δ−1)` with `δ = (α+1)p − N` gives a third index,
@@ -145,7 +151,10 @@ inverse per step and does no folding. Both fixes are now proven in this repo
 `bandii_kernel.scan_ks_half`). This is the path `extra_reps`, `intersect` and
 `collide` hammer. Expect 20–40×.
 
-### Q7. Add the k=3 and k=4 closed-form membership tests. *(difficulty: low-medium · **HARD**)*
+### Q7. Add the k=3 and k=4 closed-form membership tests. *(difficulty: low-medium · **HARD**)* — DONE 2026-08-20, by a better route
+The doc's radical criteria for k=3,4 were verified independently (exact against the brute image at p=101,211,1009, densities 2/3 and 3/8 as predicted) but NOT used. A polynomial gcd is strictly better: `gcd(x^p - x, (x)_k - k! m)` is nontrivial iff the column represents m, needs no radicals and no case analysis, and therefore works for **every k**, not just those where the Galois group is solvable (k in {1,2,3,4,6,8}). Exact on 13,599 (p,k,r) triples for k=2..11. Measured **1239x at k=3**, 847x at k=4, 86x at k=16, 2.9x at k=100, and 0.2x at k=400 -- so it is dispatched only when `k^2 log p < g`, crossover near k=150.
+
+*Original text:*
 `Claude-Answer.txt` derives and verifies both (k=3 against 3595 brute-force
 cases, k=4 against every c at 11 primes). `column_possible` short-circuits k=2
 with the QR test and falls through to an O(g) scan for k=3,4 — roughly **1700×**

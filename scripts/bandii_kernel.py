@@ -628,6 +628,54 @@ def chunk_ks(ks: list[int], p: int, n_chunks: int) -> list[list[int]]:
     return [c for c in chunks if c]
 
 
+CHECKPOINT_SCHEMA = 2
+# 1: original chunk records {tag|prime_index|round, p, k_lo, k_hi, survivors}
+# 2: survivor records additionally carry "k_odd" (2026-08-20)
+
+
+def checkpoint_identity(**params) -> dict:
+    """The header record that pins a checkpoint to one run's parameters."""
+    return {"event": "schema", "version": CHECKPOINT_SCHEMA, **params}
+
+
+def check_checkpoint(path, **params) -> None:
+    """Refuse to resume a checkpoint written by different code or parameters.
+
+    Resume merges old records with new ones. If the schema or the run's
+    parameters changed in between, that merge is silent and the result is a
+    certificate over a set of columns that were never all tested the same
+    way. Cheaper to refuse and re-run than to trust it.
+    """
+    import json
+
+    if not path.exists() or path.stat().st_size == 0:
+        return
+    with path.open(encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            rec = json.loads(line)
+            if rec.get("event") != "schema":
+                break
+            bad = {k: (v, params.get(k)) for k, v in rec.items()
+                   if k not in ("event",) and k in params and params[k] != v}
+            if rec.get("version") != CHECKPOINT_SCHEMA:
+                bad["version"] = (rec.get("version"), CHECKPOINT_SCHEMA)
+            if bad:
+                raise SystemExit(
+                    f"{path.name}: checkpoint does not match this run "
+                    f"(recorded vs now: {bad}). Delete it and start over, "
+                    f"or resume with the code/parameters that wrote it."
+                )
+            return
+    raise SystemExit(
+        f"{path.name}: checkpoint has no schema header, so it predates "
+        f"schema {CHECKPOINT_SCHEMA} and cannot be safely resumed. "
+        f"Delete it and start over."
+    )
+
+
 def read_jsonl(path) -> list[dict]:
     """Every record in a checkpoint jsonl, or [] if it does not exist."""
     rows: list[dict] = []

@@ -33,6 +33,8 @@ from bandii_kernel import (  # noqa: E402
     cells,
     chunk_ks,
     equal_g_chunks,
+    check_checkpoint,
+    checkpoint_identity,
     first_live_after,
     first_primes_above,
     live_intervals,
@@ -255,6 +257,11 @@ def main() -> int:
     )
     print(f"    log10 m={logm:.4f}  p1={primes[0]}", flush=True)
 
+    ident = dict(i=i, N=fam.N, K=fam.K, k_max=kmax, k_lo_z=k_lo_z,
+                 cap_bii=CAP_BII, cap_z=CAP_Z)
+    check_checkpoint(chk, **ident)
+    if not chk.exists() or chk.stat().st_size == 0:
+        write_jsonl(chk, checkpoint_identity(**ident))
     done = load_done(chk)
     done_keys = {
         (r["tag"], r["p"], r["k_lo"], r["k_hi"])

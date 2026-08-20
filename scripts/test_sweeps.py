@@ -57,6 +57,14 @@ def test_resume_of_unfinished_phase_is_not_clean() -> None:
     out, chk = fsw.paths(i)
     for f in (out, chk):
         f.unlink(missing_ok=True)
+    # the checkpoint must carry a matching schema header or resume refuses
+    fam = bk.make_fam(i)
+    kmax, _ = bk.kmax_of(fam)
+    fsw.write_jsonl(chk, bk.checkpoint_identity(
+        i=i, N=fam.N, K=fam.K, k_max=kmax,
+        k_lo_z=fsw.K_EXACT.get(i, 2) + 1,
+        cap_bii=fsw.CAP_BII, cap_z=fsw.CAP_Z,
+    ))
     for rec in (
         {"event": "phase_complete", "phase": "bandii", "n_alive": 5},
         {"event": "phase_complete", "phase": "zjump", "n_alive": 0, "n_nolive": 2},
@@ -251,11 +259,53 @@ def test_rcache_prune_keeps_answers() -> None:
            "a surviving entry is still served from the cache after a prune")
 
 
+def test_checkpoint_schema_guard() -> None:
+    """Resume must refuse a checkpoint from different code or parameters.
+
+    Resume merges old records with new ones, so a silent schema or parameter
+    change yields a certificate over columns that were never all tested the
+    same way. Refusing is cheaper than trusting it.
+    """
+    import tempfile
+
+    fam = bk.make_fam(3)
+    ident = dict(i=3, N=fam.N, K=fam.K, k_max=342, k_lo_z=201,
+                 cap_bii=14, cap_z=12)
+    with tempfile.TemporaryDirectory() as td:
+        good = Path(td) / "good.jsonl"
+        bk.append_jsonl(good, bk.checkpoint_identity(**ident))
+        try:
+            bk.check_checkpoint(good, **ident)
+            expect(True, "matching schema header is accepted")
+        except SystemExit as exc:
+            expect(False, f"matching header rejected: {exc}")
+
+        bad = Path(td) / "bad.jsonl"
+        bk.append_jsonl(bad, bk.checkpoint_identity(**{**ident, "k_max": 999}))
+        try:
+            bk.check_checkpoint(bad, **ident)
+            expect(False, "mismatched k_max was accepted")
+        except SystemExit:
+            expect(True, "a changed run parameter is refused")
+
+        legacy = Path(td) / "legacy.jsonl"
+        bk.append_jsonl(legacy, {"tag": "bii1", "p": 359, "survivors": []})
+        try:
+            bk.check_checkpoint(legacy, **ident)
+            expect(False, "headerless legacy checkpoint was accepted")
+        except SystemExit:
+            expect(True, "a checkpoint with no schema header is refused")
+
+        expect(bk.check_checkpoint(Path(td) / "absent.jsonl", **ident) is None,
+               "a missing checkpoint is fine (fresh run)")
+
+
 def main() -> int:
     test_rcache_matches_uncached()
     test_rcache_matches_the_recorded_runs()
     test_rcache_zero_is_cached()
     test_rcache_prune_keeps_answers()
+    test_checkpoint_schema_guard()
     test_phase_count()
     test_resume_of_unfinished_phase_is_not_clean()
     test_nolive_is_not_clean()
