@@ -8,8 +8,12 @@ Run: python scripts/test_sweeps.py
 
 from __future__ import annotations
 
+import contextlib
+import hashlib
 import json
+import shutil
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +32,50 @@ errors: list[str] = []
 
 def expect(cond: bool, msg: str) -> None:
     (ok if cond else errors).append(msg)
+
+
+# Artifacts the sweep tests used to overwrite in the REAL tree.
+GUARDED = ("i3_sweep.json", "i3_sweep.jsonl", "i3_witness.npz")
+
+
+def _digest_guarded() -> dict:
+    """sha256 of every tracked artifact the sweep tests could touch."""
+    out = {}
+    for name in GUARDED:
+        p = ROOT / "results" / name
+        out[name] = hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None
+    return out
+
+
+@contextlib.contextmanager
+def sandboxed_results():
+    """Point family_sweep's output at a throwaway results/ directory.
+
+    Three of these tests call `fsw.main()`, which WRITES results/i{i}_sweep.json,
+    its jsonl checkpoint, and -- on a clean run -- results/i{i}_witness.npz.
+    Aimed at the real tree they deleted and regenerated tracked artifacts on
+    every run. Worse, two of them unlink i3_sweep.json at the END, leaving it
+    MISSING until the third regenerates it: a crash in between lost the file
+    outright, and the proof object was being rewritten too.
+
+    It went unnoticed because the sweep is deterministic, so the only field
+    that ever changed was `seconds` -- a one-line diff. It stopped being
+    cosmetic once work_census.py began gating against results/i{i}_sweep.json:
+    the suite was mutating the ground truth it exists to protect.
+
+    family_sweep resolves ROOT at call time in both `paths()` and the witness
+    writer, so redirecting the module global covers both. Tests that read the
+    REAL recorded runs use this module's own ROOT and are unaffected.
+    """
+    tmp = Path(tempfile.mkdtemp(prefix="sweep_test_"))
+    (tmp / "results").mkdir()
+    real = fsw.ROOT
+    fsw.ROOT = tmp
+    try:
+        yield tmp
+    finally:
+        fsw.ROOT = real
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 def test_phase_count() -> None:
@@ -301,15 +349,24 @@ def test_checkpoint_schema_guard() -> None:
 
 
 def main() -> int:
-    test_rcache_matches_uncached()
-    test_rcache_matches_the_recorded_runs()
-    test_rcache_zero_is_cached()
-    test_rcache_prune_keeps_answers()
-    test_checkpoint_schema_guard()
-    test_phase_count()
-    test_resume_of_unfinished_phase_is_not_clean()
-    test_nolive_is_not_clean()
-    test_clean_run_still_clean()
+    before = _digest_guarded()
+    with sandboxed_results():
+        test_rcache_matches_uncached()
+        test_rcache_matches_the_recorded_runs()
+        test_rcache_zero_is_cached()
+        test_rcache_prune_keeps_answers()
+        test_checkpoint_schema_guard()
+        test_phase_count()
+        test_resume_of_unfinished_phase_is_not_clean()
+        test_nolive_is_not_clean()
+        test_clean_run_still_clean()
+    # Guard the sandbox itself. If the redirect is ever removed, this fails
+    # loudly instead of quietly regenerating tracked artifacts again.
+    after = _digest_guarded()
+    changed = [n for n in GUARDED if before[n] != after[n]]
+    expect(not changed,
+           "the suite left every tracked results artifact byte-identical"
+           + (f" -- MUTATED: {changed}" if changed else ""))
     print("\n=== SWEEP TESTS ===")
     for line in ok:
         print("  OK   ", line)
