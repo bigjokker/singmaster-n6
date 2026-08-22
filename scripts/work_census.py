@@ -142,8 +142,11 @@ def _classify_record_gaps(res: dict, rec: dict) -> None:
         from family_sweep import CAP_Z, SMALL_K
     except Exception:
         CAP_Z, SMALL_K = 12, 10 ** 3
-    droppable = [r for r in res["leftovers"]["off_ladder"].get("rows", [])
-                 if r["k"] >= SMALL_K]
+    # Defensive: this is called on synthetic `res` dicts by the tests that
+    # verify the excuse mechanism cannot launder a real failure, so it must not
+    # assume the full census shape.
+    _off = (res.get("leftovers") or {}).get("off_ladder") or {}
+    droppable = [r for r in _off.get("rows", []) if r["k"] >= SMALL_K]
     for g in res["gates"]:
         if g["verdict"] != "fail" or not g["gate"].startswith("zjump.round"):
             continue
