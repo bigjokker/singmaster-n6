@@ -1,8 +1,8 @@
 {
   "search": "coverage_ledger",
-  "n_members": 7,
+  "n_members": 8,
   "n_incomplete": 0,
-  "total_columns": 6067902,
+  "total_columns": 41590228,
   "members": [
     {
       "i": 2,
@@ -114,6 +114,22 @@
       "extra_sample": [],
       "family_columns_correctly_absent": true,
       "sha256": "b4c020306940519c28f138a60a2b28ed872a2d59deb44dc09407ed1f4b7b6a5b",
+      "ok": true
+    },
+    {
+      "i": 9,
+      "N": 74049690,
+      "K": 28284464,
+      "k_max": 35522329,
+      "k_max_source": "recomputed from N,K",
+      "n_expected": 35522326,
+      "n_witnessed": 35522326,
+      "n_missing": 0,
+      "missing_sample": [],
+      "n_extra": 0,
+      "extra_sample": [],
+      "family_columns_correctly_absent": true,
+      "sha256": "e375de140d32cf77e9b61bbdb67cf77a7a2308367ba5005a8586bfcbbb3f80be",
       "ok": true
     }
   ]

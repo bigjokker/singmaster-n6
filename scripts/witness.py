@@ -436,6 +436,20 @@ def fill_small_gaps(path: Path, i: int) -> dict:
     want = set(range(2, kmax + 1)) - {fam.K, fam.K + 1}
     missing = sorted(want - set(have))
     if not missing:
+        # The label must describe the file. `fill` used to carry the ORIGINAL
+        # build's n_unresolved/unresolved through `{**meta, ...}` untouched, so
+        # a table that had since been completed kept advertising the very
+        # columns it now held -- i=9 shipped to two trees claiming
+        # n_unresolved=4 for k=87/399/553/1281 while holding all four
+        # (191/421/557/1321). Rewrite the caption; never the arrays.
+        if meta.get("n_unresolved") or meta.get("unresolved"):
+            stale = list(meta.get("unresolved") or [])
+            meta = {**meta, "n_unresolved": 0, "unresolved": [],
+                    "claimed_ranges": [[2, kmax]],
+                    "excluded": [fam.K, fam.K + 1]}
+            out = save(path, meta, have)
+            return {"i": i, "added": 0, "unresolved": [], "relabelled": stale,
+                    "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
         return {"i": i, "added": 0, "unresolved": [], "sha256": meta["sha256"]}
 
     small_primes = primes_upto(50_000)
@@ -447,8 +461,12 @@ def fill_small_gaps(path: Path, i: int) -> dict:
         else:
             have[k] = int(q)
             added += 1
+    # n_unresolved/unresolved MUST be rewritten here, not inherited. They
+    # describe what is still missing AFTER this fill, and carrying the old
+    # values forward is what left i=9 labelled with four columns it holds.
     meta = {**meta, "claimed_ranges": [[2, kmax]], "excluded": [fam.K, fam.K + 1],
-            "n_filled_from_engine": added}
+            "n_filled_from_engine": added,
+            "n_unresolved": len(unresolved), "unresolved": unresolved}
     out = save(path, meta, have)
     return {"i": i, "added": added, "unresolved": unresolved,
             "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}

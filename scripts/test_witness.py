@@ -12,6 +12,7 @@ sweep. Run: python scripts/test_witness.py
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import shutil
@@ -354,7 +355,66 @@ def test_independent_verifier_agrees() -> None:
     expect(not bad, f"independent routes agree on sampled certificates {bad[:2]}")
 
 
+def test_fill_leaves_no_stale_label() -> None:
+    """The label must describe the file it is attached to.
+
+    `fill` carried the ORIGINAL build's n_unresolved/unresolved forward through
+    `{**meta, ...}` without rewriting them, so a table that had since been
+    completed kept advertising the very columns it now held. i=9 shipped to two
+    trees -- including the published one -- claiming n_unresolved=4 for
+    k=87/399/553/1281 while holding all four at p=191/421/557/1321.
+
+    A referee reading that caption would conclude the theorem had a hole.
+
+    Both paths are pinned: the early return for an already-complete table, and
+    the normal path, which must write what is ACTUALLY still missing rather
+    than inherit a stale value. The arrays must never move -- only the caption.
+    """
+    import json
+
+    import numpy as np
+
+    i = 3
+    tmp = Path(tempfile.mkdtemp(prefix="label_test_"))
+    try:
+        path = tmp / f"i{i}_witness.npz"
+        src = ROOT / "results" / f"i{i}_witness.npz"
+        if not src.exists():
+            ok.append("i3_witness.npz absent; stale-label test skipped")
+            return
+        ks, ps, meta = W.load(src)
+        before = hashlib.sha256(ks.tobytes() + ps.tobytes()).hexdigest()
+
+        # a COMPLETE table wearing a stale caption -- exactly i=9's shape
+        liar = {**meta, "n_unresolved": 4, "unresolved": [87, 399, 553, 1281]}
+        W.save(path, liar, {int(a): int(b) for a, b in zip(ks, ps)})
+        z = np.load(path, allow_pickle=False)
+        expect(json.loads(str(z["meta"]))["n_unresolved"] == 4,
+               "stale-label fixture really does carry the false caption")
+
+        res = W.fill_small_gaps(path, i)
+        ks2, ps2, meta2 = W.load(path)
+        after = hashlib.sha256(ks2.tobytes() + ps2.tobytes()).hexdigest()
+
+        expect(meta2.get("n_unresolved") == 0 and meta2.get("unresolved") == [],
+               f"fill rewrites a stale label on a complete table "
+               f"(n_unresolved={meta2.get('n_unresolved')}, "
+               f"unresolved={meta2.get('unresolved')})")
+        expect(after == before,
+               "fill rewrote the LABEL and not the TABLE (array sha256 unchanged)")
+        expect(np.array_equal(ks, ks2) and np.array_equal(ps, ps2),
+               "every witness row survives a relabel byte-for-byte")
+        expect(meta2.get("sha256") == meta.get("sha256"),
+               "the array digest in meta is untouched, so the file's own "
+               "self-check still passes")
+        expect(bool(res.get("relabelled")),
+               f"the relabel is REPORTED, not silent (got {res.get('relabelled')!r})")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
+    test_fill_leaves_no_stale_label()
     test_against_exact_arithmetic()
     test_rejects_bad_certificates()
     test_rejects_composite_p()
