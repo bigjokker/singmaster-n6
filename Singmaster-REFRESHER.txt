@@ -1,36 +1,39 @@
 SINGMASTER — session refresher (hand this file back FIRST)
 ================================================================================
-Updated 2026-08-19 19:35. Family i=2..8 CLOSED (N=6 each). i=1 is
-3003 (N=8), skip. i=9 IS RUNNING (family_sweep.py --i 9; parent
-PID 11936 + 8 spawn workers since 14:43). jsonl exists (~10.5 MB,
-8 of 32 Band II pass-1 chunks, last write 18:25). json does NOT
-exist. Do not start a second copy. Q1 parked. Path FORWARD locked.
-Uncommitted: scripts/bandii_kernel.py Lucas guard + scan_ks_half
-(parked, not wired). Leave it; do not revert while i=9 runs.
+Updated 2026-08-22. Family i=2..8 CLOSED (N=6 each). i=1 is
+3003 (N=8), skip. i=9 FINISHED 2026-08-21 23:49 (live
+Desktop\Singmaster). json EXISTS, jsonl EXISTS (219 MB, keep).
+Do not start a second copy. Do not resume. Q1 parked. Path
+FORWARD 3 is now. Uncommitted: scripts/bandii_kernel.py Lucas
+guard + scan_ks_half (parked, not wired). Leave parked; commit
+is unblocked now that i=9 is off the machine. Do not wire.
+Do not revert.
 
 Do not start a job unless the user says to run it.
 Do not start a second copy of any bat.
-i=2..8 / fat-image / walk-369 / bandii / zjump json exist => refuse.
+i=2..9 / fat-image / walk-369 / bandii / zjump json exist => refuse.
 
 
 NEXT
 ----
-User-run (Grok does not start it):
-  scripts\run-i9.bat
-  i=9 Band II + Z-jump. NO m_9. Modular already k<=80.
-  N=F_20 F_21=74049690  K=F_18 F_21=28284464  k_max=35522329.
-  Band II ~7.24e6 columns. Z-jump ~2.83e7 columns.
-  Cost: φ^8 ≈ 47× per family step. Band II pass-1 ~4.2e13 elem,
-  ~16 h at i=8's 7.2e8 elem/s aggregate (not "hours possible").
-  Z-jump similar scale; plan **1–3 days total**. Do not kill the
-  window at hour 6. jsonl already exists (first wave of pass 1
-  wrote 8 of 32 equal-Σg chunks at ~18:25, ~3.7 h after start).
-  Next waves continue silently. F table ~300–400 MB/worker.
-  Checkpoint: results\i9_sweep.jsonl
-  Final:      results\i9_sweep.json
-  json exists => refuse. Pre-flight: r(p1)=27989611 (Claude
-  independently confirmed closed form and C(N-p,K); jsonl
-  first record matches). Do NOT start a second copy.
+i=9 is DONE. json exists => refuse scripts\run-i9.bat.
+Grok does not start jobs. User-run, only if asked, PATH FORWARD 3:
+  1. write the four Lucas primes into the npz (k=87/399/553/1281
+     at p=191/421/557/1321)
+  2. witness fill --i 9 for k=2..80 (modular already killed them)
+  3. coverage ledger (expected 35,522,326 = [2,k_max]\{K,K+1})
+  4. writeup i=3..9
+Do not start i=10. Do not build m_9. Do not fire Q1.
+
+N=F_20 F_21=74049690  K=F_18 F_21=28284464  k_max=35522329.
+Band II 7,237,864 columns, died pass 9, n_bii_alive=0.
+Z-jump 28,284,383 columns, cap-12 left 4, json.clean=false
+(correct: two-digit Z-jump never scanned p≤√N=8605).
+Checkpoint: Desktop\Singmaster\results\i9_sweep.jsonl  (keep)
+Final:      Desktop\Singmaster\results\i9_sweep.json
+Witness:    results\i9_witness.npz  (live + playground, same
+            sha256 3f01fb6d…  n=35,522,243  unresolved=4)
+Pre-flight r(p1)=27989611 still matches jsonl first record.
 
 PRE-REGISTERED Band II curve (size law, 0 fitted params):
   pass 1  p=37024873  alive ~702981  even 0.658  mean_k ~31091031
@@ -41,39 +44,57 @@ PRE-REGISTERED Band II curve (size law, 0 fitted params):
   Mean k walks DOWN toward K. Pass 8 or earlier death, or
   even-g ~0.5: suspect the code, not the math.
 
-If json exists: readout vs the table above. Clean i=9 is another
-computational N=6, not a 2022 family theorem. Alive at Z-cap
-k=81..8605: full-Lucas on p<√N, not Q1. A Band II run of 8–10
-is the size-law curve. Do not fire Q1 on length 8.
-Do not start i=10.
+MEASURED Band II (jsonl events + survivor stats; json omitted
+the bandii phases because the job resumed after phase_complete
+and that path writes bii_left=[] with phases={}):
+  pass  p         alive   even   mean_k    vs pred
+  1     37024873  703000  0.657  31090415  in band [701300,704700]
+  2     37024879   86212  0.787  30505010
+  3     37024903   12411  0.875  30087671
+  4     37024931    1946  0.931  29815242  in band [1900,2075]
+  5     37024951     318  0.969  29559126
+  6     37024957      47  1.000  29608124  in band [45,76]
+  7     37024973       6  1.000  29473703
+  8     37024991       1  1.000  28575561  last k=28575561 near K
+  9     37025017       0     —         —  death pass 9 (in 9–10)
+Pass 1 is 19 columns off a 703k prediction. Even-g 0.66→1.
+Mean k walked down toward K. Not Q1. Band II closed.
 
-CMD: jsonl already appeared. Silent now = remaining pass-1
-chunks (8 workers × 32 chunks ⇒ ~4 waves). 8 python workers
-= alive. Do not close the window. Do not start a second copy.
+A clean i=9 (after the four Lucas rows + k=2..80 are in the
+npz and the ledger says complete) is another computational
+N=6, not a 2022 family theorem. Do not start i=10.
 
 Sub-√N: i=9 √N=8605. Two-digit r(p) is false for p≤8605.
 family_sweep cells() start at p_two=√N+1, so Z-jump never
 SCANS those p (skips them). Band II p>N/2 is safe. Guard
 added in scan_columns_general: p^2≤N uses full Lucas.
 UNCOMMITTED (working tree M scripts/bandii_kernel.py).
-Readout: if k=81..8605 hit the cap, they may need a small
-full-Lucas rerun on p<√N; do not assume void kills (we did
-not certify with the two-digit formula below √N).
+This is what happened: cap-12 left k=87,399,553,1281, all
+even-g, all last p=8779 (just above √N), g/p=0.85–0.99.
+Full Lucas on k<p≤8605 killed all four at the FIRST live
+prime. Independent witness.check_witness ok (lucas route):
+  k=87    p=191   r=161  g=104  (19 dead r=0 primes skipped)
+  k=399   p=421   r=346  g=22
+  k=553   p=557   r=145  g=4
+  k=1281  p=1321  r=434  g=40
+Do not treat json.clean=false as a new N=8. Do not assume
+void kills; these four now have primes. They are NOT yet
+in the npz (n_unresolved=4).
 
-LIVE MACHINE (2026-08-19 19:34, do not touch):
-  parent 11936 (low CPU, orchestrator) + workers
-  5556 6924 7976 10260 10332 14344 19588 19620
-  started 14:43. ~17400 s CPU/worker (~4.8 h). RSS ~400 MB each
-  (F table). 8 python = alive. Silent CMD is normal between chunks.
-  results\i9_sweep.jsonl  10 507 119 bytes, 8 records, last 18:25.
-  First record: p=37024873 r=27989611 (matches pre-flight and
-  Claude). k_lo=29119557 k_hi=29267473 n_cols=147917
-  n_survivors=21798. That is ONE equal-Σg chunk of pass 1
-  (32 chunks, 8 workers ⇒ ~4 waves). Last record k_lo=28831730
-  k_hi=28974356 n_cols=142627 n_survivors=21666. Do NOT parse
-  the whole jsonl (it embeds survivor lists). json absent =
-  not finished. Do not close the window. Do not start a second
-  copy. Do not kill at hour 6; plan 1–3 days.
+FINISHED MACHINE (was LIVE 2026-08-19; closed 2026-08-21 23:49):
+  live: C:\Users\wwwsa\Desktop\Singmaster
+  playground: C:\Users\wwwsa\Desktop\Claude-Singmaster
+  results\i9_sweep.json     2,968 bytes   2026-08-21 23:49
+  results\i9_sweep.jsonl    219,323,133 bytes, 995,717 records
+                            same mtime. KEEP. gitignored.
+  json.seconds=17126.827 is the Z-jump RESUME wall (~4.8 h),
+  not the whole job. Band II was already phase_complete on
+  disk from the 2026-08-19 run.
+  First jsonl record still p=37024873 r=27989611, k_lo=29119557
+  k_hi=29267473 n_cols=147917 n_survivors=21798.
+  Do NOT parse the whole jsonl (survivor lists). Header-stream
+  and Band II even/mean_k readout already done 2026-08-22.
+  python is dead. json exists => refuse. Do not resume.
 
 PowerShell: never use inline python -c (quoting mangles). Script
 files only.
@@ -84,11 +105,16 @@ PATH FORWARD (locked 2026-08-20; ChatGPT rebuttal folded)
 The asset is the column-kill that never builds m. Not "search
 harder." Not a new G(k). Do not reopen a 20-engine whiteboard.
 
-1. NOW  i=9, no m_9. Already running (user owns CMD). Family
-   experiment, not a first proof-of-concept (i=2..8 already
-   clean). Do not start a second copy. Do not wait on 2022.
-   Do not interpret a clean i=9 as "the family theorem"
-   ((2b) is already DONE: 2022 does not apply).
+1. DONE 2026-08-21 23:49. i=9, no m_9. Band II clean on the
+   pre-registered curve (death pass 9). Z-jump cap-12 left
+   four small-k columns; full Lucas on p<√N killed all four
+   (independent check_witness ok). json.clean=false is the
+   correct sweep flag. Family experiment, not a first
+   proof-of-concept (i=2..8 already clean). Do not start a
+   second copy. Do not wait on 2022. Do not interpret a
+   clean i=9 as "the family theorem" ((2b) is already DONE:
+   2022 does not apply). The four primes are not yet in the
+   npz. Ledger still i=2..8.
 
 2. THEN, before any new engine:
    (a) DONE 2026-08-20 (Claude Job 2, HARD). Full text in
@@ -130,21 +156,29 @@ harder." Not a new G(k). Do not reopen a 20-engine whiteboard.
        the census is the theorem. Do not ask him to redo
        their §§3–5. Do not send Job 1 again.
 
-3. THEN, if i=9 is clean: i=10 is NOT the same pipeline
+3. NOW (i=9 sweep is on disk). i=10 is NOT the same pipeline
    (φ^8 wall, ~5 weeks). Prefer ledger + (k,p,r) checker
    (with image_hit_tablefree, already in bandii_kernel.py) + writeup
    of i=3..9. Optional
    whiteboard: can (x)_k-c be intersective? Not a bat.
    2022 does not give a family theorem at any i we compute.
 
-   Coverage ledger (after i=9, not now): Stage 1–2 JSON have
-   rows[].q per k. Stage 3 summary, zjump.json, bandii_sweep.json,
-   and family i{N}_sweep.json do NOT store per-k (k,p,r)
-   witnesses — only phase counts and last survivors. The
-   writeup needs a ledger rebuilt from jsonl (local, gitignored)
-   or a re-scan of the handful of record tails. Grok implements
-   the Job-2 verifier later. Do not ask Claude to spec Job A/B
-   again (that was Z-jump; already ran).
+   Witness npz already harvested from jsonl (live + playground,
+   same sha256 3f01fb6d…): 35,522,243 certs, k=81..k_max,
+   n_unresolved=4 (the cap leftovers). k=2..80 not filled.
+   Arithmetic: [2,k_max]\{K,K+1} = 35,522,326
+     = 35,522,243 + 79 (k=2..80) + 4 Lucas.
+   Remaining bookkeeping, not a live extra-rep:
+     (a) put p=191/421/557/1321 on k=87/399/553/1281
+     (b) witness fill --i 9 for k=2..80
+     (c) coverage_ledger.py (still reports i=2..8 only,
+         6,067,902 columns)
+   Stage 1–2 JSON have rows[].q per k. Stage 3 summary,
+   zjump.json, bandii_sweep.json, and family i{N}_sweep.json
+   do NOT store per-k (k,p,r) witnesses — that is why the
+   npz exists. Keep the jsonl until (a)–(c) are done.
+   Do not ask Claude to spec Job A/B again (that was Z-jump;
+   already ran). Do not start i=10.
 
 4. THEN, only if the user wants odd multiplicity:
    central-driven search, m=C(2t,t). That is N=5/7.
@@ -250,13 +284,16 @@ On disk, keep:
     image_hit_tablefree + Wilson + two-route r, not F-table)
   Scratch 3(b): Desktop\New folder (5)\  copies only.
 
-Not code yet (do not lose the spec):
-  coverage ledger (rebuild from jsonl after i=9)
+Not done yet (do not lose the spec):
+  coverage ledger for i=9 (script exists in playground;
+    results/coverage_ledger.json is still i=2..8 only)
+  four Lucas primes into i9_witness.npz
+  witness fill --i 9 for k=2..80
   (k,p,r) checker — implement with image_hit_tablefree
 
 Uncommitted: bandii_kernel.py + ghost_sieve.py + falling_criteria.py
 + docs/kernel-ghosts.md + docs/criteria-birthday.md + claude-packets/.
-Commit after i=9. Do not revert. Do not wire.
+i=9 is finished: commit is unblocked. Do not revert. Do not wire.
 
 
 PATHS
@@ -315,9 +352,14 @@ Band II p>N/2 sweep clean: 1055989 columns, all killed by p8.
 Z-jump remnant clean: 3215816 columns, 0 anomalies, 51.7 min.
 Tail is the same 42/4/1/0 as walk-369; last k=2227205.
 N=6 for this m. G=(ln k)^2 is dead.
-Family i=2..7 also clean N=6 (family_sweep.py, in git).
-i=9 IS RUNNING: jsonl live (pass-1 chunks), json not yet.
-Do not start anything. Do not close the CMD window.
+Family i=2..8 also clean N=6 (family_sweep / dedicated i=8).
+i=9 FINISHED 2026-08-21 23:49. Band II clean, death pass 9,
+on the pre-registered curve (pass 1 alive 703000 vs ~702981).
+Z-jump cap-12 left k=87,399,553,1281; full Lucas killed all
+four at the first live p<√N; check_witness ok. json.clean=false
+is correct (sweep never scanned p≤8605). Witness npz harvested,
+n_unresolved=4, k=2..80 unfilled, ledger still i=2..8.
+Do not start i=10. Do not resume i=9. PATH FORWARD 3.
 
 
 1. Fixed objects
@@ -332,16 +374,20 @@ i=8 family:
   m_sha256 = 94bd69e66203e7680bdaa5370937a64a1639fc857ba187135c87e5c5fa194512
   k_max = 5182637   (C(2k,k) <= m)
 
-i=9 family (RUNNING):
+i=9 family (FINISHED 2026-08-21 23:49):
   N   = F_20 F_21 = 74049690
   K   = F_18 F_21 = 28284464
   K+1 = F_19 F_20 = 28284465
   d   = N-K = 45765226
   N/2 = 37024845
   k_max = 35522329
-  p1  = 37024873   r(p1)=27989611
+  p1  = 37024873   r(p1)=27989611  (jsonl first record matches)
   √N  = 8605
-  exact/modular already: k<=80. Sweep starts k=81.
+  exact/modular already: k<=80. Sweep started k=81.
+  n_bii = 7237864  died pass 9  n_bii_alive=0
+  n_z   = 28284383  cap-12 left 4  (Lucas-killed, not in npz yet)
+  log10 m = 21386569.341068
+  json.seconds = 17126.827  (Z-jump resume only)
 
 Family formula for any i:
   N = F_{2i+2} F_{2i+3}
@@ -604,11 +650,13 @@ Z-jump remnant  results/zjump.json  (3102 s / 51.7 min, 8 workers)
     Band II 4126649-5182637.
   N=6 for this m. Not Singmaster. Do not rerun.
 
-Family i=2..7  results/i{i}_sweep.json  (family_sweep.py)
+Family i=2..9  results/i{i}_sweep.json  (family_sweep.py)
   Formula: N=F_{2i+2} F_{2i+3}, K=F_{2i} F_{2i+3},
            K+1=F_{2i+1} F_{2i+2}. Exact k<=200 already in
            fibonacci_i1-7.json. This job: k=201..k_max except
-           {K,K+1}. Cap 14 Band II / 12 Z-jump. All clean N=6.
+           {K,K+1} (i=9: k=81..k_max, modular ≤80). Cap 14
+           Band II / 12 Z-jump. i=2..8 clean N=6. i=9 sweep
+           clean=false (four Z-cap leftovers, Lucas-killed).
            Not Singmaster. json exists => refuse.
 
     i    N         K        k_max   n_z    n_bii   BII  Z    last k   sec
@@ -619,6 +667,31 @@ Family i=2..7  results/i{i}_sweep.json  (family_sweep.py)
     6   229970     87840   110318  87639    22477   p6  r6    205    4.71
     7  1576239    602069   756136 601868   154066   p7  r9    487  110.73
     8 10803704   4126647  5182637  (zjump) 1055989  p8  r7 2227205   —
+    9 74049690  28284464 35522329 28284383 7237864  p9 r12*   87  17127*
+
+  *i=9: Band II death pass 9, last k=28575561. Z-jump cap-12 left
+  four (87,399,553,1281); full Lucas on p<√N killed them (not a
+  family_sweep kill). seconds=17127 is Z-jump resume, not full job.
+  json.clean=false. Do not quote i=9 as N=6 until npz+ledger
+  include the four + k=2..80.
+
+  i=9 Z-jump (json phases; n_nolive=0 every round):
+    round  n_primes  alive    even   mean_k
+    1       73009   395757  0.662  14413872
+    2         308    27092  0.788  14617123
+    3          38     2842  0.862  13031977
+    4          16      437  0.892   8547702
+    5           7      140  0.921   4343173
+    6           5       66  0.939   1096795
+    7           3       35  1.000      1411
+    8           1       19  1.000      1176
+    9           1       11  1.000      1117
+   10           1        7  1.000      1071
+   11           1        7  1.000      1071  held (ordinary)
+   12           1        4  1.000       580  cap; leftover 4
+  Mean k collapsed to small-k, not toward K. That is the
+  hard regime (g/p ~ 0.9), not a fat-cell tail. Not Q1.
+  json exists => refuse. Do not rerun.
 
   i=2 n_z=0: exact k<=200 already covers Band I (K=39). Z-jump
   skipped. (N/2,d]=(52,65] has only 3 primes; code now uses
@@ -629,8 +702,8 @@ Family i=2..7  results/i{i}_sweep.json  (family_sweep.py)
   are k=51 (10), k=149 (8), k=29 (6). Do not mix the two stats.
   i=6 last Z k=205 is the same p>√N artefact. Fat-cell record
   remains i=8 k=2227205 run 6.
-  i=1 is 3003, N=8, skip. i=9 running (k starts at 81; modular
-  already k<=80). Do not rerun i=2..7.
+  i=1 is 3003, N=8, skip. i=9 finished (k started at 81; modular
+  already k<=80). Do not rerun i=2..9.
 
 Family-sweep gotchas (already patched in family_sweep.py):
   (a) Band II prime list: use whatever primes exist in (N/2,d],
@@ -697,12 +770,18 @@ Large-p column_possible scans; does not cache residue images.
   docs/i8-N6.md                    i=8 theorem note
   jsonl checkpoints gitignored. 81MB Stage 3 dump gitignored.
   Overnight 1e6-2e6 stub + bat gitignored.
-  results/i9_sweep.jsonl           LIVE, gitignored, do not commit.
+  results/i9_sweep.json            FINISHED, live tree
+  results/i9_sweep.jsonl           219 MB, gitignored, KEEP until
+                                   npz+ledger include four+k=2..80
+  results/i9_witness.npz           harvested both trees, sha256
+                                   3f01fb6d… n=35,522,243
+                                   n_unresolved=4  k min=81
+  playground coverage_ledger.json  still i=2..8 only
 
 Pushed a5984fa (i=2..6 + i=9 bat). i=7 is af29bd8.
 Working tree: M scripts/bandii_kernel.py + untracked parked
-scripts/docs/packets. Commit after i=9. Do not revert. Do not wire.
-Do not commit __pycache__, *.bak, live jsonl,
+scripts/docs/packets. i=9 finished: commit unblocked. Do not
+revert. Do not wire. Do not commit __pycache__, *.bak, i9 jsonl,
 or run-overnight-k1e6-2e6.bat.
 
 
@@ -711,6 +790,8 @@ or run-overnight-k1e6-2e6.bat.
 Grok: live machine; Stage 3 readout; stragglers; hunt; fat-image
   readout; |I_g| + n123 + parity verify; walk-369 readout;
   Band II / Z-jump / family i=2..7; i=9 bat. Pushed a5984fa.
+  2026-08-22 i=9 readout: Band II vs pre-registered curve;
+  four Z-cap leftovers; full Lucas kills; check_witness ok.
   Implements verifier / ledger later. Does not start bats.
 ChatGPT: Band II zero theorem; tagged Band I paragraph (accepted;
   hang-guard is p-k>20000). Picked triple hunt over stragglers;
@@ -743,7 +824,7 @@ Claude: Parts 1-2 NONE lemmas; Q3 Z-width (accepted). Two-to-three
   Late Job A/B (REST) is obsolete — that was Z-jump, already
   ran. Packets SAVED: kernel-ghosts.md, criteria-birthday.md
   (Desktop scratch pad is overwritten each drop).
-  Remaining Claude value: none required for i=9 readout.
+  Remaining Claude value: none required; i=9 readout is done.
   Do not merge full-file dumps.
 
 
@@ -775,18 +856,21 @@ Claude: Parts 1-2 NONE lemmas; Q3 Z-width (accepted). Two-to-three
   rerun Stage 3 to cache r(p) (finished; 200× is for a future remnant)
   treat family_sweep i=7 k=487 as Claude's max live run (it is not)
   mix small-k live-run length with fat-cell / Band II length
-  start i=10 before i=9 readout; start i=10 at all unless user asks
-    (φ^8 wall, ~5 weeks, not the same pipeline)
-  start a second copy of run-i9.bat (jsonl exists, python alive)
-  treat i9_sweep.jsonl as finished (json is the finish flag)
-  parse the whole i9 jsonl (survivor lists; 10+ MB already)
+  start i=10 at all unless user asks
+    (φ^8 wall, ~5 weeks, not the same pipeline; i=9 readout is done)
+  start a second copy of run-i9.bat (json exists => refuse)
+  treat json.clean=false as a new N=8 (the four are Lucas-killed)
+  quote i=9 as N=6 before npz+ledger include the four + k=2..80
+  parse the whole i9 jsonl (survivor lists; 219 MB)
+  delete i9_sweep.jsonl before npz+ledger are complete
   revert the uncommitted Lucas guard / scan_ks_half in bandii_kernel.py
   delete parked code until it is wired in or PATH FORWARD retires it
   leave a load-bearing snippet as refresher prose only (write a file)
   send Claude Job 1 or Job 2 again
   replace Claude Job 2 with ChatGPT's rewrite (N-p<K slip)
   send Claude late Job A/B (obsolete; was Z-jump)
-  start a central / triple / collide-sieve engine before PATH FORWARD 1-3
+  start a central / triple / collide-sieve engine before PATH FORWARD 3
+    (ledger + four primes in npz + writeup) is done
   treat ChatGPT's 20 directions as a to-do list
   claim Z-jump "necessarily" kills in a given cell
   count digit-0 after cell exit as image-run length
@@ -799,26 +883,24 @@ Claude: Parts 1-2 NONE lemmas; Q3 Z-width (accepted). Two-to-three
 
 10. Next-session opener
 -----------------------
-Read this file first. PATH FORWARD is locked.
+Read this file first. PATH FORWARD 3 is now.
 i=2..8 clean N=6, in git. Theorem docs\i8-N6.md.
-Is python family_sweep.py --i 9 running? (parent + 8 spawn = Band II)
-  python alive, jsonl growing or pausing between chunks:
-    do not touch. Silent CMD for hours is expected. First
-    wave of pass 1 already wrote 8 jsonl records (18:25).
-    8 workers + parent 11936 = alive.
-  json exists: readout vs PRE-REGISTERED curve above.
-    (2a) and (2b) DONE. A clean i=9 is another computational
-    N=6, not a 2022 family theorem. Alive at Z-cap among
-    k=81..8605: full-Lucas rerun on p<√N, not Q1 (killers
-    below √N were skipped). Band II run of 8–10 is the curve,
-    not correlation. Small-k run 8 at k=11 is NOT in this
-    sweep (modular ≤80). Then PATH FORWARD 3: ledger +
-    table-free verifier + writeup i=3..9. Do not start i=10.
-  only jsonl, python dead: resume run-i9.bat (user-run).
-  neither, python dead: do not start unless the user says.
-Do not start E, i=2..8 reruns, i=10-before-i=9, nearby, Q1,
+i=9 FINISHED 2026-08-21 23:49. json exists => refuse run-i9.
+  Band II: measured vs PRE-REGISTERED above, death pass 9,
+  n_bii_alive=0. Size law hit. Not Q1.
+  Z-jump: cap-12 left k=87,399,553,1281. Full Lucas on p<√N
+  killed all four at the first live prime; check_witness ok.
+  json.clean=false is the correct sweep flag.
+  Witness npz harvested, n_unresolved=4, k=2..80 unfilled.
+  Ledger still i=2..8.
+  (2a) and (2b) DONE. A ledger-complete i=9 is another
+  computational N=6, not a 2022 family theorem.
+  Small-k run 8 at k=11 is NOT in this sweep (modular ≤80).
+  PATH FORWARD 3: four primes into npz, fill k=2..80,
+  coverage ledger, writeup i=3..9. Do not start i=10.
+Do not start E, i=2..9 reruns, i=10, nearby, Q1,
 a new G(k), a 20-engine board, Job 1/2 again, or Job A/B.
 Do not call N=6 "Singmaster proved".
 Uncommitted kernel parked fns + kernel-ghosts docs: leave them;
-commit after i=9. KEEP CODE: write snippets the turn they are found.
+commit unblocked. KEEP CODE: write snippets the turn they are found.
 Q1 trigger is n_cols×Λ < 0.01, not cap-8 length.

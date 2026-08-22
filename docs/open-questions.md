@@ -48,7 +48,7 @@ corrected two measurement errors in the profiler itself. The *method* stands
 and the ~2x projection caveat stands; only the number is historical.
 
 *Original text:*
-There is still no profiling harness. `Claude-Answer.txt` was wrong twice about
+There is still no profiling harness. `docs/size-law-notes.txt` was wrong twice about
 the bottleneck (claimed r(p) dominated Stage 3, retracted, then un-retracted),
 and this session found the Z-jump is table-dominated rather than scan-dominated
 only by measuring. Everything below is guesswork until a profile exists.
@@ -190,7 +190,7 @@ inverse per step and does no folding. Both fixes are now proven in this repo
 The doc's radical criteria for k=3,4 were verified independently (exact against the brute image at p=101,211,1009, densities 2/3 and 3/8 as predicted) but NOT used. A polynomial gcd is strictly better: `gcd(x^p - x, (x)_k - k! m)` is nontrivial iff the column represents m, needs no radicals and no case analysis, and therefore works for **every k**, not just those where the Galois group is solvable (k in {1,2,3,4,6,8}). Exact on 13,599 (p,k,r) triples for k=2..11. Measured **1239x at k=3**, 847x at k=4, 86x at k=16, 2.9x at k=100, and 0.2x at k=400 -- so it is dispatched only when `k^2 log p < g`, crossover near k=150.
 
 *Original text:*
-`Claude-Answer.txt` derives and verifies both (k=3 against 3595 brute-force
+`docs/size-law-notes.txt` derives and verifies both (k=3 against 3595 brute-force
 cases, k=4 against every c at 11 primes). `column_possible` short-circuits k=2
 with the QR test and falls through to an O(g) scan for k=3,4 — roughly **1700×**
 per call at p~10⁶. Twenty lines. Also worth recording *why* it stops at k=4:
@@ -219,7 +219,7 @@ The output carries its own caveats, because the honest reading is narrower than 
 *Original text:*
 Every killed column is a certified non-ghost: a value `c = m·k!` with a prime
 witnessing `c ∉ (x)_k(F_p)`. Across i=2..8 that is ~6.07M values of c, and i=9
-takes it past 42M — which `Claude-Answer.txt` calls *"the largest test of this
+takes it past 42M — which `docs/size-law-notes.txt` calls *"the largest test of this
 conjecture in existence"* and *"a genuine contribution to a question nobody has
 data on."* Right now it is an unrecorded by-product. Should the witness tables
 be indexed and reported as a ghost census in their own right?
