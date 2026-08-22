@@ -194,6 +194,58 @@ def test_clean_run_still_clean() -> None:
     expect(rep["certificate"] is not None, "i=3 certificate still emitted")
 
 
+def test_incremental_done_keys_equals_full_rederivation() -> None:
+    """The set maintained in place must equal the one read off the whole file.
+
+    done_keys used to be re-derived from the entire checkpoint after every
+    round, and run_jobs re-parsed it again on entry -- about 42 full passes at
+    i=9 over a file reaching 219 MB, at ~5.7x file size in RAM. That is roughly
+    1.25 GB of Python objects in the parent, 24 times, on a machine already
+    crashed once by memory pressure.
+
+    Maintaining it incrementally is only safe if it is EQUAL, so VERIFY_DONE_KEYS
+    re-derives and asserts equality every round. That is the expensive path by
+    design: it is switched on here and off in production.
+
+    Exercised on a fresh run AND a resume, because the resume path is where the
+    two false-clean certificates lived and where a missing key would silently
+    re-run or silently skip a chunk.
+    """
+    i = 5
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+
+    saved = fsw.VERIFY_DONE_KEYS
+    fsw.VERIFY_DONE_KEYS = True
+    try:
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        fsw.main()
+        full = json.loads(out.read_text(encoding="utf-8"))
+        expect(full.get("clean") is True,
+               "fresh run with VERIFY_DONE_KEYS on is still clean "
+               "(the equality assertion did not fire)")
+
+        lines = chk.read_text(encoding="utf-8").splitlines()
+        chk.write_text("\n".join(lines[: max(2, int(len(lines) * 0.6))]) + "\n",
+                       encoding="utf-8")
+        out.unlink(missing_ok=True)
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        fsw.main()
+        got = json.loads(out.read_text(encoding="utf-8"))
+        expect(got.get("clean") is True,
+               "resumed run with VERIFY_DONE_KEYS on is still clean")
+        expect(got.get("certificate") == full.get("certificate"),
+               "and the resumed certificate is byte-identical to the "
+               "uninterrupted one")
+    except RuntimeError as exc:
+        expect(False, f"incremental done_keys diverged: {str(exc)[:120]}")
+    finally:
+        fsw.VERIFY_DONE_KEYS = saved
+        for f in (out, chk):
+            f.unlink(missing_ok=True)
+
+
 def test_extended_rounds_defer_rather_than_drop() -> None:
     """A survivor the extended rounds do not serve must still be REPORTED.
 
@@ -566,6 +618,7 @@ def main() -> int:
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
         test_resume_reproduces_an_uninterrupted_run()
+        test_incremental_done_keys_equals_full_rederivation()
         test_extended_rounds_defer_rather_than_drop()
         test_failed_witness_build_withholds_the_certificate()
     # Guard the sandbox itself. If the redirect is ever removed, this fails

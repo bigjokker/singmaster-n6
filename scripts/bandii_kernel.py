@@ -822,6 +822,36 @@ def check_checkpoint(path, **params) -> None:
     )
 
 
+def iter_jsonl(path):
+    """Yield each record in a checkpoint jsonl without materialising the file.
+
+    read_jsonl builds a list of every record, and a chunk record carries its
+    whole survivor list. At i=9 the checkpoint reaches 219 MB, which measures
+    at about 5.7x that in Python objects -- roughly 1.25 GB held in the parent
+    while eight workers are running, on a machine that has already been crashed
+    once by memory pressure.
+
+    Callers that only need a few fields per record (done_keys, phase_complete
+    events, the survivors of ONE tag) should stream instead, so peak scales
+    with what they keep rather than with the file.
+
+    Deliberately NOT guarded against a malformed line: json.loads raises, so a
+    record truncated by a kill or a power loss stops the resume instead of
+    being silently skipped. read_jsonl has the same property and it is load
+    bearing -- a skipped record would drop a chunk from the worklist and the
+    run would certify over columns it never scanned.
+    """
+    if not path.exists():
+        return
+    import json
+
+    with path.open(encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                yield json.loads(line)
+
+
 def read_jsonl(path) -> list[dict]:
     """Every record in a checkpoint jsonl, or [] if it does not exist."""
     rows: list[dict] = []

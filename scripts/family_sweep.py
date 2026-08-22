@@ -38,6 +38,7 @@ from bandii_kernel import (  # noqa: E402
     first_live_after,
     first_primes_above,
     live_intervals,
+    iter_jsonl as stream_done,
     read_jsonl as load_done,
     summarize_survivors as summarize,
     fact_table,
@@ -60,6 +61,10 @@ CAP_Z = 12
 # so give the bottom a few more rounds rather than reporting a fat-tail
 # survivor as an anomaly. See sizelaw.py and docs/zjump-spec.md.
 CAP_Z_SMALL_K = 15
+# Re-derive done_keys from the whole checkpoint each round and assert it
+# equals the incrementally maintained set. Costs a full parse per round,
+# so it is for tests, not production.
+VERIFY_DONE_KEYS = False
 SMALL_K = 10**3
 N_CHUNKS = 32
 DEFAULT_WORKERS = 8
@@ -107,7 +112,19 @@ def paths(i: int) -> tuple[Path, Path]:
     return ROOT / "results" / f"i{i}_sweep.json", ROOT / "results" / f"i{i}_sweep.jsonl"
 
 
-def run_jobs(jobs: list[tuple], workers: int, chk: Path, tag: str, done_keys: set) -> list[dict]:
+def run_jobs(jobs: list[tuple], workers: int, chk: Path, tag: str,
+             done_keys: set, tags_on_disk: set | None = None) -> list[dict]:
+    """Run this round's chunks, recovering anything already on disk.
+
+    `done_keys` is updated IN PLACE as each chunk lands, so the caller never has
+    to re-derive it from the whole checkpoint. That re-derivation, plus the
+    survivor recovery below, used to re-parse the jsonl twice per round: at i=9
+    about 42 full passes over a file that reaches 219 MB. Measured 16.6 MB/s
+    and ~5.7x file size in RAM, so roughly 1.25 GB of Python objects allocated
+    in the parent, 24 times, on a machine that has already been crashed once by
+    memory pressure. The time was never the problem (~185 s against 62 core-h);
+    the allocation was.
+    """
     pending = []
     for job in jobs:
         _kind, p, ks, _N, _K, _r = job
@@ -115,9 +132,17 @@ def run_jobs(jobs: list[tuple], workers: int, chk: Path, tag: str, done_keys: se
         if key not in done_keys:
             pending.append(job)
     surv = []
-    for rec in load_done(chk):
-        if rec.get("tag") == tag:
-            surv.extend(rec.get("survivors") or [])
+    # Only look for recoverable survivors when a chunk of THIS tag is already
+    # on disk. On a fresh round there is nothing to recover and the parse is
+    # pure cost -- it read the whole file to build an empty list.
+    if tag in (tags_on_disk if tags_on_disk is not None
+               else {k[0] for k in done_keys}):
+        # Stream, filtering to THIS tag. Materialising the whole checkpoint to
+        # recover one round's survivors is what cost ~1.25 GB per call at i=9;
+        # peak here scales with the round's survivor list instead of the file.
+        for rec in stream_done(chk):
+            if rec.get("tag") == tag:
+                surv.extend(rec.get("survivors") or [])
     if not pending:
         print(f"  {tag} all chunks done  alive={len(surv)}", flush=True)
         return surv
@@ -129,6 +154,10 @@ def run_jobs(jobs: list[tuple], workers: int, chk: Path, tag: str, done_keys: se
             rec["tag"] = tag
             write_jsonl(chk, rec)
             surv.extend(rec["survivors"])
+            # Keep done_keys current in place. The record is on disk first, so
+            # a crash between the two lines loses only the in-memory copy --
+            # the next run's startup parse recovers it from the file.
+            done_keys.add((tag, int(rec["p"]), int(rec["k_lo"]), int(rec["k_hi"])))
             nprint += 1
             fat = rec["n_cols"] >= 500 or rec["seconds"] >= 1.0
             if fat or nprint % 50 == 0:
@@ -273,13 +302,29 @@ def main() -> int:
     check_checkpoint(chk, **ident)
     if not chk.exists() or chk.stat().st_size == 0:
         write_jsonl(chk, checkpoint_identity(**ident))
-    done = load_done(chk)
-    done_keys = {
-        (r["tag"], r["p"], r["k_lo"], r["k_hi"])
-        for r in done
-        if "tag" in r and "p" in r and "k_lo" in r
-    }
-    complete = {r["phase"] for r in done if r.get("event") == "phase_complete"}
+    # Stream the checkpoint rather than materialising it. Only two small
+    # things are needed here -- the set of finished chunk keys, and which
+    # phases are complete -- but the records carry whole survivor lists, so
+    # holding them all costs ~5.7x the file size in Python objects (about
+    # 1.25 GB at i=9's 219 MB) in the parent while the workers run.
+    done_keys = set()
+    tags_on_disk: set = set()
+    complete = set()
+    phase_counts: list[dict] = []
+    for r in stream_done(chk):
+        if "tag" in r:
+            # Tracked SEPARATELY from done_keys. Inferring "is this tag on
+            # disk" from done_keys would silently depend on every tagged
+            # record also carrying p/k_lo -- true today, but a record type
+            # with a tag and no p would then be invisible, the recovery guard
+            # would read False, and that tag's survivors would vanish.
+            tags_on_disk.add(r["tag"])
+        if "tag" in r and "p" in r and "k_lo" in r:
+            done_keys.add((r["tag"], r["p"], r["k_lo"], r["k_hi"]))
+        elif r.get("event") == "phase_complete":
+            complete.add(r["phase"])
+            phase_counts.append(r)
+    done = phase_counts
 
     phases = {}
 
@@ -322,7 +367,7 @@ def main() -> int:
                 else [row["k"] for row in alive]
             )
             exp = ledger_bii.expect((k_, p) for k_ in entered)
-            surv = run_jobs(jobs, workers, chk, tag, done_keys)
+            surv = run_jobs(jobs, workers, chk, tag, done_keys, tags_on_disk)
             sm = summarize(surv)
             judged = ledger_bii.record(pi, len(entered), exp, sm["n"])
             phases.setdefault("bandii", []).append(
@@ -336,11 +381,33 @@ def main() -> int:
                   f"{exp:.4g}) even={sm['even']} mean_k={sm['mean_k']}", flush=True)
             alive = surv
             write_jsonl(chk, {"event": "round_complete", "phase": "bandii", "pass": pi, "n_alive": sm["n"]})
-            done_keys = {
-                (r["tag"], r["p"], r["k_lo"], r["k_hi"])
-                for r in load_done(chk)
-                if "tag" in r and "p" in r and "k_lo" in r
-            }
+            # done_keys is maintained in place by run_jobs. Re-deriving it
+            # here meant a second full parse of the growing checkpoint every
+            # round; VERIFY_DONE_KEYS re-derives and compares instead, so the
+            # equivalence is testable without paying for it in production.
+            if VERIFY_DONE_KEYS:
+                _recs = load_done(chk)
+                _full = {
+                    (r["tag"], r["p"], r["k_lo"], r["k_hi"])
+                    for r in _recs
+                    if "tag" in r and "p" in r and "k_lo" in r
+                }
+                check(_full == done_keys,
+                      f"incremental done_keys diverged from the checkpoint: "
+                      f"missing {sorted(_full - done_keys)[:5]}, "
+                      f"extra {sorted(done_keys - _full)[:5]}")
+                # Keys are the easy half. The survivors are what feed `alive`,
+                # the size-law ledger and the n_alive written to the record --
+                # and the ledger CANNOT catch an under-recovery, because
+                # escalate() is a one-sided upper-tail test, so observed far
+                # BELOW expected reads as "ordinary".
+                _on_disk = {int(c["k"]) for r in _recs if r.get("tag") == tag
+                            for c in (r.get("survivors") or [])}
+                _in_hand = {int(c["k"]) for c in surv}
+                check(_on_disk == _in_hand,
+                      f"recovered survivors for {tag} diverge from the "
+                      f"checkpoint: missing {sorted(_on_disk - _in_hand)[:5]}, "
+                      f"extra {sorted(_in_hand - _on_disk)[:5]}")
             if not alive:
                 break
         write_jsonl(chk, {"event": "phase_complete", "phase": "bandii", "n_alive": 0 if not alive else len(alive)})
@@ -407,7 +474,7 @@ def main() -> int:
                 (k_, p_) for p_, ks_ in buckets.items() for k_ in ks_
             )
             n_entered = sum(len(v) for v in buckets.values())
-            surv = run_jobs(jobs, workers, chk, f"z{rnd}", done_keys)
+            surv = run_jobs(jobs, workers, chk, f"z{rnd}", done_keys, tags_on_disk)
             sm = summarize(surv)
             judged = ledger_z.record(rnd, n_entered, exp, sm["n"])
             zrounds.append({"round": rnd, "n_primes": len(buckets), **sm,
@@ -423,11 +490,34 @@ def main() -> int:
                       f"(expected {exp:.3g}, observed {sm['n']})", flush=True)
             current = surv
             write_jsonl(chk, {"event": "round_complete", "phase": "zjump", "round": rnd, "n_alive": sm["n"]})
-            done_keys = {
-                (r["tag"], r["p"], r["k_lo"], r["k_hi"])
-                for r in load_done(chk)
-                if "tag" in r and "p" in r and "k_lo" in r
-            }
+            # done_keys is maintained in place by run_jobs. Re-deriving it
+            # here meant a second full parse of the growing checkpoint every
+            # round; VERIFY_DONE_KEYS re-derives and compares instead, so the
+            # equivalence is testable without paying for it in production.
+            if VERIFY_DONE_KEYS:
+                _recs = load_done(chk)
+                _full = {
+                    (r["tag"], r["p"], r["k_lo"], r["k_hi"])
+                    for r in _recs
+                    if "tag" in r and "p" in r and "k_lo" in r
+                }
+                check(_full == done_keys,
+                      f"incremental done_keys diverged from the checkpoint: "
+                      f"missing {sorted(_full - done_keys)[:5]}, "
+                      f"extra {sorted(done_keys - _full)[:5]}")
+                # Keys are the easy half. The survivors are what feed `alive`,
+                # the size-law ledger and the n_alive written to the record --
+                # and the ledger CANNOT catch an under-recovery, because
+                # escalate() is a one-sided upper-tail test, so observed far
+                # BELOW expected reads as "ordinary".
+                _tag = f"z{rnd}"
+                _on_disk = {int(c["k"]) for r in _recs if r.get("tag") == _tag
+                            for c in (r.get("survivors") or [])}
+                _in_hand = {int(c["k"]) for c in surv}
+                check(_on_disk == _in_hand,
+                      f"recovered survivors for {_tag} diverge from the "
+                      f"checkpoint: missing {sorted(_on_disk - _in_hand)[:5]}, "
+                      f"extra {sorted(_in_hand - _on_disk)[:5]}")
         write_jsonl(
             chk,
             {
