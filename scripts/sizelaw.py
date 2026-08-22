@@ -129,6 +129,29 @@ def survival(g: int, p: int, k: int) -> float:
     return -math.expm1(preimage_count(g, k) * math.log1p(-1.0 / p))
 
 
+def preimage_count_vec(g, k):
+    """Vectorised `preimage_count`. Same formula, numpy arrays in and out."""
+    import numpy as np
+    g = np.asarray(g, dtype=np.int64)
+    k = np.asarray(k, dtype=np.int64)
+    return np.where(k % 2 == 1, g + 1, (g + 1) // 2 + 1)
+
+
+def survival_vec(g, p, k):
+    """Vectorised `survival`, for callers sweeping millions of columns.
+
+    Exists so the profiler does not carry a second copy of the size law --
+    a re-implementation that drifted would make the model and the escalation
+    trigger silently disagree. `test_sizelaw.py` pins this elementwise
+    against the scalar form.
+    """
+    import numpy as np
+    g = np.asarray(g, dtype=np.int64)
+    M = preimage_count_vec(g, k)
+    out = -np.expm1(M * np.log1p(-1.0 / np.asarray(p, dtype=np.float64)))
+    return np.where(g <= 0, 1.0, out)
+
+
 # ---------------------------------------------------------------------------
 # the trigger
 # ---------------------------------------------------------------------------

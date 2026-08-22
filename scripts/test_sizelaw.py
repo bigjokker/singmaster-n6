@@ -274,8 +274,46 @@ def test_accuracy_bound_by_regime() -> None:
            f"(measured {worst_big:.5f}x) -- this is the thin-headroom regime")
 
 
+def test_survival_vec_matches_scalar() -> None:
+    """`survival_vec` must be the SAME law as `survival`, elementwise.
+
+    The profiler sweeps millions of columns and needs the vector form. If the
+    two ever drift, the cost model and the escalation trigger would silently
+    disagree about the same column -- so pin them together here rather than
+    trusting that two copies of a formula stay equal.
+    """
+    import numpy as np
+    rng = np.random.default_rng(4)
+    g = rng.integers(0, 5_000_000, size=4000, dtype=np.int64)
+    k = rng.integers(2, 40_000_000, size=4000, dtype=np.int64)
+    p = (k + g).astype(np.int64)
+    got = S.survival_vec(g, p, k)
+    want = np.array([S.survival(int(a), int(b), int(c))
+                     for a, b, c in zip(g, p, k)])
+    worst = float(np.max(np.abs(got - want)))
+    if worst > 1e-12:
+        errors.append(f"survival_vec differs from survival by {worst:.3g}")
+    else:
+        ok.append(f"survival_vec == survival on 4000 random (g,p,k), max |diff| {worst:.3g}")
+
+    mg = S.preimage_count_vec(g, k)
+    mw = np.array([S.preimage_count(int(a), int(c)) for a, c in zip(g, k)])
+    if not np.array_equal(mg, mw):
+        errors.append("preimage_count_vec differs from preimage_count")
+    else:
+        ok.append("preimage_count_vec == preimage_count on the same 4000")
+
+    # g <= 0 is the degenerate branch the scalar form special-cases
+    z = S.survival_vec(np.array([0, -3]), np.array([101, 101]), np.array([5, 6]))
+    if not np.allclose(z, 1.0):
+        errors.append(f"survival_vec mishandles g<=0: {z}")
+    else:
+        ok.append("survival_vec returns 1.0 for g <= 0, matching the scalar branch")
+
+
 def main() -> int:
     test_image_size_against_measurement()
+    test_survival_vec_matches_scalar()
     test_accuracy_bound_by_regime()
     test_proved_bound_is_never_violated()
     test_parity_fold_is_real()
