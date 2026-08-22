@@ -194,6 +194,66 @@ def test_clean_run_still_clean() -> None:
     expect(rep["certificate"] is not None, "i=3 certificate still emitted")
 
 
+def test_failed_witness_build_withholds_the_certificate() -> None:
+    """A certificate names a witness table; if the build failed, do not emit it.
+
+    Before the fix the `except` around the witness build printed the error,
+    left clean=True, and still emitted a certificate reading
+    "results/i{i}_witness.npz (sha256 n/a)". The dangerous case is a STALE npz
+    from an earlier run: a referee who opens the named path verifies a table
+    this sweep never wrote, and it passes.
+
+    `clean` is deliberately NOT flipped. It is the SWEEP's verdict -- every
+    column testable, nothing surviving -- and a write failure does not make a
+    clean sweep dirty. clean=True with certificate=None is the honest state.
+    """
+    import witness as _w
+
+    i = 3
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+
+    # a stale table from a notional earlier run, at the exact path the
+    # certificate would name
+    wpath = fsw.ROOT / "results" / f"i{i}_witness.npz"
+    wpath.parent.mkdir(parents=True, exist_ok=True)
+    wpath.write_bytes(b"stale-not-this-runs-output")
+    stale_before = wpath.read_bytes()
+
+    real_build = _w._build_family
+
+    def boom(*a, **kw):
+        raise RuntimeError("simulated witness build failure")
+
+    _w._build_family = boom
+    try:
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        fsw.main()
+    finally:
+        _w._build_family = real_build
+
+    rep = json.loads(out.read_text(encoding="utf-8"))
+    expect(rep.get("certificate") is None,
+           f"a failed witness build emits NO certificate "
+           f"(got {str(rep.get('certificate'))[:40]!r})")
+    expect(rep.get("witness_ok") is False,
+           f"witness_ok records the failure (got {rep.get('witness_ok')!r})")
+    expect(rep.get("clean") is True,
+           "the SWEEP's own verdict is preserved -- a write failure does not "
+           f"make a clean sweep dirty (clean={rep.get('clean')!r})")
+    expect("stale" in (rep.get("certificate_withheld") or "").lower()
+           or "NOT written" in (rep.get("certificate_withheld") or ""),
+           f"the withholding reason names the stale-file hazard "
+           f"({str(rep.get('certificate_withheld'))[:90]!r})")
+    expect(wpath.read_bytes() == stale_before,
+           "the stale table is left untouched, not silently overwritten")
+
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+    wpath.unlink(missing_ok=True)
+
+
 def _diff_ignoring_timing(a, b, path: str = "") -> list[str]:
     """Recursive compare, ignoring wall-clock fields only.
 
@@ -454,6 +514,7 @@ def main() -> int:
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
         test_resume_reproduces_an_uninterrupted_run()
+        test_failed_witness_build_withholds_the_certificate()
     # Guard the sandbox itself. If the redirect is ever removed, this fails
     # loudly instead of quietly regenerating tracked artifacts again.
     after = _digest_guarded()

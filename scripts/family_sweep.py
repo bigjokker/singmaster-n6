@@ -494,6 +494,13 @@ def main() -> int:
     # records the witness for none of them, and the only way to re-check it is
     # to run the whole sweep again.
     witness_meta = None
+    # SEPARATE from `clean`. `clean` is the SWEEP's verdict -- every column was
+    # testable and nothing survived. Whether the proof object could be written
+    # is a different question, and conflating them would let a clean sweep be
+    # reported as dirty (or, before this, a failed build be reported as
+    # certified). A run may legitimately be clean=True with certificate=None.
+    witness_ok = True
+    withheld = None
     if clean:
         try:
             import witness as _witness
@@ -513,8 +520,26 @@ def main() -> int:
                 )
                 clean = False
         except Exception as exc:  # never lose a finished sweep to this
-            print(f"  witness build failed: {exc!r}", flush=True)
+            # ...but never certify one either. Before this, a failed build left
+            # clean=True and still emitted a certificate reading
+            # "results/i{i}_witness.npz (sha256 n/a)". The dangerous case is a
+            # STALE npz from an earlier run: a referee who opens the named path
+            # verifies a table this sweep did not write, and it passes.
+            witness_ok = False
             witness_meta = {"error": repr(exc)}
+            stale = wpath.exists()
+            withheld = (
+                f"witness build failed: {exc!r}"
+                + ("; results/{}_witness.npz EXISTS but was NOT written by this "
+                   "run -- do not verify it as this run's proof object"
+                   .format(f"i{i}") if stale else "")
+            )
+            print(f"  witness build failed: {exc!r}", flush=True)
+            print("  certificate WITHHELD: the sweep may be clean, but its "
+                  "witness table was not produced", flush=True)
+            if stale:
+                print(f"  WARNING {wpath.name} exists and is STALE -- it is not "
+                      f"this run's output", flush=True)
     payload = {
         "search": f"i{i}_sweep",
         "i": i,
@@ -537,6 +562,8 @@ def main() -> int:
         "n_z_nolive": n_z_nolive,
         "z_nolive": z_none[:100],
         "witness": witness_meta,
+        "witness_ok": witness_ok,
+        "certificate_withheld": withheld,
         "small_k_census": smallk,
         "escalation": {
             "bandii": ledger_bii.verdict(),
@@ -554,7 +581,10 @@ def main() -> int:
             f"re-check with: python scripts/witness.py verify "
             f"--file results/i{i}_witness.npz"
         )
-        if clean
+        # A certificate names a witness table. Emit it only when that table was
+        # actually written by THIS run -- `clean` alone is not enough, because a
+        # failed build leaves the named path absent or stale.
+        if clean and witness_ok
         else None,
         "seconds": round(time.time() - t0, 3),
     }
