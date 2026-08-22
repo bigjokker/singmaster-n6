@@ -413,8 +413,89 @@ def test_fill_leaves_no_stale_label() -> None:
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def test_repair_replaces_a_false_certificate() -> None:
+    """A table can carry a certificate that is simply FALSE, and repair must
+    fix exactly that row -- or refuse.
+
+    This is not hypothetical. i=8 shipped with k=1021 recorded as killed by
+    p=3517, a prime it merely SURVIVED: the Z-jump's extended small-k rounds
+    drop survivors with k >= SMALL_K instead of killing them
+    (family_sweep.py:365-368), and the builder reads "absent from this round's
+    survivors" as "killed by this round's prime". Sampled verification
+    (5,000 of 5,182,634) never looked at it.
+
+    Two properties are pinned, and the second is the one that matters: repair
+    must RAISE rather than write out a table it could not actually fix.
+    """
+    import json
+
+    import numpy as np
+
+    i = 3
+    fam = make_fam(i)
+    tmp = Path(tempfile.mkdtemp(prefix="repair_test_"))
+    try:
+        src = ROOT / "results" / f"i{i}_witness.npz"
+        if not src.exists():
+            ok.append(f"i{i}_witness.npz absent; repair test skipped")
+            return
+        ks, ps, meta = W.load(src)
+        path = tmp / f"i{i}_witness.npz"
+
+        # corrupt ONE row to a prime that does not obstruct its column
+        have = {int(a): int(b) for a, b in zip(ks, ps)}
+        victim = int(ks[len(ks) // 2])
+        good_p = have[victim]
+        bad_p = next(q for q in range(victim + 1, victim + 4000)
+                     if W.is_prime_pure(q)
+                     and not W.check_witness(fam.N, fam.K, victim, q)["ok"])
+        have[victim] = bad_p
+        W.save(path, meta, have)
+        expect(not W.check_witness(fam.N, fam.K, victim, bad_p)["ok"],
+               f"fixture really does carry a FALSE certificate (k={victim}, p={bad_p})")
+
+        res = W.repair_invalid(path, i, [victim])
+        ks2, ps2, meta2 = W.load(path)
+        have2 = {int(a): int(b) for a, b in zip(ks2, ps2)}
+
+        expect(len(res["repaired"]) == 1 and res["repaired"][0]["k"] == victim,
+               f"repair fixes exactly the corrupted row ({res['repaired']})")
+        expect(W.check_witness(fam.N, fam.K, victim, have2[victim])["ok"],
+               f"the replacement certificate actually holds "
+               f"(p={have2[victim]})")
+        untouched = sum(1 for kk in have if kk != victim and have2.get(kk) == have[kk])
+        expect(untouched == len(have) - 1,
+               f"every other row is untouched ({untouched}/{len(have)-1})")
+        expect(meta2.get("n_repaired") == 1 and meta2["repaired"][0]["old_p"] == bad_p,
+               "the repair is recorded in meta, so provenance is not laundered")
+        expect(np.array_equal(ks, ks2), "the column set itself is unchanged")
+
+        # ADVERSARIAL: if no obstructing prime exists, refuse -- do not write a
+        # table that still carries a known-false certificate.
+        have[victim] = bad_p
+        W.save(path, meta, have)
+        before = path.read_bytes()
+        import singmaster_intersect as SI
+        real_op = SI.obstructing_prime
+        SI.obstructing_prime = lambda *a, **kw: None
+        try:
+            W.repair_invalid(path, i, [victim])
+            expect(False, "repair RAISES when a false certificate cannot be replaced")
+        except RuntimeError as exc:
+            expect("FALSE certificate" in str(exc),
+                   f"repair raises rather than shipping an unrepaired table "
+                   f"({str(exc)[:70]})")
+        finally:
+            SI.obstructing_prime = real_op
+        expect(path.read_bytes() == before,
+               "and it leaves the file byte-identical rather than half-written")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
     test_fill_leaves_no_stale_label()
+    test_repair_replaces_a_false_certificate()
     test_against_exact_arithmetic()
     test_rejects_bad_certificates()
     test_rejects_composite_p()

@@ -472,6 +472,74 @@ def fill_small_gaps(path: Path, i: int) -> dict:
             "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
 
 
+def repair_invalid(path: Path, i: int, ks_want=None, k_hi: int | None = None) -> dict:
+    """Re-verify named columns and replace any certificate that does not hold.
+
+    A witness table can carry a certificate that is simply false. It happened
+    at i=8. The Z-jump's extended small-k rounds drop survivors with
+    k >= SMALL_K instead of killing them (family_sweep.py:365-368), and the
+    builder infers "absent from this round's survivors" == "killed by this
+    round's prime" -- so k=1021, which merely SURVIVED p=3517, was recorded as
+    killed by it. Verification is sampled (5,000 of 5,182,634), so a 1-in-1000
+    chance of being caught.
+
+    For each named column this re-checks the stored certificate, and on failure
+    asks the engine for a genuine obstructing prime, verifies THAT before
+    accepting it, and replaces the row. It RAISES rather than leaving a bad row
+    in place if no obstructing prime can be found -- a table with a known-false
+    certificate must not be written out as if it were repaired.
+
+    Every replacement is recorded in meta, so the repair is auditable and the
+    provenance of the row is not silently laundered from sweep to engine. No
+    other row is touched; the arrays change only in the repaired positions.
+    """
+    from singmaster_intersect import obstructing_prime, primes_upto
+
+    from bandii_kernel import make_fam
+
+    ks, ps, meta = load(path)
+    fam = make_fam(i)
+    have = {int(a): int(b) for a, b in zip(ks, ps)}
+
+    if ks_want:
+        targets = [int(x) for x in ks_want]
+    elif k_hi is not None:
+        targets = [int(k) for k in ks.tolist() if int(k) <= int(k_hi)]
+    else:
+        targets = [int(k) for k in ks.tolist()]
+
+    small_primes = primes_upto(200_000)
+    repaired, unfixable, checked = [], [], 0
+    for k in targets:
+        if k not in have:
+            continue
+        checked += 1
+        if check_witness(fam.N, fam.K, k, have[k])["ok"]:
+            continue
+        old = have[k]
+        q = obstructing_prime(fam.N, fam.K, k, small_primes)
+        if q is None or not check_witness(fam.N, fam.K, k, q)["ok"]:
+            unfixable.append({"k": k, "old_p": old})
+            continue
+        have[k] = int(q)
+        repaired.append({"k": k, "old_p": int(old), "new_p": int(q)})
+
+    if unfixable:
+        raise RuntimeError(
+            f"{path.name}: {len(unfixable)} column(s) carry a FALSE certificate "
+            f"and no obstructing prime was found: {unfixable[:5]}. The table is "
+            f"left untouched -- do not ship it as repaired.")
+    if not repaired:
+        return {"i": i, "checked": checked, "repaired": [], "sha256": meta["sha256"]}
+
+    meta = {**meta,
+            "repaired": list(meta.get("repaired", [])) + repaired,
+            "n_repaired": int(meta.get("n_repaired", 0)) + len(repaired)}
+    out = save(path, meta, have)
+    return {"i": i, "checked": checked, "repaired": repaired,
+            "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
+
+
 def _pass_tag(prefix: str):
     """Pass/round index out of a checkpoint record, across the three writers.
 
@@ -643,6 +711,15 @@ def main() -> int:
     fl.add_argument("--i", type=int, required=True)
     fl.add_argument("--file", type=Path, default=None)
 
+    rp = sub.add_parser("repair",
+                        help="re-verify columns and replace any FALSE certificate")
+    rp.add_argument("--i", type=int, required=True)
+    rp.add_argument("--file", type=Path, default=None)
+    rp.add_argument("--k", type=int, nargs="*", default=None,
+                    help="specific columns; default is every column (slow)")
+    rp.add_argument("--k-hi", type=int, default=None,
+                    help="check every column k <= this bound")
+
     o = sub.add_parser("one", help="check a single certificate from five integers")
     o.add_argument("--N", type=int, required=True)
     o.add_argument("--K", type=int, required=True)
@@ -664,6 +741,16 @@ def main() -> int:
               + (f", UNRESOLVED {res['unresolved'][:10]}" if res["unresolved"] else ""))
         print(f"  sha256 {res['sha256'][:32]}...")
         return 0 if not res["unresolved"] else 2
+
+    if args.cmd == "repair":
+        f = args.file or ROOT / "results" / f"i{args.i}_witness.npz"
+        res = repair_invalid(f, args.i, args.k, args.k_hi)
+        print(f"  {f.name}: checked {res['checked']:,} columns, "
+              f"repaired {len(res['repaired'])}")
+        for r in res["repaired"]:
+            print(f"    k={r['k']}: p {r['old_p']} (FALSE) -> {r['new_p']} (verified)")
+        print(f"  sha256 {res['sha256'][:32]}...")
+        return 0
 
     if args.cmd == "build":
         out = args.out or ROOT / "results" / f"i{args.i}_witness.npz"

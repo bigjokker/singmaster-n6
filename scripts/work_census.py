@@ -133,6 +133,37 @@ def _classify_record_gaps(res: dict, rec: dict) -> None:
             f"phase_complete before this run was resumed, so its passes were "
             f"never written to this record. Not evaluable from this file.")
 
+    # The extended small-k rounds DROP survivors with k >= SMALL_K instead of
+    # killing them (family_sweep.py:365-368), so for rounds past CAP_Z the
+    # recorded survivor count can be short by exactly those columns. The
+    # reconstruction is right and the record is wrong -- a distinct situation
+    # from a record that is merely incomplete, so it gets its own verdict.
+    try:
+        from family_sweep import CAP_Z, SMALL_K
+    except Exception:
+        CAP_Z, SMALL_K = 12, 10 ** 3
+    droppable = [r for r in res["leftovers"]["off_ladder"].get("rows", [])
+                 if r["k"] >= SMALL_K]
+    for g in res["gates"]:
+        if g["verdict"] != "fail" or not g["gate"].startswith("zjump.round"):
+            continue
+        if not g["gate"].endswith(".survivors"):
+            continue
+        try:
+            rnd = int(g["gate"].split("round")[1].split(".")[0])
+        except (IndexError, ValueError):
+            continue
+        if rnd > CAP_Z and droppable and g["got"] - g["want"] == len(droppable):
+            g["verdict"] = "record_wrong"
+            g["evidence"] = (
+                f"round {rnd} is past CAP_Z={CAP_Z}, where family_sweep filters "
+                f"current to k < SMALL_K={SMALL_K:,} and DROPS the rest instead of "
+                f"killing them. The record is short by exactly the "
+                f"{len(droppable)} droppable off-ladder column(s) "
+                f"{[r['k'] for r in droppable]}, which were still alive. The "
+                f"reconstruction is correct here and the recorded count is not; "
+                f"this cannot be reconciled without re-running the member.")
+
     g = by.get("zjump.round1.n_primes")
     later = [x for x in res["gates"]
              if x["gate"].startswith("zjump.round") and x["gate"].endswith(".n_primes")
@@ -376,6 +407,8 @@ def census(i: int, rate: float = SCAN_RATE) -> dict:
                 res["recorded_wall_core_h"] / res["scan_core_h"], 2)
 
     res["ok"] = all(g["verdict"] != "fail" for g in res["gates"])
+    res["record_wrong"] = [g["gate"] for g in res["gates"]
+                           if g["verdict"] == "record_wrong"]
     return res
 
 
@@ -405,12 +438,13 @@ def report(rows: list[dict]) -> None:
                 more = " ..." if lf.get("truncated") else ""
                 print(f"  leftover {key}: n={lf['n']}  k={shown}{more}  ({lf['why']})")
         npass = sum(1 for g in r["gates"] if g["verdict"] == "pass")
-        inc = [g for g in r["gates"] if g["verdict"] == "record_incomplete"]
+        inc = [g for g in r["gates"]
+               if g["verdict"] in ("record_incomplete", "record_wrong")]
         bad = [g for g in r["gates"] if g["verdict"] == "fail"]
         print(f"  gates: {npass}/{len(r['gates'])} pass"
-              + (f", {len(inc)} not evaluable, {len(bad)} FAIL" if inc or bad else ""))
+              + (f", {len(inc)} record defect, {len(bad)} FAIL" if inc or bad else ""))
         for g in inc:
-            print(f"    RECORD INCOMPLETE {g['gate']}: "
+            print(f"    {'RECORD WRONG' if g['verdict'] == 'record_wrong' else 'RECORD INCOMPLETE'} {g['gate']}: "
                   f"reconstructed {g['got']:,} vs recorded {g['want']:,}")
             for line in textwrap.wrap(g["evidence"], 84):
                 print(f"        {line}")
