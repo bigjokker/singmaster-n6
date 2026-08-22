@@ -114,8 +114,27 @@ def _m(N: int, K: int):
     return _M
 
 
-def remainder_tree(m, primes: list[int]) -> list[int]:
-    """m mod p for every p, in one pass. Product tree up, remainder tree down."""
+# Primes per tree. The whole ladder in one tree is fastest but the product
+# tree holds every level at once, and at i=10 scale that MEASURED a 2,286 MB
+# peak working set -- in the parent, while eight workers run, on a machine with
+# a memory-crash history. Blocking to 8 pieces measured 766 MB for 27.0 s
+# against 17.7 s, i.e. 3x less memory for 1.5x time, with byte-identical
+# output. Nine seconds against i=10's order-1e3 core-hour Lucas bill is free.
+# 1e6 leaves i=9 (990,683 primes) in a single tree and splits i=10 into seven.
+TREE_BLOCK = 1_000_000
+
+
+def remainder_tree(m, primes: list[int], block: int = TREE_BLOCK) -> list[int]:
+    """m mod p for every p. Product tree up, remainder tree down.
+
+    Blocked at `block` primes to bound peak memory; the blocks are independent
+    and concatenate, so the result is identical to one big tree.
+    """
+    if block and len(primes) > block:
+        out: list[int] = []
+        for s in range(0, len(primes), block):
+            out.extend(remainder_tree(m, primes[s:s + block], block=0))
+        return out
     level = [gmpy2.mpz(int(x)) for x in primes]
     levels = [level]
     while len(level) > 1:
