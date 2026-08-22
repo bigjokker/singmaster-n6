@@ -194,6 +194,99 @@ def test_clean_run_still_clean() -> None:
     expect(rep["certificate"] is not None, "i=3 certificate still emitted")
 
 
+def _diff_ignoring_timing(a, b, path: str = "") -> list[str]:
+    """Recursive compare, ignoring wall-clock fields only.
+
+    `seconds` legitimately differs between an uninterrupted run and a resumed
+    one. Everything else -- every survivor, every round count, the certificate
+    string itself -- must be identical, or the resume changed the claim.
+    """
+    if isinstance(a, dict) and isinstance(b, dict):
+        out = []
+        for k in sorted(set(a) | set(b)):
+            if k == "seconds":
+                continue
+            if k not in a or k not in b:
+                out.append(f"{path}.{k}: present in only one")
+                continue
+            out += _diff_ignoring_timing(a[k], b[k], f"{path}.{k}")
+        return out
+    if isinstance(a, list) and isinstance(b, list):
+        if len(a) != len(b):
+            return [f"{path}: length {len(a)} vs {len(b)}"]
+        out = []
+        for n, (x, y) in enumerate(zip(a, b)):
+            out += _diff_ignoring_timing(x, y, f"{path}[{n}]")
+        return out
+    return [] if a == b else [f"{path}: {a!r} vs {b!r}"]
+
+
+def test_resume_reproduces_an_uninterrupted_run() -> None:
+    """A run killed mid-round and resumed must emit the SAME certificate.
+
+    The resume path is where both "false clean certificate" bugs lived. The
+    two tests below cover a resumed unfinished phase and an untestable column,
+    but neither checks the property that matters most: that resuming AGREES
+    WITH not having been interrupted.
+
+    Truncating the checkpoint is exactly what a crash leaves on disk -- some
+    job records written, no output json -- so it exercises the real resume
+    branch rather than a mock of it. Two cut points, one mid-phase and one
+    later, because the Band II and Z-jump resume paths are separate code.
+    """
+    i = 5
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+    sys.argv = ["family_sweep.py", "--i", str(i)]
+    fsw.main()
+    full = json.loads(out.read_text(encoding="utf-8"))
+    lines = chk.read_text(encoding="utf-8").splitlines()
+    expect(full.get("clean") is True and full.get("certificate"),
+           f"baseline i={i} run is clean and certified (for the resume comparison)")
+
+    # `escalation` and `phases` are rebuilt only for phases this run actually
+    # executed. A resume that skips an already-complete phase cannot
+    # reconstruct them from the checkpoint, so it emits evaluated=False with a
+    # note saying why. That is DECLARED, not silent -- so assert the
+    # declaration rather than equality, and pin everything else exactly.
+    #
+    # This is not cosmetic: i=9 resumed, and its recorded json carries NO
+    # escalation block for either phase. The certificates are unaffected (each
+    # kill has an independently checkable witness), but the size-law anomaly
+    # trigger did not run on that member and a human checked the Band II curve
+    # by hand instead.
+    LOST_ON_RESUME = {"escalation", "phases"}
+
+    for frac in (0.35, 0.75):
+        keep = max(2, int(len(lines) * frac))
+        chk.write_text("\n".join(lines[:keep]) + "\n", encoding="utf-8")
+        out.unlink(missing_ok=True)
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        fsw.main()
+        got = json.loads(out.read_text(encoding="utf-8"))
+        pct = int(frac * 100)
+
+        claim_full = {k: v for k, v in full.items() if k not in LOST_ON_RESUME}
+        claim_got = {k: v for k, v in got.items() if k not in LOST_ON_RESUME}
+        diff = _diff_ignoring_timing(claim_full, claim_got)
+        expect(not diff,
+               f"resume from a {pct}% checkpoint reproduces the uninterrupted CLAIM"
+               + (f" -- {len(diff)} differences, first: {diff[0]}" if diff else ""))
+        expect(got.get("certificate") == full.get("certificate"),
+               f"resume from {pct}% emits a byte-identical certificate")
+
+        # whatever escalation it does NOT evaluate, it must say so
+        undeclared = [
+            ph for ph, blk in (got.get("escalation") or {}).items()
+            if isinstance(blk, dict) and not blk.get("evaluated")
+            and "resumed" not in (blk.get("note") or "")
+        ]
+        expect(not undeclared,
+               f"resume from {pct} declares every escalation it could not evaluate"
+               + (f" -- silent for {undeclared}" if undeclared else ""))
+
+
 def test_rcache_matches_uncached() -> None:
     """The r(p) cache is an optimisation: rows must be byte-identical.
 
@@ -360,6 +453,7 @@ def main() -> int:
         test_resume_of_unfinished_phase_is_not_clean()
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
+        test_resume_reproduces_an_uninterrupted_run()
     # Guard the sandbox itself. If the redirect is ever removed, this fails
     # loudly instead of quietly regenerating tracked artifacts again.
     after = _digest_guarded()

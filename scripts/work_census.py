@@ -37,11 +37,19 @@ Band II survivors, and the no-live-prime counts. Every one must match
 EXACTLY.
 
 A reconstruction that needs a tolerance is a reconstruction that is still
-wrong. The only permitted discrepancy is a named leftover -- a column present
-in the witness table but outside the swept bands, filled by the exact or
-modular engine instead (i=7: k=2..200; i=8: k=2) -- or a column absent from
-the table altogether (i=9: the four Lucas-killed k=87/399/553/1281). Those are
-listed individually, never absorbed into a fudge.
+wrong. Only named leftovers are permitted, and each is listed individually
+rather than absorbed into a fudge:
+
+  not_swept    in the table but outside the swept bands, filled by the exact
+               or modular engine (i=7: k=2..200; i=8: k=2; i=9: k=2..80)
+  off_ladder   inside the swept band, but killed by FULL LUCAS at p <= sqrt(N),
+               which cells() never scans -- i=9's k=87/399/553/1281 at
+               p=191/421/557/1321. Each is re-verified by witness.check_witness,
+               so it is explained rather than excused, and more than 256 of them
+               is refused outright as too many to be leftovers.
+  unresolved   claimed unresolved by the witness meta AND still absent from the
+               table. The meta can be STALE: i=9's still lists those four after
+               they were filled in, so the table is trusted over the label.
 
 Scan work and wall clock are reported as TWO numbers. They are not the same
 number and the gap between them is not constant: it measured 5.6x at i=7 and
@@ -180,10 +188,26 @@ def census(i: int, rate: float = SCAN_RATE) -> dict:
         "why": "outside k_z and k_bii -- filled by the exact/modular engine",
     }
     # ---- named leftovers: claimed by the run but absent from the table -----
+    # Default so the gates below are safe when the Z band is empty (i=2).
+    res["leftovers"]["off_ladder"] = {
+        "n": 0, "k": [], "rows": [],
+        "why": "swept band, but killed by full Lucas at p <= sqrt(N), which "
+               "cells() never scans; each re-verified by witness.check_witness",
+    }
+
+    # meta['unresolved'] can be STALE: i=9's meta still lists k=87/399/553/1281
+    # as unresolved after they were filled in. Trust the table, not the label --
+    # count only those genuinely absent.
+    claimed_unres = [int(x) for x in meta.get("unresolved", [])]
+    present = set(k_all.tolist()) if len(k_all) < 60_000_000 else None
+    absent = [x for x in claimed_unres
+              if (x not in present if present is not None else True)]
     res["leftovers"]["unresolved"] = {
-        "n": int(meta.get("n_unresolved", 0)),
-        "k": [int(x) for x in meta.get("unresolved", [])],
-        "why": "recorded unresolved in the witness meta (cap leftovers)",
+        "n": len(absent),
+        "k": absent,
+        "claimed_by_meta": len(claimed_unres),
+        "why": "listed unresolved in the witness meta AND still absent from the "
+               "table (a claim that has since been filled is not a leftover)",
     }
 
     def gate(name: str, got, want, note: str = "") -> bool:
@@ -233,14 +257,43 @@ def census(i: int, rate: float = SCAN_RATE) -> dict:
     kz, pz = k_all[in_z], p_all[in_z]
     ops_z = 0
     z_rounds = []
-    naive_z = int(np.ceil((pz - kz) / 2).sum()) if len(kz) else 0
+    naive_z = 0
     if len(kz):
         L = build_ladder(fam, int(kz.min()) - 1, int(pz.max()))
         check(L.size > 0, "empty live-prime ladder")
         idx = np.searchsorted(L, kz, side="right")
         end = np.searchsorted(L, pz, side="left")
-        check(bool((L[np.clip(end, 0, L.size - 1)] == pz).all()),
-              "a Z-jump witness prime is not on the live-prime ladder")
+
+        # A Z-band column can carry a witness prime that is NOT on the ladder.
+        # cells() starts at p_two = sqrt(N)+1, so a column killed by FULL LUCAS
+        # at p <= sqrt(N) is off-ladder by construction -- i=9's four cap
+        # leftovers (k=87/399/553/1281 at p=191/421/557/1321, sqrt(N)=8605) are
+        # exactly that. Name them and VERIFY each independently; do not excuse
+        # them, and do not let an unexplained off-ladder prime through.
+        on = L[np.clip(end, 0, L.size - 1)] == pz
+        off = ~on
+        off_rows = []
+        if off.any():
+            import witness as _w
+            ko, po = kz[off], pz[off]
+            check(len(ko) <= 256,
+                  f"{len(ko)} off-ladder Z-jump columns -- too many to be leftovers")
+            for kk, pp in zip(ko.tolist(), po.tolist()):
+                v = _w.check_witness(fam.N, fam.K, kk, pp)
+                check(bool(v.get("ok")),
+                      f"off-ladder column k={kk} p={pp} is NOT a valid "
+                      f"certificate: {v.get('reason')}")
+                off_rows.append({"k": kk, "p": pp,
+                                 "below_sqrt_N": pp * pp <= fam.N})
+            kz, pz, idx, end = kz[on], pz[on], idx[on], end[on]
+        naive_z = int(np.ceil((pz - kz) / 2).sum())
+        res["leftovers"]["off_ladder"] = {
+            "n": len(off_rows),
+            "k": [r["k"] for r in off_rows[:12]],
+            "rows": off_rows[:12],
+            "why": "swept band, but killed by full Lucas at p <= sqrt(N), which "
+                   "cells() never scans; each re-verified by witness.check_witness",
+        }
         rounds = end - idx + 1
         check(bool((rounds >= 1).all()), "a Z-jump column has a non-positive round index")
 
@@ -271,13 +324,19 @@ def census(i: int, rate: float = SCAN_RATE) -> dict:
                              "n_primes": int(np.unique(primes_t).size)})
 
     rec_z = rec.get("phases", {}).get("zjump", [])
-    gate("zjump.n_columns", int(len(kz)) + res["leftovers"]["unresolved"]["n"],
-         int(rec["n_z"]), "table columns + named unresolved leftovers")
+    gate("zjump.n_columns",
+         int(len(kz)) + res["leftovers"]["off_ladder"]["n"]
+         + res["leftovers"]["unresolved"]["n"],
+         int(rec["n_z"]),
+         "on-ladder columns + off-ladder (Lucas-killed) + still-absent")
     for t, rr in enumerate(rec_z):
         if t < len(z_rounds):
             gate(f"zjump.round{t + 1}.survivors",
-                 z_rounds[t]["survived"] + res["leftovers"]["unresolved"]["n"],
-                 int(rr["n"]), "reconstructed + named unresolved leftovers")
+                 z_rounds[t]["survived"] + res["leftovers"]["off_ladder"]["n"]
+                 + res["leftovers"]["unresolved"]["n"],
+                 int(rr["n"]),
+                 "reconstructed + off-ladder + still-absent (both survived "
+                 "every ladder round the sweep ran)")
             gate(f"zjump.round{t + 1}.n_primes", z_rounds[t]["n_primes"],
                  int(rr["n_primes"]))
         if int(rr.get("n_nolive", 0)):
