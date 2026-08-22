@@ -1,0 +1,2837 @@
+{
+ "search": "work_census",
+ "members": [
+  {
+   "i": 2,
+   "N": 104,
+   "K": 39,
+   "k_max": 49,
+   "witnesses": 46,
+   "leftovers": {
+    "not_swept": {
+     "n": 37,
+     "k": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "truncated": true,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 9,
+     "want": 9,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 53,
+     "want": 53,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 59,
+     "want": 59,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 9,
+     "ops_exact": 47,
+     "ops_naive": 41,
+     "multipass_factor": 1.146341,
+     "mean_g": 8.666666666666666,
+     "median_g": 8,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 53,
+       "entered": 9,
+       "survived": 1
+      },
+      {
+       "pass": 2,
+       "p": 59,
+       "entered": 1,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 0,
+     "ops_exact": 0,
+     "ops_naive": 0,
+     "multipass_factor": null,
+     "mean_g": 0.0,
+     "median_g": 0,
+     "rounds": []
+    }
+   },
+   "ops_exact": 47,
+   "bandii_share": 100.0,
+   "scan_core_h": 7.000297885016384e-11,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 0.702,
+   "workers": 8,
+   "recorded_wall_core_h": 0.00156,
+   "scan_share_of_wall": 0.0,
+   "wall_over_scan": 22284765.96,
+   "ok": true
+  },
+  {
+   "i": 3,
+   "N": 714,
+   "K": 272,
+   "k_max": 342,
+   "witnesses": 339,
+   "leftovers": {
+    "not_swept": {
+     "n": 199,
+     "k": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "truncated": true,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 69,
+     "want": 69,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 9,
+     "want": 9,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 359,
+     "want": 359,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 367,
+     "want": 367,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.prime",
+     "got": 373,
+     "want": 373,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 71,
+     "want": 71,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 9,
+     "want": 9,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 69,
+     "ops_exact": 2150,
+     "ops_naive": 1819,
+     "multipass_factor": 1.181968,
+     "mean_g": 52.21739130434783,
+     "median_g": 52,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 359,
+       "entered": 69,
+       "survived": 9
+      },
+      {
+       "pass": 2,
+       "p": 367,
+       "entered": 9,
+       "survived": 2
+      },
+      {
+       "pass": 3,
+       "p": 373,
+       "entered": 2,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 71,
+     "ops_exact": 358,
+     "ops_naive": 355,
+     "multipass_factor": 1.008451,
+     "mean_g": 9.507042253521126,
+     "median_g": 6,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 71,
+       "survived": 1,
+       "n_primes": 9
+      },
+      {
+       "round": 2,
+       "entered": 1,
+       "survived": 0,
+       "n_primes": 1
+      }
+     ]
+    }
+   },
+   "ops_exact": 2508,
+   "bandii_share": 85.73,
+   "scan_core_h": 3.735478105451296e-09,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 1.389,
+   "workers": 8,
+   "recorded_wall_core_h": 0.003086666666666667,
+   "scan_share_of_wall": 0.0,
+   "wall_over_scan": 826311.0,
+   "ok": true
+  },
+  {
+   "i": 4,
+   "N": 4895,
+   "K": 1869,
+   "k_max": 2347,
+   "witnesses": 2344,
+   "leftovers": {
+    "not_swept": {
+     "n": 199,
+     "k": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "truncated": true,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 477,
+     "want": 477,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 43,
+     "want": 43,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 2459,
+     "want": 2459,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 5,
+     "want": 5,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 2467,
+     "want": 2467,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.prime",
+     "got": 2473,
+     "want": 2473,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 1668,
+     "want": 1668,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 37,
+     "want": 37,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 134,
+     "want": 134,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 13,
+     "want": 13,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 477,
+     "ops_exact": 92879,
+     "ops_naive": 83781,
+     "multipass_factor": 1.108593,
+     "mean_g": 350.7840670859539,
+     "median_g": 350,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 2459,
+       "entered": 477,
+       "survived": 43
+      },
+      {
+       "pass": 2,
+       "p": 2467,
+       "entered": 43,
+       "survived": 5
+      },
+      {
+       "pass": 3,
+       "p": 2473,
+       "entered": 5,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 1668,
+     "ops_exact": 28426,
+     "ops_naive": 26754,
+     "multipass_factor": 1.062495,
+     "mean_g": 31.57913669064748,
+     "median_g": 10,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 1668,
+       "survived": 37,
+       "n_primes": 134
+      },
+      {
+       "round": 2,
+       "entered": 37,
+       "survived": 1,
+       "n_primes": 13
+      },
+      {
+       "round": 3,
+       "entered": 1,
+       "survived": 0,
+       "n_primes": 1
+      }
+     ]
+    }
+   },
+   "ops_exact": 121305,
+   "bandii_share": 76.57,
+   "scan_core_h": 1.80674709562109e-07,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 1.595,
+   "workers": 8,
+   "recorded_wall_core_h": 0.0035444444444444442,
+   "scan_share_of_wall": 0.01,
+   "wall_over_scan": 19617.82,
+   "ok": true
+  },
+  {
+   "i": 5,
+   "N": 33552,
+   "K": 12815,
+   "k_max": 16094,
+   "witnesses": 16091,
+   "leftovers": {
+    "not_swept": {
+     "n": 199,
+     "k": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "truncated": true,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 3278,
+     "want": 3278,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 327,
+     "want": 327,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 16787,
+     "want": 16787,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 40,
+     "want": 40,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 16811,
+     "want": 16811,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.survivors",
+     "got": 6,
+     "want": 6,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.prime",
+     "got": 16823,
+     "want": 16823,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.prime",
+     "got": 16829,
+     "want": 16829,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.prime",
+     "got": 16831,
+     "want": 16831,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.prime",
+     "got": 16843,
+     "want": 16843,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 6,
+     "want": 6,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 12614,
+     "want": 12614,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 205,
+     "want": 205,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 833,
+     "want": 833,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 12,
+     "want": 12,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 37,
+     "want": 37,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.survivors",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.n_primes",
+     "got": 5,
+     "want": 5,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.n_primes",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 3278,
+     "ops_exact": 4344352,
+     "ops_naive": 3826337,
+     "multipass_factor": 1.135381,
+     "mean_g": 2334.055826723612,
+     "median_g": 2335,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 16787,
+       "entered": 3278,
+       "survived": 327
+      },
+      {
+       "pass": 2,
+       "p": 16811,
+       "entered": 327,
+       "survived": 40
+      },
+      {
+       "pass": 3,
+       "p": 16823,
+       "entered": 40,
+       "survived": 6
+      },
+      {
+       "pass": 4,
+       "p": 16829,
+       "entered": 6,
+       "survived": 1
+      },
+      {
+       "pass": 5,
+       "p": 16831,
+       "entered": 1,
+       "survived": 1
+      },
+      {
+       "pass": 6,
+       "p": 16843,
+       "entered": 1,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 12614,
+     "ops_exact": 1032095,
+     "ops_naive": 968907,
+     "multipass_factor": 1.065216,
+     "mean_g": 153.12406849532266,
+     "median_g": 12,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 12614,
+       "survived": 205,
+       "n_primes": 833
+      },
+      {
+       "round": 2,
+       "entered": 205,
+       "survived": 12,
+       "n_primes": 37
+      },
+      {
+       "round": 3,
+       "entered": 12,
+       "survived": 2,
+       "n_primes": 5
+      },
+      {
+       "round": 4,
+       "entered": 2,
+       "survived": 0,
+       "n_primes": 2
+      }
+     ]
+    }
+   },
+   "ops_exact": 5376447,
+   "bandii_share": 80.8,
+   "scan_core_h": 8.007815013404826e-06,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 2.608,
+   "workers": 8,
+   "recorded_wall_core_h": 0.0057955555555555555,
+   "scan_share_of_wall": 0.14,
+   "wall_over_scan": 723.74,
+   "ok": true
+  },
+  {
+   "i": 6,
+   "N": 229970,
+   "K": 87840,
+   "k_max": 110318,
+   "witnesses": 110315,
+   "leftovers": {
+    "not_swept": {
+     "n": 199,
+     "k": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "truncated": true,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 22477,
+     "want": 22477,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 2172,
+     "want": 2172,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 114997,
+     "want": 114997,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 268,
+     "want": 268,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 115001,
+     "want": 115001,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.survivors",
+     "got": 45,
+     "want": 45,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.prime",
+     "got": 115013,
+     "want": 115013,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.survivors",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.prime",
+     "got": 115019,
+     "want": 115019,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.survivors",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.prime",
+     "got": 115021,
+     "want": 115021,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.prime",
+     "got": 115057,
+     "want": 115057,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 6,
+     "want": 6,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 87639,
+     "want": 87639,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 1294,
+     "want": 1294,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 4743,
+     "want": 4743,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 105,
+     "want": 105,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 64,
+     "want": 64,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.survivors",
+     "got": 13,
+     "want": 13,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.n_primes",
+     "got": 9,
+     "want": 9,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.survivors",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.n_primes",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.n_primes",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 22477,
+     "ops_exact": 202090338,
+     "ops_naive": 178894950,
+     "multipass_factor": 1.129659,
+     "mean_g": 15917.545090536993,
+     "median_g": 15919,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 114997,
+       "entered": 22477,
+       "survived": 2172
+      },
+      {
+       "pass": 2,
+       "p": 115001,
+       "entered": 2172,
+       "survived": 268
+      },
+      {
+       "pass": 3,
+       "p": 115013,
+       "entered": 268,
+       "survived": 45
+      },
+      {
+       "pass": 4,
+       "p": 115019,
+       "entered": 45,
+       "survived": 3
+      },
+      {
+       "pass": 5,
+       "p": 115021,
+       "entered": 3,
+       "survived": 2
+      },
+      {
+       "pass": 6,
+       "p": 115057,
+       "entered": 2,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 87639,
+     "ops_exact": 45689408,
+     "ops_naive": 42605282,
+     "multipass_factor": 1.072388,
+     "mean_g": 971.7904699962346,
+     "median_g": 17,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 87639,
+       "survived": 1294,
+       "n_primes": 4743
+      },
+      {
+       "round": 2,
+       "entered": 1294,
+       "survived": 105,
+       "n_primes": 64
+      },
+      {
+       "round": 3,
+       "entered": 105,
+       "survived": 13,
+       "n_primes": 9
+      },
+      {
+       "round": 4,
+       "entered": 13,
+       "survived": 2,
+       "n_primes": 3
+      },
+      {
+       "round": 5,
+       "entered": 2,
+       "survived": 1,
+       "n_primes": 2
+      },
+      {
+       "round": 6,
+       "entered": 1,
+       "survived": 0,
+       "n_primes": 1
+      }
+     ]
+    }
+   },
+   "ops_exact": 247779746,
+   "bandii_share": 81.56,
+   "scan_core_h": 0.0003690493684837653,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 7.872,
+   "workers": 8,
+   "recorded_wall_core_h": 0.017493333333333333,
+   "scan_share_of_wall": 2.11,
+   "wall_over_scan": 47.4,
+   "ok": true
+  },
+  {
+   "i": 7,
+   "N": 1576239,
+   "K": 602069,
+   "k_max": 756136,
+   "witnesses": 756133,
+   "leftovers": {
+    "not_swept": {
+     "n": 199,
+     "k": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+     ],
+     "truncated": true,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 154066,
+     "want": 154066,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 15061,
+     "want": 15061,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 788129,
+     "want": 788129,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 1862,
+     "want": 1862,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 788153,
+     "want": 788153,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.survivors",
+     "got": 280,
+     "want": 280,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.prime",
+     "got": 788159,
+     "want": 788159,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.survivors",
+     "got": 37,
+     "want": 37,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.prime",
+     "got": 788167,
+     "want": 788167,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.survivors",
+     "got": 11,
+     "want": 11,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.prime",
+     "got": 788173,
+     "want": 788173,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.survivors",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.prime",
+     "got": 788189,
+     "want": 788189,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass7.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass7.prime",
+     "got": 788209,
+     "want": 788209,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 601868,
+     "want": 601868,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 8783,
+     "want": 8783,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 27622,
+     "want": 27622,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 613,
+     "want": 613,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 99,
+     "want": 99,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.survivors",
+     "got": 87,
+     "want": 87,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.n_primes",
+     "got": 17,
+     "want": 17,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.survivors",
+     "got": 23,
+     "want": 23,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.n_primes",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.survivors",
+     "got": 5,
+     "want": 5,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.n_primes",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round7.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round7.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round8.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round8.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round9.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round9.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 154066,
+     "ops_exact": 9508483920,
+     "ops_naive": 8398787515,
+     "multipass_factor": 1.132126,
+     "mean_g": 109027.93605987045,
+     "median_g": 109027,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 788129,
+       "entered": 154066,
+       "survived": 15061
+      },
+      {
+       "pass": 2,
+       "p": 788153,
+       "entered": 15061,
+       "survived": 1862
+      },
+      {
+       "pass": 3,
+       "p": 788159,
+       "entered": 1862,
+       "survived": 280
+      },
+      {
+       "pass": 4,
+       "p": 788167,
+       "entered": 280,
+       "survived": 37
+      },
+      {
+       "pass": 5,
+       "p": 788173,
+       "entered": 37,
+       "survived": 11
+      },
+      {
+       "pass": 6,
+       "p": 788189,
+       "entered": 11,
+       "survived": 2
+      },
+      {
+       "pass": 7,
+       "p": 788209,
+       "entered": 2,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 601868,
+     "ops_exact": 2118181658,
+     "ops_naive": 1975606570,
+     "multipass_factor": 1.072168,
+     "mean_g": 6564.416460087594,
+     "median_g": 21,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 601868,
+       "survived": 8783,
+       "n_primes": 27622
+      },
+      {
+       "round": 2,
+       "entered": 8783,
+       "survived": 613,
+       "n_primes": 99
+      },
+      {
+       "round": 3,
+       "entered": 613,
+       "survived": 87,
+       "n_primes": 17
+      },
+      {
+       "round": 4,
+       "entered": 87,
+       "survived": 23,
+       "n_primes": 7
+      },
+      {
+       "round": 5,
+       "entered": 23,
+       "survived": 5,
+       "n_primes": 3
+      },
+      {
+       "round": 6,
+       "entered": 5,
+       "survived": 1,
+       "n_primes": 1
+      },
+      {
+       "round": 7,
+       "entered": 1,
+       "survived": 1,
+       "n_primes": 1
+      },
+      {
+       "round": 8,
+       "entered": 1,
+       "survived": 1,
+       "n_primes": 1
+      },
+      {
+       "round": 9,
+       "entered": 1,
+       "survived": 0,
+       "n_primes": 1
+      }
+     ]
+    }
+   },
+   "ops_exact": 11626665578,
+   "bandii_share": 81.78,
+   "scan_core_h": 0.017317047330950252,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 95.235,
+   "workers": 4,
+   "recorded_wall_core_h": 0.10581666666666667,
+   "scan_share_of_wall": 16.37,
+   "wall_over_scan": 6.11,
+   "ok": true
+  },
+  {
+   "i": 8,
+   "N": 10803704,
+   "K": 4126647,
+   "k_max": 5182637,
+   "witnesses": 5182634,
+   "leftovers": {
+    "not_swept": {
+     "n": 1,
+     "k": [
+      2
+     ],
+     "truncated": false,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 0,
+     "k": [],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 1055989,
+     "want": 1055989,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.survivors",
+     "got": 102754,
+     "want": 102754,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass1.prime",
+     "got": 5401853,
+     "want": 5401853,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.survivors",
+     "got": 12478,
+     "want": 12478,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass2.prime",
+     "got": 5401861,
+     "want": 5401861,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.survivors",
+     "got": 1782,
+     "want": 1782,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass3.prime",
+     "got": 5401867,
+     "want": 5401867,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.survivors",
+     "got": 293,
+     "want": 293,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass4.prime",
+     "got": 5401897,
+     "want": 5401897,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.survivors",
+     "got": 48,
+     "want": 48,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass5.prime",
+     "got": 5401901,
+     "want": 5401901,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.survivors",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass6.prime",
+     "got": 5401951,
+     "want": 5401951,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass7.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass7.prime",
+     "got": 5401969,
+     "want": 5401969,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass8.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.pass8.prime",
+     "got": 5401973,
+     "want": 5401973,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 8,
+     "want": 8,
+     "ok": true,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 4126644,
+     "want": 4126644,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 58276,
+     "want": 58276,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 164105,
+     "want": 164105,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 4071,
+     "want": 4071,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 176,
+     "want": 176,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.survivors",
+     "got": 549,
+     "want": 549,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.n_primes",
+     "got": 27,
+     "want": 27,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.survivors",
+     "got": 125,
+     "want": 125,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.n_primes",
+     "got": 9,
+     "want": 9,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.survivors",
+     "got": 36,
+     "want": 36,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.n_primes",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.survivors",
+     "got": 17,
+     "want": 17,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.n_primes",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round7.survivors",
+     "got": 8,
+     "want": 8,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round7.n_primes",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round8.survivors",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round8.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round9.survivors",
+     "got": 5,
+     "want": 5,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round9.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round10.survivors",
+     "got": 4,
+     "want": 4,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round10.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round11.survivors",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round11.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round12.survivors",
+     "got": 2,
+     "want": 2,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round12.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round13.survivors",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round13.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round14.survivors",
+     "got": 0,
+     "want": 0,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round14.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 1055989,
+     "ops_exact": 446042801926,
+     "ops_naive": 394523511373,
+     "multipass_factor": 1.130586,
+     "mean_g": 747210.9034772143,
+     "median_g": 747211,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 5401853,
+       "entered": 1055989,
+       "survived": 102754
+      },
+      {
+       "pass": 2,
+       "p": 5401861,
+       "entered": 102754,
+       "survived": 12478
+      },
+      {
+       "pass": 3,
+       "p": 5401867,
+       "entered": 12478,
+       "survived": 1782
+      },
+      {
+       "pass": 4,
+       "p": 5401897,
+       "entered": 1782,
+       "survived": 293
+      },
+      {
+       "pass": 5,
+       "p": 5401901,
+       "entered": 293,
+       "survived": 48
+      },
+      {
+       "pass": 6,
+       "p": 5401951,
+       "entered": 48,
+       "survived": 7
+      },
+      {
+       "pass": 7,
+       "p": 5401969,
+       "entered": 7,
+       "survived": 1
+      },
+      {
+       "pass": 8,
+       "p": 5401973,
+       "entered": 1,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 4126644,
+     "ops_exact": 99211508936,
+     "ops_naive": 92586037220,
+     "multipass_factor": 1.07156,
+     "mean_g": 44871.81620658337,
+     "median_g": 25,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 4126644,
+       "survived": 58276,
+       "n_primes": 164105
+      },
+      {
+       "round": 2,
+       "entered": 58276,
+       "survived": 4071,
+       "n_primes": 176
+      },
+      {
+       "round": 3,
+       "entered": 4071,
+       "survived": 549,
+       "n_primes": 27
+      },
+      {
+       "round": 4,
+       "entered": 549,
+       "survived": 125,
+       "n_primes": 9
+      },
+      {
+       "round": 5,
+       "entered": 125,
+       "survived": 36,
+       "n_primes": 3
+      },
+      {
+       "round": 6,
+       "entered": 36,
+       "survived": 17,
+       "n_primes": 2
+      },
+      {
+       "round": 7,
+       "entered": 17,
+       "survived": 8,
+       "n_primes": 2
+      },
+      {
+       "round": 8,
+       "entered": 8,
+       "survived": 7,
+       "n_primes": 1
+      },
+      {
+       "round": 9,
+       "entered": 7,
+       "survived": 5,
+       "n_primes": 1
+      },
+      {
+       "round": 10,
+       "entered": 5,
+       "survived": 4,
+       "n_primes": 1
+      },
+      {
+       "round": 11,
+       "entered": 4,
+       "survived": 3,
+       "n_primes": 1
+      },
+      {
+       "round": 12,
+       "entered": 3,
+       "survived": 2,
+       "n_primes": 1
+      },
+      {
+       "round": 13,
+       "entered": 2,
+       "survived": 1,
+       "n_primes": 1
+      },
+      {
+       "round": 14,
+       "entered": 1,
+       "survived": 0,
+       "n_primes": 1
+      }
+     ]
+    }
+   },
+   "ops_exact": 545254310862,
+   "bandii_share": 81.8,
+   "scan_core_h": 0.812115446621984,
+   "scan_rate_used": 186500000.0,
+   "record_partial": false,
+   "recorded_seconds": 7508.037,
+   "workers": 4,
+   "recorded_wall_core_h": 8.342263333333333,
+   "scan_share_of_wall": 9.73,
+   "wall_over_scan": 10.27,
+   "ok": true
+  },
+  {
+   "i": 9,
+   "N": 74049690,
+   "K": 28284464,
+   "k_max": 35522329,
+   "witnesses": 35522243,
+   "leftovers": {
+    "not_swept": {
+     "n": 0,
+     "k": [],
+     "truncated": false,
+     "why": "outside k_z and k_bii -- filled by the exact/modular engine"
+    },
+    "unresolved": {
+     "n": 4,
+     "k": [
+      87,
+      399,
+      553,
+      1281
+     ],
+     "why": "recorded unresolved in the witness meta (cap leftovers)"
+    }
+   },
+   "gates": [
+    {
+     "gate": "bandii.n_columns",
+     "got": 7237864,
+     "want": 7237864,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "bandii.n_passes_realised",
+     "got": 9,
+     "want": 0,
+     "ok": false,
+     "note": "production stops on weight, not on CAP_BII",
+     "verdict": "record_incomplete",
+     "evidence": "phases.bandii is None while n_bii = 7,237,864. Band II reached phase_complete before this run was resumed, so its passes were never written to this record. Not evaluable from this file."
+    },
+    {
+     "gate": "zjump.n_columns",
+     "got": 28284383,
+     "want": 28284383,
+     "ok": true,
+     "note": "table columns + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.survivors",
+     "got": 395757,
+     "want": 395757,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round1.n_primes",
+     "got": 990684,
+     "want": 73009,
+     "ok": false,
+     "note": "",
+     "verdict": "record_incomplete",
+     "evidence": "rounds 2+ n_primes match exactly (11 of them); only round 1 is short. Round-1 buckets partition the entire Z band, so covering 28,284,379 columns needs the whole ladder -- and the recorded 73,009 cannot do it (i=8 needed 124,830 buckets for 4,126,644 columns). The run was resumed mid-round-1: survivors were merged from the checkpoint, which is why round-1 survivors match while its prime count does not."
+    },
+    {
+     "gate": "zjump.round2.survivors",
+     "got": 27092,
+     "want": 27092,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round2.n_primes",
+     "got": 308,
+     "want": 308,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.survivors",
+     "got": 2842,
+     "want": 2842,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round3.n_primes",
+     "got": 38,
+     "want": 38,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.survivors",
+     "got": 437,
+     "want": 437,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round4.n_primes",
+     "got": 16,
+     "want": 16,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.survivors",
+     "got": 140,
+     "want": 140,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round5.n_primes",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.survivors",
+     "got": 66,
+     "want": 66,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round6.n_primes",
+     "got": 5,
+     "want": 5,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round7.survivors",
+     "got": 35,
+     "want": 35,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round7.n_primes",
+     "got": 3,
+     "want": 3,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round8.survivors",
+     "got": 19,
+     "want": 19,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round8.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round9.survivors",
+     "got": 11,
+     "want": 11,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round9.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round10.survivors",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round10.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round11.survivors",
+     "got": 7,
+     "want": 7,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round11.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round12.survivors",
+     "got": 4,
+     "want": 4,
+     "ok": true,
+     "note": "reconstructed + named unresolved leftovers",
+     "verdict": "pass",
+     "evidence": ""
+    },
+    {
+     "gate": "zjump.round12.n_primes",
+     "got": 1,
+     "want": 1,
+     "ok": true,
+     "note": "",
+     "verdict": "pass",
+     "evidence": ""
+    }
+   ],
+   "phases": {
+    "bandii": {
+     "columns": 7237864,
+     "ops_exact": 20952736543870,
+     "ops_naive": 18534276721787,
+     "multipass_factor": 1.130486,
+     "mean_g": 5121476.4224144025,
+     "median_g": 5121477,
+     "rounds": [
+      {
+       "pass": 1,
+       "p": 37024873,
+       "entered": 7237864,
+       "survived": 703000
+      },
+      {
+       "pass": 2,
+       "p": 37024879,
+       "entered": 703000,
+       "survived": 86212
+      },
+      {
+       "pass": 3,
+       "p": 37024903,
+       "entered": 86212,
+       "survived": 12411
+      },
+      {
+       "pass": 4,
+       "p": 37024931,
+       "entered": 12411,
+       "survived": 1946
+      },
+      {
+       "pass": 5,
+       "p": 37024951,
+       "entered": 1946,
+       "survived": 318
+      },
+      {
+       "pass": 6,
+       "p": 37024957,
+       "entered": 318,
+       "survived": 47
+      },
+      {
+       "pass": 7,
+       "p": 37024973,
+       "entered": 47,
+       "survived": 6
+      },
+      {
+       "pass": 8,
+       "p": 37024991,
+       "entered": 6,
+       "survived": 1
+      },
+      {
+       "pass": 9,
+       "p": 37025017,
+       "entered": 1,
+       "survived": 0
+      }
+     ]
+    },
+    "zjump": {
+     "columns": 28284379,
+     "ops_exact": 4659668447858,
+     "ops_naive": 4347293960324,
+     "multipass_factor": 1.071855,
+     "mean_g": 307398.4328401553,
+     "median_g": 29,
+     "rounds": [
+      {
+       "round": 1,
+       "entered": 28284379,
+       "survived": 395753,
+       "n_primes": 990684
+      },
+      {
+       "round": 2,
+       "entered": 395753,
+       "survived": 27088,
+       "n_primes": 308
+      },
+      {
+       "round": 3,
+       "entered": 27088,
+       "survived": 2838,
+       "n_primes": 38
+      },
+      {
+       "round": 4,
+       "entered": 2838,
+       "survived": 433,
+       "n_primes": 16
+      },
+      {
+       "round": 5,
+       "entered": 433,
+       "survived": 136,
+       "n_primes": 7
+      },
+      {
+       "round": 6,
+       "entered": 136,
+       "survived": 62,
+       "n_primes": 5
+      },
+      {
+       "round": 7,
+       "entered": 62,
+       "survived": 31,
+       "n_primes": 3
+      },
+      {
+       "round": 8,
+       "entered": 31,
+       "survived": 15,
+       "n_primes": 1
+      },
+      {
+       "round": 9,
+       "entered": 15,
+       "survived": 7,
+       "n_primes": 1
+      },
+      {
+       "round": 10,
+       "entered": 7,
+       "survived": 3,
+       "n_primes": 1
+      },
+      {
+       "round": 11,
+       "entered": 3,
+       "survived": 3,
+       "n_primes": 1
+      },
+      {
+       "round": 12,
+       "entered": 3,
+       "survived": 0,
+       "n_primes": 1
+      }
+     ]
+    }
+   },
+   "ops_exact": 25612404991728,
+   "bandii_share": 81.81,
+   "scan_core_h": 38.14775840293119,
+   "scan_rate_used": 186500000.0,
+   "record_partial": true,
+   "recorded_seconds": 17126.827,
+   "workers": 8,
+   "recorded_wall_core_h": 38.05961555555556,
+   "ok": true
+  }
+ ]
+}

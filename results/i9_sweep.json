@@ -1,0 +1,168 @@
+{
+  "search": "i9_sweep",
+  "i": 9,
+  "N": 74049690,
+  "K": 28284464,
+  "d": 45765226,
+  "k_max": 35522329,
+  "log10_m": 21386569.341068,
+  "k_z": [
+    81,
+    28284463
+  ],
+  "k_bii": [
+    28284466,
+    35522329
+  ],
+  "n_z": 28284383,
+  "n_bii": 7237864,
+  "primes_bii": [
+    37024873,
+    37024879,
+    37024903,
+    37024931,
+    37024951,
+    37024957,
+    37024973,
+    37024991,
+    37025017,
+    37025029,
+    37025033,
+    37025039,
+    37025041,
+    37025047
+  ],
+  "workers": 8,
+  "phases": {
+    "zjump": [
+      {
+        "round": 1,
+        "n_primes": 73009,
+        "n": 395757,
+        "even": 0.6616,
+        "mean_k": 14413872,
+        "n_nolive": 0
+      },
+      {
+        "round": 2,
+        "n_primes": 308,
+        "n": 27092,
+        "even": 0.7883,
+        "mean_k": 14617123,
+        "n_nolive": 0
+      },
+      {
+        "round": 3,
+        "n_primes": 38,
+        "n": 2842,
+        "even": 0.8617,
+        "mean_k": 13031977,
+        "n_nolive": 0
+      },
+      {
+        "round": 4,
+        "n_primes": 16,
+        "n": 437,
+        "even": 0.8924,
+        "mean_k": 8547702,
+        "n_nolive": 0
+      },
+      {
+        "round": 5,
+        "n_primes": 7,
+        "n": 140,
+        "even": 0.9214,
+        "mean_k": 4343173,
+        "n_nolive": 0
+      },
+      {
+        "round": 6,
+        "n_primes": 5,
+        "n": 66,
+        "even": 0.9394,
+        "mean_k": 1096795,
+        "n_nolive": 0
+      },
+      {
+        "round": 7,
+        "n_primes": 3,
+        "n": 35,
+        "even": 1.0,
+        "mean_k": 1411,
+        "n_nolive": 0
+      },
+      {
+        "round": 8,
+        "n_primes": 1,
+        "n": 19,
+        "even": 1.0,
+        "mean_k": 1176,
+        "n_nolive": 0
+      },
+      {
+        "round": 9,
+        "n_primes": 1,
+        "n": 11,
+        "even": 1.0,
+        "mean_k": 1117,
+        "n_nolive": 0
+      },
+      {
+        "round": 10,
+        "n_primes": 1,
+        "n": 7,
+        "even": 1.0,
+        "mean_k": 1071,
+        "n_nolive": 0
+      },
+      {
+        "round": 11,
+        "n_primes": 1,
+        "n": 7,
+        "even": 1.0,
+        "mean_k": 1071,
+        "n_nolive": 0
+      },
+      {
+        "round": 12,
+        "n_primes": 1,
+        "n": 4,
+        "even": 1.0,
+        "mean_k": 580,
+        "n_nolive": 0
+      }
+    ]
+  },
+  "n_bii_alive": 0,
+  "n_z_alive": 4,
+  "bii_survivors": [],
+  "z_survivors": [
+    {
+      "k": 87,
+      "g": 8692,
+      "g_even": true,
+      "b": 994
+    },
+    {
+      "k": 399,
+      "g": 8380,
+      "g_even": true,
+      "b": 2207
+    },
+    {
+      "k": 553,
+      "g": 8226,
+      "g_even": true,
+      "b": 2123
+    },
+    {
+      "k": 1281,
+      "g": 7498,
+      "g_even": true,
+      "b": 1142
+    }
+  ],
+  "clean": false,
+  "certificate": null,
+  "seconds": 17126.827
+}
