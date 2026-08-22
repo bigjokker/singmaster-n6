@@ -49,6 +49,7 @@ from bandii_kernel import (  # noqa: E402
     r_two_digit,
     scan_columns,
     scan_columns_general,
+    scan_ks_windowed,
 )
 
 CAP_BII = 14
@@ -65,6 +66,92 @@ CAP_Z_SMALL_K = 15
 # equals the incrementally maintained set. Costs a full parse per round,
 # so it is for tests, not production.
 VERIFY_DONE_KEYS = False
+# r(p) for a WHOLE ROUND at once, by reducing m = C(N,K) against that round's
+# primes with a product/remainder tree, in the PARENT.
+#
+# Band II primes have a tiny third Lucas index (2p-N-1), so r there is a
+# handful of multiplies and is already computed parent-side. Z-jump primes sit
+# near k, their remainders are generic, and min(k0, n0-k0, p-n0-1) stays O(p):
+# measured over all 990,683 i=9 round-1 primes the median min-index is
+# 1,032,763 and the Lucas bill is 23.82 core-h -- 99.7% of a job that scans a
+# median of 12 columns.
+#
+# MEASURED at i=9 on the real ladder: build m 0.86 s (8.9 MB), tree 2.05 s for
+# 990,683 primes = 2.07 us/prime. Direct m %% p is 3.14 ms/prime, so the tree is
+# 1,517x that and ~30,000x the Lucas route: 23.82 core-h becomes ~2.9 s.
+# Amdahl caps the member at ~1.6x (62 -> ~38 core-h) since the Band II scan is
+# untouched; the case for it is i=10, where the Lucas r(p) bill is order 1e3
+# core-hours.
+#
+# m stays in the PARENT. It is never pickled, never written to the npz or the
+# json, and check_witness never sees it -- the proof rule that a certificate is
+# re-derivable from (N, K, k, p) alone is unchanged.
+USE_M_FOR_RP = True
+# Every Nth prime of a round is ALSO reduced by Lucas and compared. m is one
+# integer, so if it is right it is right for every p -- but a silent GMP fault
+# would poison an entire run, and check_witness only samples.
+RP_CROSSCHECK = 1000
+
+_M = None
+_M_KEY = None
+
+
+def _m(N: int, K: int):
+    """m = C(N,K), built once in the parent. gmpy2.bincoef, not math.comb --
+    measured 282x apart, which is why the old "never build m" cost premise held
+    for the naive binomial and does not for GMP.
+
+    KEYED on (N, K). Caching on "is it None" was wrong: one process sweeps a
+    single member so it never bit in production, but the test suite runs i=3
+    before i=5 and the i=5 rounds silently reduced against m_3. The 1-in-1000
+    Lucas cross-check caught it on its first run, which is the entire argument
+    for keeping that check in the live sweep.
+    """
+    global _M, _M_KEY
+    if _M_KEY != (N, K):
+        _M = gmpy2.bincoef(N, K)
+        _M_KEY = (N, K)
+    return _M
+
+
+def remainder_tree(m, primes: list[int]) -> list[int]:
+    """m mod p for every p, in one pass. Product tree up, remainder tree down."""
+    level = [gmpy2.mpz(int(x)) for x in primes]
+    levels = [level]
+    while len(level) > 1:
+        level = [level[i] * level[i + 1] if i + 1 < len(level) else level[i]
+                 for i in range(0, len(level), 2)]
+        levels.append(level)
+    cur = [m % levels[-1][0]]
+    for d in range(len(levels) - 2, -1, -1):
+        below, out = levels[d], []
+        for i, r in enumerate(cur):
+            a = 2 * i
+            out.append(r % below[a])
+            if a + 1 < len(below):
+                out.append(r % below[a + 1])
+        cur = out
+    return [int(x) for x in cur]
+
+
+def round_rp(fam, primes: list[int]) -> dict:
+    """{p: r(p)} for one round's primes. MUST be called per round -- rounds 2+
+    scan a different prime set, derived from the previous round's survivors."""
+    if not USE_M_FOR_RP or not primes:
+        return {}
+    from singmaster_intersect import binom_mod_lucas
+
+    t0 = time.time()
+    rmap = dict(zip(primes, remainder_tree(_m(fam.N, fam.K), primes)))
+    checked = 0
+    for j in range(0, len(primes), RP_CROSSCHECK or len(primes)):
+        q = primes[j]
+        check(rmap[q] == int(binom_mod_lucas(fam.N, fam.K, q)),
+              f"r(p) from m disagrees with Lucas at p={q}")
+        checked += 1
+    print(f"  r(p) for {len(primes):,} primes in {time.time()-t0:.1f}s "
+          f"({checked} Lucas cross-checks)", flush=True)
+    return rmap
 SMALL_K = 10**3
 N_CHUNKS = 32
 DEFAULT_WORKERS = 8
@@ -80,6 +167,15 @@ def _job(payload: tuple) -> dict:
     t0 = time.time()
     if kind == "bii":
         r, rows = scan_columns(p, ks, r_expected=r_expected, N=N, K=K)
+    elif r_expected is not None:
+        # The parent already reduced m against this round's primes. Scan only.
+        # scan_columns_general is deliberately NOT given a "skip Lucas" branch:
+        # it stays the no-r path, and this is a different route to the same r
+        # rather than a shortcut through the same one. scan_ks_windowed still
+        # refuses r=0, and a wrong r cannot mint a certificate -- check_witness
+        # re-derives r from N and K by Lucas and rejects it.
+        r = int(r_expected)
+        rows = scan_ks_windowed(p, r, ks)
     else:
         r, rows = scan_columns_general(p, ks, N=N, K=K)
     return {
@@ -467,9 +563,10 @@ def main() -> int:
                 print(f"  Z round {rnd} no live prime: {len(none)} (anomaly)", flush=True)
                 z_none.extend(none)
             jobs = []
+            rmap = round_rp(fam, sorted(buckets))
             for p, ks in sorted(buckets.items()):
                 for ch in chunk_ks(ks, p, N_CHUNKS if len(ks) >= 2000 else 1):
-                    jobs.append(("z", p, ch, fam.N, fam.K, None))
+                    jobs.append(("z", p, ch, fam.N, fam.K, rmap.get(p)))
             exp = ledger_z.expect(
                 (k_, p_) for p_, ks_ in buckets.items() for k_ in ks_
             )

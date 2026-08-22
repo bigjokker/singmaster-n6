@@ -37,3 +37,9 @@ results/i9_sweep.jsonl
 
 # Witness tables ARE the proof object. Never ignore them.
 !results/*_witness.npz
+
+# m = C(N,K) is built in-process and never persisted. If anything ever dumps
+# it, do not track it: it is derivable from (N,K) in ~1 s and must stay out of
+# the proof object -- a certificate is re-derivable from (N, K, k, p) alone.
+results/m_*.txt
+results/m_*.bin

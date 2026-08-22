@@ -194,6 +194,57 @@ def test_clean_run_still_clean() -> None:
     expect(rep["certificate"] is not None, "i=3 certificate still emitted")
 
 
+def test_m_route_matches_lucas_route_exactly() -> None:
+    """r(p) from m must produce the SAME sweep as r(p) from Lucas.
+
+    The Z-jump's r(p) now comes from reducing m = C(N,K) against the whole
+    round's prime set with a product/remainder tree in the parent, instead of
+    two-digit Lucas per job. That is an optimisation, so the only acceptable
+    evidence is identical output -- not a plausible argument, and not a faster
+    number.
+
+    Measured at i=9 on the real 990,683-prime ladder: 2.07 us/prime against
+    3.14 ms for direct m %% p and ~86 ms for Lucas, i.e. 23.82 core-h of r(p)
+    becomes ~2.9 s. None of that matters if a single survivor moves.
+    """
+    i = 5
+    out, chk = fsw.paths(i)
+    saved = fsw.USE_M_FOR_RP
+    reports = {}
+    try:
+        for flag in (False, True):
+            fsw.USE_M_FOR_RP = flag
+            fsw._M_KEY = None                   # force a rebuild, do not reuse
+            for f in (out, chk):
+                f.unlink(missing_ok=True)
+            sys.argv = ["family_sweep.py", "--i", str(i)]
+            fsw.main()
+            reports[flag] = json.loads(out.read_text(encoding="utf-8"))
+    finally:
+        fsw.USE_M_FOR_RP = saved
+        fsw._M_KEY = None
+        for f in (out, chk):
+            f.unlink(missing_ok=True)
+
+    lucas, viam = reports[False], reports[True]
+    diff = _diff_ignoring_timing(lucas, viam)
+    expect(not diff,
+           "the m route reproduces the Lucas route exactly"
+           + (f" -- {len(diff)} differences, first: {diff[0]}" if diff else ""))
+    expect(lucas.get("certificate") == viam.get("certificate")
+           and lucas.get("certificate") is not None,
+           "and emits a byte-identical certificate")
+    expect(lucas.get("witness", {}).get("sha256")
+           == viam.get("witness", {}).get("sha256"),
+           "and the witness table it produces is byte-identical "
+           f"({str(lucas.get('witness', {}).get('sha256'))[:16]} vs "
+           f"{str(viam.get('witness', {}).get('sha256'))[:16]})")
+    # m must not leak into any artifact
+    blob = json.dumps(viam)
+    expect(len(blob) < 200_000 and "bincoef" not in blob,
+           "m does not leak into the sweep record")
+
+
 def test_incremental_done_keys_equals_full_rederivation() -> None:
     """The set maintained in place must equal the one read off the whole file.
 
@@ -618,6 +669,7 @@ def main() -> int:
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
         test_resume_reproduces_an_uninterrupted_run()
+        test_m_route_matches_lucas_route_exactly()
         test_incremental_done_keys_equals_full_rederivation()
         test_extended_rounds_defer_rather_than_drop()
         test_failed_witness_build_withholds_the_certificate()
