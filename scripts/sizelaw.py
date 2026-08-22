@@ -164,18 +164,73 @@ def run_lambda(k: int, primes) -> float:
     return lam
 
 
+def _gammainc_lower_reg(a: float, x: float) -> float:
+    """Regularized lower incomplete gamma P(a,x). Series / continued fraction.
+
+    The whole point is the prefactor exp(-x + a ln x - lgamma(a)), formed in
+    LOG space. Those three terms very nearly cancel for a ~ x, which is exactly
+    the regime the escalation trigger lives in -- computing exp(-x) on its own
+    first, as the old summation did, throws the answer away before the
+    cancellation can happen.
+    """
+    if x <= 0.0 or a <= 0.0:
+        return 0.0
+    lg = -x + a * math.log(x) - math.lgamma(a)
+    if lg < -745.0:                      # prefactor is zero to double precision
+        return 0.0 if x < a else 1.0
+    pref = math.exp(lg)
+    if x < a + 1.0:
+        ap, term, total = a, 1.0 / a, 1.0 / a
+        for _ in range(100_000):
+            ap += 1.0
+            term *= x / ap
+            total += term
+            if abs(term) < abs(total) * 1e-16:
+                break
+        return min(1.0, max(0.0, total * pref))
+    tiny = 1e-300                        # modified Lentz for Q(a,x)
+    b, c, d = x + 1.0 - a, 1.0 / tiny, 1.0 / max(x + 1.0 - a, tiny)
+    h = d
+    for i in range(1, 100_000):
+        an = -i * (i - a)
+        b += 2.0
+        d = an * d + b
+        if abs(d) < tiny:
+            d = tiny
+        c = b + an / c
+        if abs(c) < tiny:
+            c = tiny
+        d = 1.0 / d
+        delta = d * c
+        h *= delta
+        if abs(delta - 1.0) < 1e-16:
+            break
+    return min(1.0, max(0.0, 1.0 - pref * h))
+
+
 def poisson_tail(expected: float, observed: int) -> float:
-    """P(X >= observed) for X ~ Poisson(expected). Upper tail, no scipy."""
+    """P(X >= observed) for X ~ Poisson(expected). Upper tail, no scipy.
+
+    P(X >= k) = P(k, lambda), the regularized LOWER incomplete gamma.
+
+    The previous form summed the pmf from i=0 and started with
+    term = math.exp(-expected). That underflows to 0.0 for expected > ~745, so
+    the cdf accumulated nothing and the tail returned 1.0 -- "ordinary" -- for
+    EVERY round with expected above that. Measured before the fix:
+
+        escalate(expected=102,563, observed=500,000) -> escalate: False
+
+    A five-fold excess of survivors read as ordinary. That covered Band II
+    passes 1-4 and Z-jump rounds 1-2 at every member, i.e. essentially every
+    column the project has ever swept: the anomaly detector was silently
+    inoperative exactly where the counts are large. It was also O(observed),
+    which is 100k+ iterations at Band II scale.
+    """
     if observed <= 0:
         return 1.0
     if expected <= 0:
         return 0.0
-    term = math.exp(-expected)
-    cdf = term
-    for i in range(1, observed):
-        term *= expected / i
-        cdf += term
-    return max(0.0, min(1.0, 1.0 - cdf))
+    return _gammainc_lower_reg(float(observed), float(expected))
 
 
 def escalate(expected: float, observed: int, threshold: float = THRESHOLD,

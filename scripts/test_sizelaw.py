@@ -311,9 +311,90 @@ def test_survival_vec_matches_scalar() -> None:
         ok.append("survival_vec returns 1.0 for g <= 0, matching the scalar branch")
 
 
+def test_poisson_tail_survives_band_ii_scale() -> None:
+    """The trigger must be able to fire where the counts are large.
+
+    poisson_tail used to start from term = math.exp(-expected), which
+    underflows to 0.0 above ~745. The cdf then accumulated nothing and the tail
+    returned 1.0 -- "ordinary" -- for every round with expected above that.
+    Measured before the fix:
+
+        escalate(expected=102,563, observed=500,000) -> escalate: False
+
+    A five-fold excess of survivors read as ordinary, and that covered Band II
+    passes 1-4 and Z-jump rounds 1-2 at every member. The anomaly detector was
+    inoperative precisely where almost every column lives.
+    """
+    import math
+
+    def brute(lam, k):
+        """Direct summation. Ground truth ONLY below the underflow cliff."""
+        t = math.exp(-lam)
+        cdf = t
+        for i in range(1, k):
+            t *= lam / i
+            cdf += t
+        return max(0.0, min(1.0, 1.0 - cdf))
+
+    worst = 0.0
+    for lam in (0.001, 0.5, 1, 5, 20, 100, 300, 700):
+        for k in (1, 2, 5, 10, 50, 120, 400, 900):
+            got, want = S.poisson_tail(lam, k), brute(lam, k)
+            if want > 1e-12:
+                worst = max(worst, abs(got - want) / want)
+    if worst > 1e-6:
+        errors.append(f"poisson_tail disagrees with direct summation by {worst:.3g}")
+    else:
+        ok.append(f"poisson_tail matches direct summation below the cliff "
+                  f"(worst rel. diff {worst:.2g})")
+
+    # the regression itself
+    fired = S.escalate(102563.32, 500000)
+    if not fired["escalate"]:
+        errors.append("a 5x survivor excess at Band II scale still reads as ordinary")
+    else:
+        ok.append("a 5x survivor excess at Band II scale now escalates "
+                  f"(tail={fired['poisson_tail']:.3g})")
+
+    quiet = S.escalate(102563.32, 102754)
+    if quiet["escalate"]:
+        errors.append(f"an ordinary Band II pass now escalates spuriously: {quiet}")
+    else:
+        ok.append(f"an ordinary Band II pass stays ordinary "
+                  f"(tail={quiet['poisson_tail']:.3g})")
+
+    # monotone in observed, for a fixed expected
+    tails = [S.poisson_tail(5000.0, n) for n in (4000, 4900, 5000, 5100, 6000)]
+    if any(b > a + 1e-12 for a, b in zip(tails, tails[1:])):
+        errors.append(f"poisson_tail is not monotone decreasing in observed: {tails}")
+    else:
+        ok.append("poisson_tail is monotone decreasing in observed")
+
+
+def test_recorded_bandii_passes_stay_ordinary() -> None:
+    """The fix must make the trigger WORK without making it trigger-happy.
+
+    Every recorded Band II pass of i=8 was, by the project's own reading,
+    ordinary and on the pre-registered curve. If the repaired tail escalates
+    any of them, the model and the trigger now disagree about data that has
+    already been accepted -- which would be a worse failure than the underflow.
+    """
+    rows = [(102600.0, 102754), (12600.0, 12478), (1816.0, 1782),
+            (290.0, 293), (49.4, 48), (8.78, 7), (1.61, 1), (0.30, 0)]
+    fired = [(e, o) for e, o in rows if S.escalate(e, o)["escalate"]]
+    if fired:
+        errors.append(f"repaired tail escalates recorded-ordinary i=8 Band II "
+                      f"passes: {fired}")
+    else:
+        ok.append(f"all {len(rows)} recorded i=8 Band II passes still read "
+                  f"ordinary under the repaired tail")
+
+
 def main() -> int:
     test_image_size_against_measurement()
     test_survival_vec_matches_scalar()
+    test_poisson_tail_survives_band_ii_scale()
+    test_recorded_bandii_passes_stay_ordinary()
     test_accuracy_bound_by_regime()
     test_proved_bound_is_never_violated()
     test_parity_fold_is_real()

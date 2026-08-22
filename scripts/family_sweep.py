@@ -359,13 +359,26 @@ def main() -> int:
         current: list = [{"k": k} for k in range(k_lo_z, fam.K)]
         zrounds = []
         z_none: list[int] = []
+        # Survivors the extended rounds do not serve. They are SET ASIDE, never
+        # dropped -- see the loop below.
+        z_deferred: list = []
         cap_z = CAP_Z_SMALL_K if k_lo_z < SMALL_K else CAP_Z
         for rnd in range(1, cap_z + 1):
             if not current:
                 break
             if rnd > CAP_Z:
-                # extra rounds serve the small-k tail only
-                current = [c for c in current if int(c["k"]) < SMALL_K]
+                # Extra rounds serve the small-k tail only. Columns with
+                # k >= SMALL_K are NOT killed here, so they must still be
+                # REPORTED as survivors rather than filtered out of existence.
+                #
+                # Dropping them is what let i=8 certify k=1021, a column it
+                # never killed: k=145 and k=1021 both survived round 12, round
+                # 13 filtered k=1021 away, n_z_alive fell to 0, clean went True,
+                # and the witness builder recorded the last prime k=1021 had
+                # merely SURVIVED as the prime that killed it.
+                keep = [c for c in current if int(c["k"]) < SMALL_K]
+                z_deferred.extend(c for c in current if int(c["k"]) >= SMALL_K)
+                current = keep
                 if not current:
                     break
             buckets = defaultdict(list)
@@ -420,12 +433,15 @@ def main() -> int:
             {
                 "event": "phase_complete",
                 "phase": "zjump",
-                "n_alive": len(current),
+                "n_alive": len(current) + len(z_deferred),
                 "n_nolive": len(z_none),
+                "n_deferred": len(z_deferred),
             },
         )
         phases["zjump"] = zrounds
-        z_left = current
+        # Deferred columns are survivors. They block `clean` exactly as an
+        # ordinary survivor does; the extended rounds simply never tested them.
+        z_left = current + z_deferred
         n_z_left = len(z_left)
         n_z_nolive = len(z_none)
     elif "zjump" in complete:

@@ -194,6 +194,58 @@ def test_clean_run_still_clean() -> None:
     expect(rep["certificate"] is not None, "i=3 certificate still emitted")
 
 
+def test_extended_rounds_defer_rather_than_drop() -> None:
+    """A survivor the extended rounds do not serve must still be REPORTED.
+
+    Past CAP_Z the Z-jump serves only the small-k tail. It used to do that with
+        current = [c for c in current if int(c["k"]) < SMALL_K]
+    which does not merely stop testing the large-k survivors -- it deletes them
+    from the accounting. They reach neither z_none nor z_left, so n_z_alive can
+    fall to 0 and the run certifies over columns it never killed.
+
+    That is not hypothetical. i=8's round 12 held k=145 and k=1021; round 13
+    recorded n=1, mean_k=145; k=1021 was dropped; clean went True; and the
+    witness builder recorded p=3517 -- a prime k=1021 had merely SURVIVED -- as
+    its killer. Sampled verification (5,000 of 5,182,634) never looked.
+
+    Forced here by shrinking CAP_Z so ordinary survivors fall into the extended
+    rounds, which is the only way to reach this branch on a small member.
+    """
+    i = 5
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+
+    saved = (fsw.CAP_Z, fsw.CAP_Z_SMALL_K, fsw.SMALL_K)
+    fsw.CAP_Z, fsw.CAP_Z_SMALL_K, fsw.SMALL_K = 1, 3, 1000
+    try:
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        fsw.main()
+    finally:
+        fsw.CAP_Z, fsw.CAP_Z_SMALL_K, fsw.SMALL_K = saved
+
+    rep = json.loads(out.read_text(encoding="utf-8"))
+    n_alive = rep.get("n_z_alive", 0)
+    big = [int(c["k"]) for c in (rep.get("z_survivors") or [])
+           if int(c["k"]) >= 1000]
+    expect(n_alive > 0,
+           f"deferred large-k survivors are counted, not dropped "
+           f"(n_z_alive={n_alive})")
+    expect(rep.get("clean") is False,
+           f"a deferred survivor blocks clean exactly as an ordinary one does "
+           f"(clean={rep.get('clean')!r})")
+    expect(rep.get("certificate") is None,
+           "and no certificate is emitted over a column that was never killed")
+    # it must be SURVIVORS blocking clean, not untestable columns -- the
+    # nolive path is a different mechanism with a different meaning
+    expect(rep.get("n_z_nolive", 0) == 0,
+           f"clean is blocked by deferred SURVIVORS, not by nolive columns "
+           f"(n_z_nolive={rep.get('n_z_nolive')})")
+
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+
+
 def test_failed_witness_build_withholds_the_certificate() -> None:
     """A certificate names a witness table; if the build failed, do not emit it.
 
@@ -514,6 +566,7 @@ def main() -> int:
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
         test_resume_reproduces_an_uninterrupted_run()
+        test_extended_rounds_defer_rather_than_drop()
         test_failed_witness_build_withholds_the_certificate()
     # Guard the sandbox itself. If the redirect is ever removed, this fails
     # loudly instead of quietly regenerating tracked artifacts again.
