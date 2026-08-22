@@ -38,6 +38,8 @@ the prime list did not kill it.
 | `scripts/test_sweeps.py` | the sweep drivers' certificate logic |
 | `scripts/test_witness.py` | the certificate verifier |
 | `scripts/test_sizelaw.py` | the size law and the escalation trigger |
+| `scripts/test_work_census.py` | the exact scan-work census and its gates |
+| `scripts/test_rp_cost.py` | that r(p), not the scan, is a Z-jump job's cost |
 
 ```text
 python scripts/test_sweeps.py

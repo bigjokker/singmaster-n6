@@ -493,8 +493,65 @@ def test_repair_replaces_a_false_certificate() -> None:
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def test_ledger_catches_a_certificate_naming_another_table() -> None:
+    """A certificate names its witness table BY DIGEST. Check the digest.
+
+    Nothing did. Any post-sweep change to a table -- fill adding engine
+    witnesses, repair replacing a false row -- left the certificate naming a
+    table that no longer existed, and it was never noticed. Measured
+    2026-08-22: five of seven certified members were stale, and i=8's named a
+    digest matching no table that had ever been at that path.
+
+    A referee following such a certificate verifies the wrong file, or one that
+    is absent. Worse, if a stale table is still lying around it verifies
+    cleanly and the reader concludes the claim is backed.
+    """
+    import json
+
+    import coverage_ledger as CL
+
+    i = 3
+    src = ROOT / "results" / f"i{i}_witness.npz"
+    sweep_src = ROOT / "results" / f"i{i}_sweep.json"
+    if not (src.exists() and sweep_src.exists()):
+        ok.append(f"i{i} artifacts absent; certificate-binding test skipped")
+        return
+    tmp = Path(tempfile.mkdtemp(prefix="certbind_test_"))
+    try:
+        shutil.copy(src, tmp / src.name)
+        rep = json.loads(sweep_src.read_text(encoding="utf-8"))
+        cert = rep.get("certificate") or ""
+        if "sha256 " not in cert:
+            ok.append(f"i{i} has no certificate digest; binding test skipped")
+            return
+
+        # honest copy first: the check must PASS on a correctly bound pair
+        (tmp / sweep_src.name).write_text(json.dumps(rep), encoding="utf-8")
+        good = CL.audit_member(i, tmp / src.name)
+        expect(good["certificate_names_this_table"] is True and good["ok"],
+               "ledger accepts a certificate that names the table on disk")
+
+        # now point the certificate at a different table
+        import re
+        bad_cert = re.sub(r"sha256 [0-9a-f]+", "sha256 " + "0" * 16, cert)
+        (tmp / sweep_src.name).write_text(
+            json.dumps({**rep, "certificate": bad_cert}), encoding="utf-8")
+        bad = CL.audit_member(i, tmp / src.name)
+        expect(bad["certificate_names_this_table"] is False,
+               f"ledger DETECTS a certificate naming another table "
+               f"({bad['certificate_sha256']})")
+        expect(bad["ok"] is False,
+               "and a member whose certificate names another table is not COMPLETE")
+        expect(bad["n_missing"] == 0 and bad["n_extra"] == 0,
+               "coverage itself is still reported as intact -- the two failures "
+               "are kept distinct rather than conflated")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
     test_fill_leaves_no_stale_label()
+    test_ledger_catches_a_certificate_naming_another_table()
     test_repair_replaces_a_false_certificate()
     test_against_exact_arithmetic()
     test_rejects_bad_certificates()

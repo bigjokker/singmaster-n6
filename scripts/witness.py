@@ -448,7 +448,9 @@ def fill_small_gaps(path: Path, i: int) -> dict:
                     "claimed_ranges": [[2, kmax]],
                     "excluded": [fam.K, fam.K + 1]}
             out = save(path, meta, have)
+            rt = retarget_certificate(i, out["sha256"], "relabelled a complete table")
             return {"i": i, "added": 0, "unresolved": [], "relabelled": stale,
+                    "retargeted": rt,
                     "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
         return {"i": i, "added": 0, "unresolved": [], "sha256": meta["sha256"]}
 
@@ -468,8 +470,45 @@ def fill_small_gaps(path: Path, i: int) -> dict:
             "n_filled_from_engine": added,
             "n_unresolved": len(unresolved), "unresolved": unresolved}
     out = save(path, meta, have)
-    return {"i": i, "added": added, "unresolved": unresolved,
+    rt = retarget_certificate(i, out["sha256"], f"fill added {added} engine witnesses")
+    return {"i": i, "added": added, "unresolved": unresolved, "retargeted": rt,
             "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
+
+
+def retarget_certificate(i: int, new_sha: str, why: str,
+                         sweep: Path | None = None) -> dict | None:
+    """Point the sweep record's certificate at the table that now exists.
+
+    The certificate embeds the witness table's sha256. Any post-sweep change to
+    the table -- `fill` adding engine witnesses, `repair` replacing a false row
+    -- leaves that digest naming a table that no longer exists, and nothing
+    ever checked it. Measured 2026-08-22: five of seven certified members were
+    stale (i=2,4,6,7,8). i=8's read sha256 e17d2777, matching neither the table
+    before the k=1021 repair (b4c02030) nor after (596dbf47) -- it went stale
+    when fill added k=2 and stayed wrong indefinitely.
+
+    This rewrites the LABEL and never the claim: the certificate text is
+    otherwise byte-identical, and the retarget is recorded in the sweep record
+    so it is auditable rather than silent.
+    """
+    sweep = sweep or ROOT / "results" / f"i{i}_sweep.json"
+    if not sweep.exists():
+        return None
+    rep = json.loads(sweep.read_text(encoding="utf-8"))
+    cert = rep.get("certificate")
+    if not cert:
+        return None
+    import re
+
+    m = re.search(r"sha256 ([0-9a-f]+)", cert)
+    if not m or new_sha.startswith(m.group(1)):
+        return None
+    old = m.group(1)
+    rep["certificate"] = cert.replace(f"sha256 {old}", f"sha256 {new_sha[:len(old)]}")
+    rep["certificate_retargeted"] = list(rep.get("certificate_retargeted", [])) + [
+        {"from": old, "to": new_sha[:len(old)], "why": why}]
+    sweep.write_text(json.dumps(rep, indent=1), encoding="utf-8")
+    return {"from": old, "to": new_sha[:len(old)], "file": sweep.name}
 
 
 def repair_invalid(path: Path, i: int, ks_want=None, k_hi: int | None = None) -> dict:
@@ -536,7 +575,9 @@ def repair_invalid(path: Path, i: int, ks_want=None, k_hi: int | None = None) ->
             "repaired": list(meta.get("repaired", [])) + repaired,
             "n_repaired": int(meta.get("n_repaired", 0)) + len(repaired)}
     out = save(path, meta, have)
-    return {"i": i, "checked": checked, "repaired": repaired,
+    rt = retarget_certificate(i, out["sha256"],
+                              f"repaired {len(repaired)} false certificate(s)")
+    return {"i": i, "checked": checked, "repaired": repaired, "retargeted": rt,
             "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
 
 
@@ -720,6 +761,11 @@ def main() -> int:
     rp.add_argument("--k-hi", type=int, default=None,
                     help="check every column k <= this bound")
 
+    rt = sub.add_parser("retarget",
+                        help="point the sweep record's certificate at the current table")
+    rt.add_argument("--i", type=int, required=True)
+    rt.add_argument("--file", type=Path, default=None)
+
     o = sub.add_parser("one", help="check a single certificate from five integers")
     o.add_argument("--N", type=int, required=True)
     o.add_argument("--K", type=int, required=True)
@@ -741,6 +787,18 @@ def main() -> int:
               + (f", UNRESOLVED {res['unresolved'][:10]}" if res["unresolved"] else ""))
         print(f"  sha256 {res['sha256'][:32]}...")
         return 0 if not res["unresolved"] else 2
+
+    if args.cmd == "retarget":
+        f = args.file or ROOT / "results" / f"i{args.i}_witness.npz"
+        _, _, meta = load(f)
+        res = retarget_certificate(args.i, meta["sha256"],
+                                   "explicit retarget after a post-sweep table change")
+        if res is None:
+            print(f"  i={args.i}: certificate already names the current table "
+                  f"(or there is no certificate)")
+        else:
+            print(f"  i={args.i}: certificate sha256 {res['from']} -> {res['to']}")
+        return 0
 
     if args.cmd == "repair":
         f = args.file or ROOT / "results" / f"i{args.i}_witness.npz"

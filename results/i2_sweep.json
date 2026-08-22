@@ -1,178 +1,185 @@
 {
-  "search": "i2_sweep",
+ "search": "i2_sweep",
+ "i": 2,
+ "N": 104,
+ "K": 39,
+ "d": 65,
+ "k_max": 49,
+ "log10_m": 28.78688,
+ "k_z": [
+  201,
+  38
+ ],
+ "k_bii": [
+  41,
+  49
+ ],
+ "n_z": 0,
+ "cap_z": 12,
+ "cap_z_small_k": 15,
+ "n_bii": 9,
+ "primes_bii": [
+  53,
+  59,
+  61
+ ],
+ "workers": 8,
+ "phases": {
+  "bandii": [
+   {
+    "prime_index": 1,
+    "p": 53,
+    "n": 1,
+    "even": 0.0,
+    "odd_k": 0.0,
+    "mean_k": 42,
+    "expected": 1.1786,
+    "escalate": false
+   },
+   {
+    "prime_index": 2,
+    "p": 59,
+    "n": 0,
+    "even": null,
+    "mean_k": null,
+    "expected": 0.1571,
+    "escalate": false
+   }
+  ]
+ },
+ "n_bii_alive": 0,
+ "n_z_alive": 0,
+ "n_z_nolive": 0,
+ "z_nolive": [],
+ "witness": {
+  "source": "i2_sweep.jsonl",
   "i": 2,
   "N": 104,
   "K": 39,
-  "d": 65,
   "k_max": 49,
-  "log10_m": 28.78688,
-  "k_z": [
-    201,
-    38
-  ],
-  "k_bii": [
+  "claimed_ranges": [
+   [
     41,
     49
+   ]
   ],
-  "n_z": 0,
-  "cap_z": 12,
-  "cap_z_small_k": 15,
-  "n_bii": 9,
+  "excluded": [],
+  "n_unresolved": 0,
+  "unresolved": [],
   "primes_bii": [
-    53,
-    59,
-    61
+   53,
+   59,
+   61
   ],
-  "workers": 8,
-  "phases": {
-    "bandii": [
-      {
-        "prime_index": 1,
-        "p": 53,
-        "n": 1,
-        "even": 0.0,
-        "odd_k": 0.0,
-        "mean_k": 42,
-        "expected": 1.1786,
-        "escalate": false
-      },
-      {
-        "prime_index": 2,
-        "p": 59,
-        "n": 0,
-        "even": null,
-        "mean_k": null,
-        "expected": 0.1571,
-        "escalate": false
-      }
-    ]
+  "schema": 1,
+  "n_witnesses": 9,
+  "sha256": "676ac6984ff42fa4f47f0b6dfb100642a250e3cb110b2024f5eb4e97e0b064d1"
+ },
+ "small_k_census": {
+  "k_range": [
+   2,
+   200
+  ],
+  "n_with_run": 17,
+  "longest_run": {
+   "k": 65,
+   "run": 20,
+   "expected": 1.1996157000100248e-05
   },
-  "n_bii_alive": 0,
-  "n_z_alive": 0,
-  "n_z_nolive": 0,
-  "z_nolive": [],
-  "witness": {
-    "source": "i2_sweep.jsonl",
-    "i": 2,
-    "N": 104,
-    "K": 39,
-    "k_max": 49,
-    "claimed_ranges": [
-      [
-        41,
-        49
-      ]
-    ],
-    "excluded": [],
-    "n_unresolved": 0,
-    "unresolved": [],
-    "primes_bii": [
-      53,
-      59,
-      61
-    ],
-    "schema": 1,
-    "n_witnesses": 9,
-    "sha256": "676ac6984ff42fa4f47f0b6dfb100642a250e3cb110b2024f5eb4e97e0b064d1"
+  "most_surprising": {
+   "k": 65,
+   "k_parity": "odd",
+   "run": 20,
+   "primes": [
+    107,
+    109,
+    113,
+    127,
+    131,
+    137,
+    139,
+    149,
+    151,
+    157,
+    163,
+    167,
+    173,
+    179,
+    181,
+    191
+   ],
+   "g_over_p": [
+    0.3925,
+    0.4037,
+    0.4248,
+    0.4882,
+    0.5038,
+    0.5255,
+    0.5324,
+    0.5638
+   ],
+   "lambda": 6.028219598040325e-08,
+   "expected": 1.1996157000100248e-05,
+   "observed": 1,
+   "poisson_tail": 1.1996085046539484e-05,
+   "threshold": 0.01,
+   "escalate": true,
+   "reason": "expected count below threshold, yet a column survived"
   },
-  "small_k_census": {
-    "k_range": [
-      2,
-      200
-    ],
-    "n_with_run": 17,
-    "longest_run": {
-      "k": 65,
-      "run": 20,
-      "expected": 1.1996157000100248e-05
+  "escalate": true,
+  "note": "closed by `modular`, not by the Z-jump; run length here is NOT comparable with Band II -- see sizelaw.py"
+ },
+ "escalation": {
+  "bandii": {
+   "phase": "bandii",
+   "threshold": 0.01,
+   "rounds": [
+    {
+     "round": 1,
+     "entered": 9,
+     "expected": 1.1786425344615572,
+     "observed": 1,
+     "poisson_tail": 0.6923038578591574,
+     "threshold": 0.01,
+     "escalate": false,
+     "reason": "ordinary"
     },
-    "most_surprising": {
-      "k": 65,
-      "k_parity": "odd",
-      "run": 20,
-      "primes": [
-        107,
-        109,
-        113,
-        127,
-        131,
-        137,
-        139,
-        149,
-        151,
-        157,
-        163,
-        167,
-        173,
-        179,
-        181,
-        191
-      ],
-      "g_over_p": [
-        0.3925,
-        0.4037,
-        0.4248,
-        0.4882,
-        0.5038,
-        0.5255,
-        0.5324,
-        0.5638
-      ],
-      "lambda": 6.028219598040325e-08,
-      "expected": 1.1996157000100248e-05,
-      "observed": 1,
-      "poisson_tail": 1.1996085046539484e-05,
-      "threshold": 0.01,
-      "escalate": true,
-      "reason": "expected count below threshold, yet a column survived"
-    },
-    "escalate": true,
-    "note": "closed by `modular`, not by the Z-jump; run length here is NOT comparable with Band II -- see sizelaw.py"
-  },
-  "escalation": {
-    "bandii": {
-      "phase": "bandii",
-      "threshold": 0.01,
-      "rounds": [
-        {
-          "round": 1,
-          "entered": 9,
-          "expected": 1.1786425344615572,
-          "observed": 1,
-          "poisson_tail": 0.6923038578591574,
-          "threshold": 0.01,
-          "escalate": false,
-          "reason": "ordinary"
-        },
-        {
-          "round": 2,
-          "entered": 1,
-          "expected": 0.15713150837377332,
-          "observed": 0,
-          "poisson_tail": 1.0,
-          "threshold": 0.01,
-          "escalate": false,
-          "reason": "ordinary"
-        }
-      ],
-      "evaluated": true,
-      "escalate": false,
-      "escalating_rounds": [],
-      "note": "Escalation is on expected count, not run length. A long run in a high-g/p regime is ordinary; see scripts/sizelaw.py."
-    },
-    "zjump": {
-      "phase": "zjump",
-      "threshold": 0.01,
-      "rounds": [],
-      "evaluated": false,
-      "escalate": false,
-      "escalating_rounds": [],
-      "note": "not evaluated in this run: the phase was empty, skipped, or resumed from a checkpoint"
+    {
+     "round": 2,
+     "entered": 1,
+     "expected": 0.15713150837377332,
+     "observed": 0,
+     "poisson_tail": 1.0,
+     "threshold": 0.01,
+     "escalate": false,
+     "reason": "ordinary"
     }
+   ],
+   "evaluated": true,
+   "escalate": false,
+   "escalating_rounds": [],
+   "note": "Escalation is on expected count, not run length. A long run in a high-g/p regime is ordinary; see scripts/sizelaw.py."
   },
-  "bii_survivors": [],
-  "z_survivors": [],
-  "clean": true,
-  "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=2 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i2_witness.npz (sha256 676ac6984ff42fa4); re-check with: python scripts/witness.py verify --file results/i2_witness.npz",
-  "seconds": 0.702
+  "zjump": {
+   "phase": "zjump",
+   "threshold": 0.01,
+   "rounds": [],
+   "evaluated": false,
+   "escalate": false,
+   "escalating_rounds": [],
+   "note": "not evaluated in this run: the phase was empty, skipped, or resumed from a checkpoint"
+  }
+ },
+ "bii_survivors": [],
+ "z_survivors": [],
+ "clean": true,
+ "certificate": "Every extra k in [2, k_max] except {K, K+1} for i=2 has r(p) notin I_{p,k}. Together with exact k<=200 and two family columns, N(C(N,K))=6. Not Singmaster. Witness prime for every column: results/i2_witness.npz (sha256 ab08157ad3407871); re-check with: python scripts/witness.py verify --file results/i2_witness.npz",
+ "seconds": 0.702,
+ "certificate_retargeted": [
+  {
+   "from": "676ac6984ff42fa4",
+   "to": "ab08157ad3407871",
+   "why": "explicit retarget after a post-sweep table change"
+  }
+ ]
 }

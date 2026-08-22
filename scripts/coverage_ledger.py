@@ -55,6 +55,27 @@ def audit_member(i: int, path: Path) -> dict:
     got = {int(v) for v in ks}
     missing = sorted(expected - got)
     extra = sorted(got - expected)
+
+    # The certificate names a witness table BY DIGEST, and nothing checked that
+    # the named table is the one on disk. Any post-sweep change -- fill adding
+    # engine witnesses, repair replacing a false row -- silently invalidated it.
+    # Measured 2026-08-22: five of seven certified members were stale, i=8's
+    # naming a digest that matched no table that had ever existed at that path.
+    # A referee following the certificate would verify the wrong file, or a file
+    # that is not there.
+    cert_sha, cert_ok = None, None
+    sweep = path.parent / f"i{i}_sweep.json"
+    if sweep.exists():
+        import re
+
+        rep = json.loads(sweep.read_text(encoding="utf-8"))
+        cert = rep.get("certificate")
+        if cert:
+            m = re.search(r"sha256 ([0-9a-f]+)", cert)
+            if m:
+                cert_sha = m.group(1)
+                cert_ok = meta["sha256"].startswith(cert_sha)
+
     return {
         "i": i,
         "N": fam.N,
@@ -69,7 +90,11 @@ def audit_member(i: int, path: Path) -> dict:
         "extra_sample": extra[:20],
         "family_columns_correctly_absent": not ({fam.K, fam.K + 1} & got),
         "sha256": meta["sha256"],
-        "ok": not missing and not extra and not ({fam.K, fam.K + 1} & got),
+        "certificate_sha256": cert_sha,
+        "certificate_names_this_table": cert_ok,
+        "ok": (not missing and not extra
+               and not ({fam.K, fam.K + 1} & got)
+               and cert_ok is not False),
     }
 
 
