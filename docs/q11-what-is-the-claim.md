@@ -136,6 +136,15 @@ recommendation was waiting on.
    -- which, per Q14, would most likely come from the intersectivity question,
    not from more computation.
 
+**2026-08-23.** i=9 finished; (a) did not fire (ordinary on every round and
+on the four cap columns; numbers in `open-questions.md` under Q11). The
+operating path is **PATH FORWARD 4** in `Singmaster-REFRESHER.txt`: writeup
+i=3..9 first, then a named-question lab and nearby/collide/intersective
+breadth. "Study the family data until it runs out" is not a phase — the
+jsonl will not run out, and almost every slice is the size law doing what
+it already predicted. i=10 stays behind the conditions above, plus an
+explicit "this is for a family paper" if that is the real reason.
+
 ---
 
 ## 6. What would change this answer

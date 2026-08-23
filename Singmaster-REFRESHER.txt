@@ -25,7 +25,16 @@ disagrees:
     only SURVIVED p=3517, its row was repaired to p=1051 (verifies),
     and the sweep no longer drops deferred columns. Do not reopen it.
     N(m_8)=6 stands on the witness table, not on that json.
-  * Only the write-up of i=3..9 is left of PATH FORWARD 3.
+  * PATH FORWARD 3 items (1)-(3) are DONE here. Item (4) — the
+    writeup of i=3..9 — is the first item of PATH FORWARD 4.
+    See NEXT below. Do not re-open PF3 (1)-(3).
+  * GITHUB. This clone's origin is
+    github.com/bigjokker/singmaster-n6 (main = 5c52131 on
+    origin). The live tree Desktop\Singmaster is a DIFFERENT
+    repo: github.com/bigjokker/singmaster-intersect. Do not
+    push this branch there. Do not merge the two trees. Focus
+    here. wave1-stop-the-bleeding is ahead of origin/main and
+    has not been pushed (user decision).
   * Still true and still binding: do not start a job, do not touch the
     live tree, do not start i=10.
   * "Uncommitted / parked bandii_kernel.py" below is a LIVE-TREE statement
@@ -63,13 +72,53 @@ i=2..9 / fat-image / walk-369 / bandii / zjump json exist => refuse.
 NEXT
 ----
 i=9 is DONE. json exists => refuse scripts\run-i9.bat.
-Grok does not start jobs. User-run, only if asked, PATH FORWARD 3:
-  1. write the four Lucas primes into the npz (k=87/399/553/1281
-     at p=191/421/557/1321)
-  2. witness fill --i 9 for k=2..80 (modular already killed them)
-  3. coverage ledger (expected 35,522,326 = [2,k_max]\{K,K+1})
-  4. writeup i=3..9
+Grok does not start jobs. User-run, only if asked.
+
+PATH FORWARD 3 (closed in this clone, 2026-08-23):
+  1. four Lucas primes in the npz — DONE
+  2. witness fill --i 9 for k=2..80 — DONE
+  3. coverage ledger 35,522,326 — DONE (UNBOUND, exit 1 expected)
+  4. writeup i=3..9 — became PATH FORWARD 4 item 1
+
+PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
+  1. WRITEUP i=3..9. Pattern: docs/i8-N6.md. Say i=8 and i=9
+     are coverage-complete and UNBOUND (i=8: engine fill k=2
+     and repair 1021 3517->1051; i=9: 83 engine fills, four
+     Lucas columns). This is what lets a stranger check the
+     claim. Do it BEFORE any lab. Until it exists, crumb
+     sessions rediscover k=1021 and the four cap columns.
+  2. LAB = named questions with a yes/no, a cheap command,
+     a written outcome (done / declined / blocked). Not
+     browsing jsonl. You will not run out of data (i=9 jsonl
+     is 219 MB). The gate is running out of questions whose
+     answer would CHANGE WHAT YOU BELIEVE. Worth a session:
+     the four i=9 cap columns (already ordinary under D4);
+     fat cells vs the size law; ghosts (ghost_census.json is
+     stale — regenerating it is a named question). Not worth
+     a session: re-walking i9_sweep.jsonl for "anomalies" the
+     ledger already called ordinary.
+  3. BREADTH, cheaper than i=10 and aimed where a new result
+     could live (docs/q11-what-is-the-claim.md): nearby at
+     larger k and (d,e); collide range (D5 still skips the
+     61-digit decade past the 2017 bound); intersective gaps
+     (Q26 Thue, Q28 one elliptic, Q29 effective Siegel).
+     Effectiveness is bought by covering more kinds of ground,
+     not another family member. A hit on nearby/collide is a
+     new collision. i=10 is another instance of a pattern
+     the size law already predicts.
+  4. i=10 stays PARKED. Re-open only if (a) the size law
+     fails (i=9's ledger is ordinary — (a) did not fire),
+     (b) cost drops more than an order of magnitude (the
+     curve is phi^8 ~ 47x per step; Q2 bought ~4.5x; the
+     kernel since then did not buy another 47x), (c) a
+     structural reason member 10 should differ (likely from
+     intersectivity, not more compute), OR you name it as a
+     paper-about-the-family choice (Q11 §6: legitimate, but
+     say so). Do not wait until data "runs out". Do not wait
+     for the tool to become 47x cheaper.
+
 Do not start i=10. Do not build m_9. Do not fire Q1.
+Do not start a job unless the user says to run it.
 
 N=F_20 F_21=74049690  K=F_18 F_21=28284464  k_max=35522329.
 Band II 7,237,864 columns, died pass 9, n_bii_alive=0.

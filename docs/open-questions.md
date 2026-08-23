@@ -338,7 +338,10 @@ This does not by itself fix the two-tree divergence that motivated the
 question; it makes divergence *detectable*, which is the part that was missing.
 The live tree `Desktop\Singmaster` remains the authority while its i=9 job runs.
 (2026-08-23: that job finished 2026-08-21 23:49. i=9's artifacts are in this
-clone and its table is complete here; see the top of `Singmaster-REFRESHER.txt`.)
+clone and its table is complete here; see the top of `Singmaster-REFRESHER.txt`.
+The two trees are also two GitHub remotes: this clone is
+`bigjokker/singmaster-n6`; the live tree is `bigjokker/singmaster-intersect`.
+Do not push one into the other. PATH FORWARD 4 lives in the refresher.)
 
 *Original text:*
 Still not a git repository. `Desktop\Singmaster` and `Desktop\Claude-Singmaster`
