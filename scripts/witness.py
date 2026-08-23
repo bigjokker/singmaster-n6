@@ -775,7 +775,16 @@ def _pass_tag(prefix: str):
 
 
 def build_i8(chk_bandii: Path, chk_zjump: Path, out: Path) -> dict:
-    """i=8's dedicated pipeline: bandii_sweep.jsonl + zjump.jsonl."""
+    """i=8's RETIRED dedicated pipeline: bandii_sweep.jsonl + zjump.jsonl.
+
+    Not reachable from the CLI (D9). The shipped i=8 table was built by
+    _build_family from results/i8_sweep.jsonl, and those two historical
+    checkpoints are gone. This path is also broken on any real zjump.jsonl:
+    it calls build_zjump once per HANG_RUNS sub-range over the WHOLE round's
+    records, so the count identity compares whole-round n_cols to one
+    sub-range's accounting and raises, and other ranges' survivors leak into
+    `unresolved`. Kept only as a record of the historical format adapters.
+    """
     from bandii_kernel import CAP, D, K, KMAX, KMIN, N, PRIMES, cells, live_intervals
     from zjump import HANG_RUNS, K_HI_NEW, K_LO_NEW
 
@@ -1032,17 +1041,13 @@ def main() -> int:
 
     if args.cmd == "build":
         out = args.out or ROOT / "results" / f"i{args.i}_witness.npz"
-        if args.i == 8 and args.checkpoint is None:
-            meta = build_i8(
-                ROOT / "results" / "bandii_sweep.jsonl",
-                ROOT / "results" / "zjump.jsonl",
-                out,
-            )
-            print(f"wrote {out}", flush=True)
-            print(f"  witnesses  {meta['n_witnesses']}", flush=True)
-            print(f"  unresolved {meta['n_unresolved']}", flush=True)
-            print(f"  sha256     {meta['sha256'][:32]}...", flush=True)
-            return 0 if meta["n_unresolved"] == 0 else 2
+        # Every member builds the same way: _build_family on its own
+        # i{i}_sweep.jsonl, or on --checkpoint. i=8 used to default to
+        # build_i8 -- the retired dedicated pipeline (bandii_sweep.jsonl +
+        # zjump.jsonl) -- which cannot succeed on any real multi-range
+        # checkpoint (see build_i8) and then told the operator to repeat the
+        # sweeps while results/i8_sweep.jsonl, the shipped table's
+        # meta.source, was on disk. Nothing in the CLI calls build_i8.
         chk = args.checkpoint or ROOT / "results" / f"i{args.i}_sweep.jsonl"
         if not chk.exists():
             print(f"missing checkpoint {chk}", flush=True)

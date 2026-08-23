@@ -774,6 +774,98 @@ def test_fill_and_repair_bind_to_the_table_directory() -> None:
         shutil.rmtree(stand, ignore_errors=True)
 
 
+def test_build_cli_dispatches_every_member_to_the_family_path() -> None:
+    """D9. `witness.py build --i 8` with no --checkpoint used to route to
+    build_i8, the retired dedicated pipeline (bandii_sweep.jsonl +
+    zjump.jsonl): it calls build_zjump per HANG_RUNS sub-range over the WHOLE
+    round's records, so the count identity compares whole-round n_cols to one
+    sub-range and raises -- or foreign survivors leak into unresolved -- and
+    its error tells the operator the sweeps must be repeated while
+    results/i8_sweep.jsonl, the meta.source of the shipped table, is on disk.
+    The documented default for the headline member was dead.
+
+    Every member dispatches through _build_family on i{i}_sweep.jsonl, or on
+    --checkpoint when given. Spies only: nothing is rebuilt or written.
+    """
+    calls: list[tuple] = []
+
+    def spy_family(i, chk, out):
+        calls.append(("family", int(i), Path(chk), Path(out)))
+        return {"n_witnesses": 0, "n_unresolved": 0, "sha256": "0" * 64}
+
+    def spy_i8(*a, **kw):
+        calls.append(("i8",) + tuple(a))
+        raise AssertionError("build_i8 must not be reachable from the CLI")
+
+    real_family, real_i8 = W._build_family, W.build_i8
+    real_argv = sys.argv
+    tmp = Path(tempfile.mkdtemp(prefix="dispatch_test_"))
+    try:
+        W._build_family, W.build_i8 = spy_family, spy_i8
+        out = tmp / "never.npz"
+
+        # 1. the headline member, default checkpoint
+        calls.clear()
+        sys.argv = ["witness.py", "build", "--i", "8", "--out", str(out)]
+        try:
+            rc = W.main()
+        except AssertionError as exc:
+            rc = f"raised {exc}"
+        expect(rc == 0 and calls == [("family", 8, ROOT / "results" / "i8_sweep.jsonl", out)],
+               f"build --i 8 (no --checkpoint) dispatches to _build_family on "
+               f"results/i8_sweep.jsonl, never build_i8 (calls={calls})")
+
+        # 2. an explicit checkpoint is honoured
+        chk = tmp / "some.jsonl"
+        chk.write_text("{}\n", encoding="utf-8")
+        calls.clear()
+        sys.argv = ["witness.py", "build", "--i", "8", "--checkpoint", str(chk),
+                    "--out", str(out)]
+        rc = W.main()
+        expect(rc == 0 and calls == [("family", 8, chk, out)],
+               f"build --i 8 --checkpoint X builds from X (calls={calls})")
+
+        # 3. another member is unchanged
+        calls.clear()
+        sys.argv = ["witness.py", "build", "--i", "3", "--out", str(out)]
+        rc = W.main()
+        expect(rc == 0 and calls == [("family", 3, ROOT / "results" / "i3_sweep.jsonl", out)],
+               f"build --i 3 dispatches as before (calls={calls})")
+    finally:
+        W._build_family, W.build_i8 = real_family, real_i8
+        sys.argv = real_argv
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_build_i8_from_its_checkpoint_leaves_1021_to_the_engine() -> None:
+    """End to end, to a temp path: the i=8 table rebuilt from
+    results/i8_sweep.jsonl (a pre-Q30 checkpoint, so spans over-cover) must
+    match the shipped table on every prime it credits and leave exactly
+    k=1021 -- the deferred column -- unresolved for the engine. ~20 s.
+    """
+    chk = ROOT / "results" / "i8_sweep.jsonl"
+    src = ROOT / "results" / "i8_witness.npz"
+    if not chk.exists() or not src.exists():
+        ok.append("i8 artifacts absent; end-to-end rebuild skipped")
+        return
+    tmp = Path(tempfile.mkdtemp(prefix="i8_rebuild_"))
+    try:
+        meta = W._build_family(8, chk, tmp / "i8_witness.npz")
+        ks, ps, _ = W.load(tmp / "i8_witness.npz")
+        sks, sps, smeta = W.load(src)
+        shipped = dict(zip(sks.tolist(), sps.tolist()))
+        diffs = [(k, p, shipped.get(k)) for k, p in zip(ks.tolist(), ps.tolist())
+                 if shipped.get(k) != p]
+        expect(meta["n_unresolved"] == 1 and meta["unresolved"] == [1021],
+               f"the legacy checkpoint leaves exactly k=1021 unresolved "
+               f"({meta['n_unresolved']}: {meta['unresolved'][:5]})")
+        expect(not diffs and ks.size == smeta["n_witnesses"] - 1,
+               f"every credited prime equals the shipped table's "
+               f"({ks.size:,} rows, {len(diffs)} differ {diffs[:2]})")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def test_build_family_clips_engine_band_at_kmax() -> None:
     """The engine band below the Z-jump start must stop at k_max.
 
@@ -964,6 +1056,8 @@ def _digest_guarded() -> dict:
 def main() -> int:
     before = _digest_guarded()
     test_fill_and_repair_bind_to_the_table_directory()
+    test_build_cli_dispatches_every_member_to_the_family_path()
+    test_build_i8_from_its_checkpoint_leaves_1021_to_the_engine()
     test_build_family_clips_engine_band_at_kmax()
     test_verifier_rejects_the_j0_image_entry()
     test_bandii_count_identity_catches_a_sparse_span()
