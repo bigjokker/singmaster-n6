@@ -461,23 +461,57 @@ def load(path: Path):
 # coverage: a witness per row is not enough, every claimed row needs one
 # ---------------------------------------------------------------------------
 
-def coverage(ks, meta: dict) -> dict:
-    expected: set[int] = set()
-    for lo, hi in meta["claimed_ranges"]:
-        expected |= set(range(int(lo), int(hi) + 1))
-    expected -= {int(x) for x in meta.get("excluded", [])}
-    got = {int(x) for x in ks}
-    missing = sorted(expected - got)
-    extra = sorted(got - expected)
+def column_coverage(ks, claimed_ranges, excluded=()) -> dict:
+    """Does the witnessed column set equal the claimed one? Exactly which
+    columns are missing, which are extra -- without a Python set of every
+    column.
+
+    Two boolean occupancy arrays over [0, k_hi], where k_hi is the top of
+    the claim: one byte per column, ~35 MB each at i=9 against the 5.9 GB
+    peak that two `set(range(...))` objects cost for the same answer (D15).
+    Columns outside [0, k_hi] cannot be claimed, so they are extra by
+    definition and are handled as a short list rather than by sizing the
+    array to a stray value. Semantics are the set ones: n_witnessed counts
+    DISTINCT columns, missing and extra are sorted, samples are the first 20.
+
+    One helper for coverage() and coverage_ledger.audit_member, so the
+    table's own self-check and the family-level audit cannot drift.
+    """
+    import numpy as np
+
+    ranges = [(int(lo), int(hi)) for lo, hi in claimed_ranges]
+    k_hi = max((hi for _lo, hi in ranges), default=-1)
+    expected = np.zeros(k_hi + 1, dtype=bool)
+    for lo, hi in ranges:
+        if hi >= lo:
+            expected[max(lo, 0):hi + 1] = True
+    for x in excluded:
+        x = int(x)
+        if 0 <= x <= k_hi:
+            expected[x] = False
+
+    arr = np.unique(np.asarray(ks, dtype=np.int64).ravel())
+    inside = arr[(arr >= 0) & (arr <= k_hi)]
+    outside = arr[(arr < 0) | (arr > k_hi)]           # can never be claimed
+    got = np.zeros(k_hi + 1, dtype=bool)
+    got[inside] = True
+
+    missing = np.flatnonzero(expected & ~got)
+    extra_in = np.flatnonzero(got & ~expected)
+    extra = np.concatenate([outside[outside < 0], extra_in, outside[outside > k_hi]])
     return {
-        "n_expected": len(expected),
-        "n_witnessed": len(got),
-        "n_missing": len(missing),
-        "missing_sample": missing[:20],
-        "n_extra": len(extra),
-        "extra_sample": extra[:20],
-        "complete": not missing and not extra,
+        "n_expected": int(expected.sum()),
+        "n_witnessed": int(arr.size),
+        "n_missing": int(missing.size),
+        "missing_sample": missing[:20].tolist(),
+        "n_extra": int(extra.size),
+        "extra_sample": extra[:20].tolist(),
+        "complete": bool(missing.size == 0 and extra.size == 0),
     }
+
+
+def coverage(ks, meta: dict) -> dict:
+    return column_coverage(ks, meta["claimed_ranges"], meta.get("excluded", []))
 
 
 # ---------------------------------------------------------------------------

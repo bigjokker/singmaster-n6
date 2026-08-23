@@ -64,10 +64,14 @@ def audit_member(i: int, path: Path) -> dict:
                 "error": f"file says N,K = {meta['N']},{meta['K']}; "
                          f"the family says {fam.N},{fam.K}"}
 
-    expected = set(range(2, kmax + 1)) - {fam.K, fam.K + 1}
-    got = {int(v) for v in ks}
-    missing = sorted(expected - got)
-    extra = sorted(got - expected)
+    # The family's OWN claim -- [2, k_max] minus the two family columns --
+    # through the same helper the table's self-check uses (witness.coverage),
+    # so the two cannot drift. Boolean occupancy, not Python sets: the set
+    # form peaked at 5.9 GB on i=9 for this answer (D15).
+    import numpy as np
+
+    cov = W.column_coverage(ks, [[2, kmax]], [fam.K, fam.K + 1])
+    family_absent = not bool(np.isin(np.array([fam.K, fam.K + 1]), ks).any())
 
     # The certificate names a witness table BY DIGEST, and nothing checked that
     # the named table is the one on disk. Any post-sweep change -- fill adding
@@ -89,8 +93,7 @@ def audit_member(i: int, path: Path) -> dict:
                 cert_sha = m.group(1)
                 cert_ok = meta["sha256"].startswith(cert_sha)
 
-    family_absent = not ({fam.K, fam.K + 1} & got)
-    coverage_complete = not missing and not extra and family_absent
+    coverage_complete = cov["complete"] and family_absent
     # Bound means a certificate exists AND names this table. None (no sweep
     # record, or certificate=null) is NOT "not contradicted" -- it is unbound.
     bound = cert_ok is True
@@ -106,12 +109,12 @@ def audit_member(i: int, path: Path) -> dict:
         "K": fam.K,
         "k_max": kmax,
         "k_max_source": "recomputed from N,K",
-        "n_expected": len(expected),
-        "n_witnessed": len(got),
-        "n_missing": len(missing),
-        "missing_sample": missing[:20],
-        "n_extra": len(extra),
-        "extra_sample": extra[:20],
+        "n_expected": cov["n_expected"],
+        "n_witnessed": cov["n_witnessed"],
+        "n_missing": cov["n_missing"],
+        "missing_sample": cov["missing_sample"],
+        "n_extra": cov["n_extra"],
+        "extra_sample": cov["extra_sample"],
         "family_columns_correctly_absent": family_absent,
         "sha256": meta["sha256"],
         "certificate_sha256": cert_sha,

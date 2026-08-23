@@ -866,6 +866,91 @@ def test_build_i8_from_its_checkpoint_leaves_1021_to_the_engine() -> None:
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def test_column_coverage_matches_a_set_reference() -> None:
+    """D15. coverage() and the ledger each built two Python sets of every
+    column -- 35.5M ints at i=9, 5.9 GB peak for an answer a boolean
+    occupancy gives in ~70 MB. One helper now serves both; its answers must
+    be exactly the set answers, on every shape that matters: a hole, an
+    extra inside the range, an extra far above it, a negative k, duplicate
+    rows, and overlapping claimed ranges with exclusions (the rebuilt i=2
+    shape [[41,49],[2,49]] + excluded {39,40}).
+    """
+    import numpy as np
+
+    fn = getattr(W, "column_coverage", None)
+    expect(callable(fn), "witness exposes column_coverage(ks, claimed_ranges, excluded)")
+    if not callable(fn):
+        return
+
+    def reference(ks, ranges, excluded):
+        expected = set()
+        for lo, hi in ranges:
+            expected |= set(range(int(lo), int(hi) + 1))
+        expected -= {int(x) for x in excluded}
+        got = {int(x) for x in ks}
+        missing = sorted(expected - got)
+        extra = sorted(got - expected)
+        return {"n_expected": len(expected), "n_witnessed": len(got),
+                "n_missing": len(missing), "missing_sample": missing[:20],
+                "n_extra": len(extra), "extra_sample": extra[:20],
+                "complete": not missing and not extra}
+
+    ranges = [[41, 49], [2, 49]]
+    excluded = [39, 40]
+    full = [k for k in range(2, 50) if k not in excluded]
+    cases = {
+        "complete": full,
+        "hole": [k for k in full if k != 17],
+        "extra inside (an excluded column)": full + [39],
+        "extra far above": full + [10**9],
+        "negative k": full + [-3],
+        "duplicates": full + [5, 5, 48],
+        "everything at once": [k for k in full if k not in (17, 23)] + [40, 777, -1, 5, 5],
+        "empty table": [],
+        "legacy three-range claim": [k for k in range(2, 343) if k not in (272, 273)],
+    }
+    legacy_ranges = [[274, 342], [201, 271], [2, 200]]
+    bad = []
+    for name, ks in cases.items():
+        r, x = (legacy_ranges, []) if name.startswith("legacy") else (ranges, excluded)
+        got = fn(np.array(ks, dtype=np.int64), r, x)
+        ref = reference(ks, r, x)
+        if {k: got[k] for k in ref} != ref:
+            bad.append((name, got, ref))
+    expect(not bad, f"column_coverage equals the Python-set reference on {len(cases)} shapes "
+                    f"({len(bad)} differ: {bad[:1]})")
+
+    # and coverage(ks, meta) is the same helper
+    meta = {"claimed_ranges": ranges, "excluded": excluded}
+    ks = np.array(cases["everything at once"], dtype=np.int64)
+    c = W.coverage(ks, meta)
+    ref = reference(ks.tolist(), ranges, excluded)
+    expect({k: c[k] for k in ref} == ref, "coverage(ks, meta) gives the reference answer")
+
+
+def test_ledger_numbers_unchanged_on_a_real_table() -> None:
+    """audit_member after D15 must report exactly what it reported before on
+    the shipped i=3 and i=2 tables: counts from results/coverage_ledger.json
+    (tracked, written by the set implementation), state from S2.
+    """
+    import coverage_ledger as CL
+
+    want = {2: (46, 46), 3: (339, 339)}          # n_expected, n_witnessed
+    for i, (n_exp, n_wit) in want.items():
+        path = ROOT / "results" / f"i{i}_witness.npz"
+        if not path.exists():
+            ok.append(f"i{i}_witness.npz absent; ledger-unchanged test skipped")
+            continue
+        aud = CL.audit_member(i, path)
+        expect(aud["n_expected"] == n_exp and aud["n_witnessed"] == n_wit
+               and aud["n_missing"] == 0 and aud["n_extra"] == 0
+               and aud["family_columns_correctly_absent"] is True
+               and aud["coverage_complete"] is True and aud["state"] == "COMPLETE",
+               f"i={i}: ledger unchanged (expected {aud['n_expected']}, witnessed "
+               f"{aud['n_witnessed']}, missing {aud['n_missing']}, extra {aud['n_extra']}, "
+               f"state {aud['state']})")
+
+
 def test_build_family_clips_engine_band_at_kmax() -> None:
     """The engine band below the Z-jump start must stop at k_max.
 
@@ -1058,6 +1143,8 @@ def main() -> int:
     test_fill_and_repair_bind_to_the_table_directory()
     test_build_cli_dispatches_every_member_to_the_family_path()
     test_build_i8_from_its_checkpoint_leaves_1021_to_the_engine()
+    test_column_coverage_matches_a_set_reference()
+    test_ledger_numbers_unchanged_on_a_real_table()
     test_build_family_clips_engine_band_at_kmax()
     test_verifier_rejects_the_j0_image_entry()
     test_bandii_count_identity_catches_a_sparse_span()
