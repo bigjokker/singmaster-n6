@@ -202,7 +202,83 @@ def test_gm_scan_equals_numpy_scan() -> None:
         K.USE_GM_SCAN = saved
 
 
+def test_iv_starts_survives_id_reuse() -> None:
+    """first_live_after must not answer from a cache keyed by a dead id.
+
+    _iv_starts cached interval starts under id(ivs) with only a len() guard
+    and held no reference to the list, so once the list was freed CPython
+    could hand the same address to a different list of the same length --
+    and the bisect then ran on the OLD starts. The wrong answer is a wrong
+    live prime (or None) for every column that asks; it is masked today
+    only because no two families have the same interval count.
+    """
+    def ask(ivs):
+        return K.first_live_after(0, ivs, 10**6)
+
+    hits = 0
+    wrong = []
+    for trial in range(200):
+        a = [(100 + 10 * j, 105 + 10 * j) for j in range(50)]
+        ask(a)
+        id_a = id(a)
+        del a
+        b = [(5000 + 10 * j, 5005 + 10 * j) for j in range(50)]
+        if id(b) == id_a:
+            hits += 1
+        got = ask(b)
+        if got != 5003:
+            wrong.append((trial, got))
+        expect_starts = [lo for lo, _hi in b]
+        if K._iv_starts(b) != expect_starts:
+            wrong.append((trial, "stale starts"))
+        del b
+    expect(not wrong,
+           f"first_live_after is correct across {200} freed-and-reallocated "
+           f"interval lists ({hits} id reuses observed, {len(wrong)} wrong "
+           f"{wrong[:2]})")
+
+
+def test_scanners_refuse_primes_past_the_word_size() -> None:
+    """The int64 kernel needs s*F[b] < p^2 < 2^63; above it numpy wraps
+    silently and the scan can report a FALSE KILL. The bound was stated in
+    a docstring and enforced nowhere.
+    """
+    import gmpy2
+
+    ok_p = 37_024_873                       # i=9 Band II p1
+    bad_p = int(gmpy2.next_prime(3_037_000_499))
+    expect(bad_p * bad_p >= 2**63 and ok_p * ok_p < 2**63,
+           f"fixture: {bad_p} is past the int64 bound, {ok_p} inside it")
+    expect(K._check_r(5, ok_p) == 5, "a prime inside the bound is accepted")
+    checks = [
+        ("_check_r", lambda: K._check_r(5, bad_p)),
+        ("fact_window", lambda: K.fact_window(bad_p, 0, 3)),
+        ("scan_ks_windowed", lambda: K.scan_ks_windowed(bad_p, 5, [bad_p - 50])),
+    ]
+    refused = 0
+    for name, fn in checks:
+        try:
+            fn()
+            expect(False, f"{name} accepted p={bad_p} past the int64 bound")
+        except ValueError as exc:
+            refused += 1
+            expect("2^63" in str(exc) or "int64" in str(exc),
+                   f"{name} refuses p={bad_p} past the int64 bound")
+    # fact_table(bad_p) without a guard would allocate 24 GB and loop 3e9
+    # times; only probe it once the cheap entry points are known to refuse.
+    if refused == len(checks):
+        try:
+            K.fact_table(bad_p)
+            expect(False, f"fact_table accepted p={bad_p} past the int64 bound")
+        except ValueError:
+            expect(True, f"fact_table refuses p={bad_p} before allocating")
+    else:
+        expect(False, "fact_table bound not probed: the cheap entry points do not refuse")
+
+
 def main() -> int:
+    test_iv_starts_survives_id_reuse()
+    test_scanners_refuse_primes_past_the_word_size()
     test_gm_scan_equals_numpy_scan()
     test_half_equals_full()
     test_against_exact_arithmetic()

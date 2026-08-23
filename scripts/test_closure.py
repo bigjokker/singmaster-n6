@@ -150,9 +150,30 @@ def test_deferred_columns_close_through_the_engine() -> None:
                f"({len(sample)} checked, {len(bad)} invalid {bad[:2]})")
 
 
+# Tracked artifacts this suite must leave untouched. fill runs on the sandbox
+# table only; if a table change ever reaches results/ again, fail loudly.
+GUARDED = (f"i{I_TEST}_sweep.json", f"i{I_TEST}_sweep.jsonl", f"i{I_TEST}_witness.npz")
+
+
+def _digest_guarded() -> dict:
+    import hashlib
+
+    out = {}
+    for name in GUARDED:
+        p = ROOT / "results" / name
+        out[name] = hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None
+    return out
+
+
 def main() -> int:
     t = time.perf_counter()
+    before = _digest_guarded()
     test_deferred_columns_close_through_the_engine()
+    after = _digest_guarded()
+    changed = [n for n in GUARDED if before[n] != after[n]]
+    expect(not changed,
+           "the suite left every tracked results artifact byte-identical"
+           + (f" -- MUTATED: {changed}" if changed else ""))
     print(f"\n=== CLOSURE TESTS (i={I_TEST}, {time.perf_counter()-t:.1f}s) ===")
     for line in ok:
         print("  OK   ", line)

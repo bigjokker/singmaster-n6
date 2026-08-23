@@ -558,7 +558,8 @@ def fill_small_gaps(path: Path, i: int) -> dict:
                     "claimed_ranges": [[2, kmax]],
                     "excluded": [fam.K, fam.K + 1]}
             out = save(path, meta, have)
-            rt = retarget_certificate(i, out["sha256"], "relabelled a complete table")
+            rt = retarget_certificate(i, out["sha256"], "relabelled a complete table",
+                                      sweep_record_for(path, i))
             return {"i": i, "added": 0, "unresolved": [], "relabelled": stale,
                     "retargeted": rt,
                     "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
@@ -580,13 +581,29 @@ def fill_small_gaps(path: Path, i: int) -> dict:
             "n_filled_from_engine": added,
             "n_unresolved": len(unresolved), "unresolved": unresolved}
     out = save(path, meta, have)
-    rt = retarget_certificate(i, out["sha256"], f"fill added {added} engine witnesses")
+    rt = retarget_certificate(i, out["sha256"], f"fill added {added} engine witnesses",
+                              sweep_record_for(path, i))
     return {"i": i, "added": added, "unresolved": unresolved, "retargeted": rt,
             "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
 
 
-def retarget_certificate(i: int, new_sha: str, why: str,
-                         sweep: Path | None = None) -> dict | None:
+def sweep_record_for(table: Path, i: int) -> Path:
+    """The sweep record a change to `table` may retarget: the one NEXT TO it.
+
+    Never ROOT/results by default. A table under edit lives wherever it lives
+    -- the tracked results/ directory, a temp copy in a test, a scratch
+    rebuild -- and the only sweep record that describes it is the sibling
+    i{i}_sweep.json in the same directory. Resolving from the family index
+    instead meant that fill/repair on a temp COPY rewrote the TRACKED proof
+    record whenever the copy's digest diverged from the shipped table,
+    appending a `certificate_retargeted` entry for a fill or repair that never
+    happened to the shipped table. The suites did exactly that and were a
+    no-op only because their fixtures reproduced the shipped bytes.
+    """
+    return Path(table).parent / f"i{i}_sweep.json"
+
+
+def retarget_certificate(i: int, new_sha: str, why: str, sweep: Path) -> dict | None:
     """Point the sweep record's certificate at the table that now exists.
 
     The certificate embeds the witness table's sha256. Any post-sweep change to
@@ -600,8 +617,16 @@ def retarget_certificate(i: int, new_sha: str, why: str,
     This rewrites the LABEL and never the claim: the certificate text is
     otherwise byte-identical, and the retarget is recorded in the sweep record
     so it is auditable rather than silent.
+
+    `sweep` is REQUIRED and must be the record next to the table that changed
+    (see sweep_record_for). There is deliberately no ROOT default: a default
+    resolved from the family index is how a temp copy once reached the tracked
+    record. If the sibling record does not exist there is nothing to retarget.
     """
-    sweep = sweep or ROOT / "results" / f"i{i}_sweep.json"
+    if sweep is None:
+        raise ValueError("retarget_certificate needs the sweep record next to the "
+                         "table that changed; there is no default")
+    sweep = Path(sweep)
     if not sweep.exists():
         return None
     rep = json.loads(sweep.read_text(encoding="utf-8"))
@@ -686,7 +711,8 @@ def repair_invalid(path: Path, i: int, ks_want=None, k_hi: int | None = None) ->
             "n_repaired": int(meta.get("n_repaired", 0)) + len(repaired)}
     out = save(path, meta, have)
     rt = retarget_certificate(i, out["sha256"],
-                              f"repaired {len(repaired)} false certificate(s)")
+                              f"repaired {len(repaired)} false certificate(s)",
+                              sweep_record_for(path, i))
     return {"i": i, "checked": checked, "repaired": repaired, "retargeted": rt,
             "sha256": out["sha256"], "n_witnesses": out["n_witnesses"]}
 
@@ -842,13 +868,23 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
     # the fix: the sweep kernel has no O(1) route for k=2, so k=2 there costs a
     # full g~p scan (410 ms at i=8). The engine does have one, so take the
     # witnesses from there and make the table self-contained.
+    #
+    # The band is [2, k_lo_z) CLIPPED at k_max. i=2 is the member where that
+    # matters: k_max=49 sits below K_EXACT=200, and an unclipped loop searched
+    # obstructing primes for k=50..200 -- columns no claim contains -- wrote
+    # 149 witnesses for them, claimed [2,200], found no prime below 50,000 for
+    # k=63 and 65, and reported them unresolved: the rebuild exited 2 and a
+    # fresh i=2 sweep would have withheld a certificate it had earned. K and
+    # K+1 are skipped in the loop, so they are excluded from the claim too
+    # (they fall inside the band only when K < k_lo_z, again i=2).
     w_small: dict[int, int] = {}
     unresolved_small: set[int] = set()
-    if k_lo_z > 2:
+    k_hi_small = min(k_lo_z - 1, kmax)
+    if k_hi_small >= 2:
         from singmaster_intersect import obstructing_prime, primes_upto
 
         small_primes = primes_upto(50_000)
-        for kk in range(2, k_lo_z):
+        for kk in range(2, k_hi_small + 1):
             if kk in (fam.K, fam.K + 1):
                 continue
             q = obstructing_prime(fam.N, fam.K, kk, small_primes)
@@ -861,8 +897,8 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
     claimed = [[fam.K + 2, kmax]]
     if k_lo_z < fam.K:
         claimed.append([k_lo_z, fam.K - 1])
-    if w_small or unresolved_small:
-        claimed.append([2, k_lo_z - 1])
+    if k_hi_small >= 2:
+        claimed.append([2, k_hi_small])
     meta = {
         "source": str(chk.name),
         "i": i,
@@ -870,7 +906,7 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
         "K": fam.K,
         "k_max": kmax,
         "claimed_ranges": claimed,
-        "excluded": [],
+        "excluded": [fam.K, fam.K + 1],
         "n_unresolved": len(alive_bii) + len(alive_z) + len(unresolved_small),
         "unresolved": sorted(alive_bii | alive_z | unresolved_small)[:100],
         "n_small_k_from_engine": len(w_small),
@@ -940,7 +976,8 @@ def main() -> int:
         f = args.file or ROOT / "results" / f"i{args.i}_witness.npz"
         _, _, meta = load(f)
         res = retarget_certificate(args.i, meta["sha256"],
-                                   "explicit retarget after a post-sweep table change")
+                                   "explicit retarget after a post-sweep table change",
+                                   sweep_record_for(f, args.i))
         if res is None:
             print(f"  i={args.i}: certificate already names the current table "
                   f"(or there is no certificate)")

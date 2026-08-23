@@ -634,7 +634,289 @@ def test_deferred_column_is_not_credited_a_kill() -> None:
            "Band II leaves an uncovered column unresolved too")
 
 
+def test_fill_and_repair_bind_to_the_table_directory() -> None:
+    """fill/repair of a COPY must never touch the tracked sweep record.
+
+    retarget_certificate used to default its target to ROOT/results/
+    i{i}_sweep.json -- resolved from the family index, not from the table
+    being edited. So fill or repair on a temp copy (which is exactly what the
+    suites do) rewrote the TRACKED proof record whenever the copy's digest
+    diverged from the shipped table, appending a `certificate_retargeted`
+    entry describing a fill or repair that never happened to the shipped
+    table, and pointing the certificate at a digest that existed only in a
+    temp dir. The suites were a silent no-op only because their fixtures
+    happened to reproduce the shipped bytes.
+
+    The sweep record a table change may retarget is the one NEXT TO that
+    table, or nothing. Run against a stand-in ROOT holding a copy of the
+    tracked record, so a regression shows on the copy and can never reach
+    results/. The real tracked files are digest-guarded in main() as well.
+    """
+    import json
+
+    i = 3
+    fam = make_fam(i)
+    src = ROOT / "results" / f"i{i}_witness.npz"
+    tracked = ROOT / "results" / f"i{i}_sweep.json"
+    if not src.exists() or not tracked.exists():
+        ok.append("i3 artifacts absent; directory-binding test skipped")
+        return
+    stand = Path(tempfile.mkdtemp(prefix="standin_root_"))
+    tmp = Path(tempfile.mkdtemp(prefix="bind_test_"))
+    real_root = W.ROOT
+    try:
+        (stand / "results").mkdir()
+        decoy = stand / "results" / f"i{i}_sweep.json"
+        shutil.copyfile(tracked, decoy)
+        decoy_before = decoy.read_bytes()
+        W.ROOT = stand
+
+        ks, ps, meta = W.load(src)
+        have = {int(a): int(b) for a, b in zip(ks, ps)}
+        # Make the copy DIVERGE from the shipped table: one column gets a
+        # different (still valid) witness, and one column is dropped so fill
+        # has something to add. The rebuilt digest then differs from the one
+        # the certificate names, which is the case that used to leak.
+        victim = int(ks[len(ks) // 3])
+        alt = next(q for q in range(have[victim] + 1, have[victim] + 5000)
+                   if W.is_prime_pure(q) and W.check_witness(fam.N, fam.K, victim, q)["ok"])
+        have[victim] = alt
+        dropped = int(ks[len(ks) // 2])
+        del have[dropped]
+        path = tmp / f"i{i}_witness.npz"
+        W.save(path, meta, have)
+
+        res = W.fill_small_gaps(path, i)
+        expect(res["added"] == 1 and not res["unresolved"],
+               f"fixture: fill re-adds the dropped column (added {res['added']})")
+        expect(res["sha256"] != meta["sha256"],
+               "fixture: the filled copy really has a different digest from the shipped table")
+        expect(decoy.read_bytes() == decoy_before,
+               "fill of a temp copy leaves ROOT/results/i3_sweep.json byte-identical")
+        expect(res.get("retargeted") is None,
+               f"with no sweep record next to the table, nothing is retargeted "
+               f"(got {res.get('retargeted')!r})")
+
+        # Now put a sweep record NEXT TO the table: that one, and only that
+        # one, is what a table change may retarget.
+        sibling = tmp / f"i{i}_sweep.json"
+        shutil.copyfile(tracked, sibling)
+        ks2, ps2, meta2 = W.load(path)
+        have2 = {int(a): int(b) for a, b in zip(ks2, ps2)}
+        victim2 = int(ks2[len(ks2) // 4])
+        bad_p = next(q for q in range(victim2 + 1, victim2 + 4000)
+                     if W.is_prime_pure(q)
+                     and not W.check_witness(fam.N, fam.K, victim2, q)["ok"])
+        have2[victim2] = bad_p
+        W.save(path, meta2, have2)
+        rep = W.repair_invalid(path, i, [victim2])
+        expect(len(rep["repaired"]) == 1, "fixture: repair replaced the corrupted row")
+        sib = json.loads(sibling.read_text(encoding="utf-8"))
+        expect(rep.get("retargeted") is not None
+               and sib.get("certificate_retargeted")
+               and rep["sha256"].startswith(sib["certificate_retargeted"][-1]["to"]),
+               "repair retargets the sweep record NEXT TO the table it edited")
+        expect(decoy.read_bytes() == decoy_before,
+               "repair of a temp copy leaves ROOT/results/i3_sweep.json byte-identical")
+    finally:
+        W.ROOT = real_root
+        shutil.rmtree(tmp, ignore_errors=True)
+        shutil.rmtree(stand, ignore_errors=True)
+
+
+def test_build_family_clips_engine_band_at_kmax() -> None:
+    """The engine band below the Z-jump start must stop at k_max.
+
+    i=2 is the one member whose k_max (49) lies below K_EXACT (200). The
+    builder searched obstructing primes for k=50..200 -- columns no claim
+    contains -- wrote witnesses for them, claimed [2,200], and reported k=63
+    and 65 (above k_max) as unresolved, so a rebuild exited 2 and a fresh
+    sweep of i=2 would have withheld a certificate the member earns.
+
+    The shipped results/i2_witness.npz (46 rows, digest ab08157a...) is the
+    reference; a rebuild from the checkpoint must reproduce it exactly.
+    """
+    import coverage_ledger as CL
+    from bandii_kernel import kmax_of
+
+    i = 2
+    chk = ROOT / "results" / f"i{i}_sweep.jsonl"
+    src = ROOT / "results" / f"i{i}_witness.npz"
+    if not chk.exists() or not src.exists():
+        ok.append("i2 artifacts absent; k_max clip test skipped")
+        return
+    fam = make_fam(i)
+    kmax, _ = kmax_of(fam)
+    _, _, shipped = W.load(src)
+    tmp = Path(tempfile.mkdtemp(prefix="clip_test_"))
+    try:
+        path = tmp / f"i{i}_witness.npz"
+        meta = W._build_family(i, chk, path)
+        ks, _ps, meta = W.load(path)
+        expect(meta["n_unresolved"] == 0 and not meta["unresolved"],
+               f"i=2 rebuild leaves nothing unresolved "
+               f"(n_unresolved={meta['n_unresolved']}, {meta['unresolved']})")
+        expect(int(ks.max()) <= kmax and ks.size == shipped["n_witnesses"],
+               f"i=2 rebuild emits no column above k_max={kmax} "
+               f"({ks.size} rows, max k {int(ks.max())})")
+        expect(meta["sha256"] == shipped["sha256"],
+               f"i=2 rebuild reproduces the shipped table "
+               f"({meta['sha256'][:16]} vs {shipped['sha256'][:16]})")
+        cov = W.coverage(ks, meta)
+        expect(cov["complete"],
+               f"rebuilt i=2 claim is complete and exact "
+               f"(missing {cov['n_missing']}, extra {cov['n_extra']})")
+        aud = CL.audit_member(i, path)
+        expect(aud.get("ok") and aud["n_extra"] == 0 and aud["n_missing"] == 0,
+               f"ledger accepts the rebuilt i=2 table (extra {aud.get('n_extra')})")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_verifier_rejects_the_j0_image_entry() -> None:
+    """r(p)=1 is C(k,k): the image entry at j=0, present for EVERY column.
+
+    No adversarial case fed the verifier a prime with r(p)=1, so an image
+    walk that started at j=1 would have accepted a false certificate for
+    every column at that prime and passed every suite. Pin j=0 explicitly.
+    """
+    fam, _m = _fam()
+    p = 787
+    r = W.lucas_mod_pure(fam.N, fam.K, p)
+    expect(r == 1, f"fixture: r({p}) = 1 for i={I_TEST} (got {r})")
+    flips = []
+    for k in range(2, 60):
+        res = W.check_witness(fam.N, fam.K, k, p)
+        if res["ok"] or res.get("j") != 0:
+            flips.append((k, res))
+    expect(not flips,
+           f"check_witness rejects p={p} for every k<p with the hit at j=0 "
+           f"({len(flips)} wrong verdicts {flips[:2]})")
+
+
+def test_bandii_count_identity_catches_a_sparse_span() -> None:
+    """Band II: a column absent from the survivors inside a SPARSE span is
+    not a kill unless the record's n_cols says it was scanned.
+
+    The Z-jump half of this identity is pinned in
+    test_deferred_column_is_not_credited_a_kill; the Band II half was not,
+    and removing it passed every suite. This is the k=1021 mechanism in the
+    Band II phase.
+    """
+    p = 359
+    sparse = {"tag": "bii1", "p": p, "prime_index": 1, "k_lo": 300, "k_hi": 301,
+              "n_cols": 1, "survivors": [], "seconds": 0.0, "n_survivors": 0}
+    try:
+        w, alive = W.build_bandii([sparse], 300, 301, [p], W._pass_tag("bii"))
+        expect(False, f"Band II sparse-span record credited {w}")
+    except RuntimeError as exc:
+        expect("never scanned" in str(exc),
+               "Band II count identity refuses to credit a column the record "
+               "did not scan")
+    dense = {**sparse, "n_cols": 2}
+    w, alive = W.build_bandii([dense], 300, 301, [p], W._pass_tag("bii"))
+    expect(w == {300: p, 301: p} and not alive,
+           "and a dense Band II record still credits both columns")
+
+
+def test_verify_reports_invalid_rows() -> None:
+    """witness.verify is the command the README hands a referee, and nothing
+    called it. Pin: a table with one FALSE row is NOT VALID under a full
+    check, the bad row is named, and a sampled check labels itself sampled.
+    """
+    fam, _m = _fam()
+    src = ROOT / "results" / f"i{I_TEST}_witness.npz"
+    if not src.exists():
+        ok.append("i3_witness.npz absent; verify test skipped")
+        return
+    tmp = Path(tempfile.mkdtemp(prefix="verify_test_"))
+    try:
+        ks, ps, meta = W.load(src)
+        have = {int(a): int(b) for a, b in zip(ks, ps)}
+        victim = int(ks[len(ks) // 5])
+        bad_p = next(q for q in range(victim + 1, victim + 4000)
+                     if W.is_prime_pure(q)
+                     and not W.check_witness(fam.N, fam.K, victim, q)["ok"])
+        have[victim] = bad_p
+        path = tmp / f"i{I_TEST}_witness.npz"
+        W.save(path, meta, have)
+
+        full = W.verify(path, sample=None, workers=1)
+        expect(full["valid"] is False and full["n_invalid"] == 1
+               and full["invalid"][0]["k"] == victim,
+               f"full verify reports the one false certificate "
+               f"(valid={full['valid']}, n_invalid={full['n_invalid']})")
+        expect(full["coverage"]["complete"] and not full["sampled"],
+               "full verify: coverage complete, not sampled")
+        part = W.verify(path, sample=5, workers=1, seed=0)
+        expect(part["sampled"] is True and part["n_checked"] == 5,
+               "a sampled verify says so and checks exactly the sample")
+
+        clean = W.verify(src, sample=20, workers=1, seed=1)
+        expect(clean["valid"] is True and clean["n_invalid"] == 0,
+               "the shipped table passes a sampled verify")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def test_ledger_recomputes_kmax_from_the_family() -> None:
+    """coverage_ledger's headline property -- k_max from N,K, never from the
+    file under audit -- had no test. A table that drops its top column AND
+    shrinks its own claimed range to match must still be INCOMPLETE.
+    """
+    import coverage_ledger as CL
+    from bandii_kernel import kmax_of
+
+    fam, _m = _fam()
+    src = ROOT / "results" / f"i{I_TEST}_witness.npz"
+    if not src.exists():
+        ok.append("i3_witness.npz absent; ledger k_max test skipped")
+        return
+    kmax, _ = kmax_of(fam)
+    tmp = Path(tempfile.mkdtemp(prefix="ledger_kmax_"))
+    try:
+        ks, ps, meta = W.load(src)
+        have = {int(a): int(b) for a, b in zip(ks, ps) if int(a) != kmax}
+        liar = {**meta, "claimed_ranges": [[2, kmax - 1]], "k_max": kmax - 1,
+                "excluded": [fam.K, fam.K + 1]}
+        path = tmp / f"i{I_TEST}_witness.npz"
+        W.save(path, liar, have)
+        ks2, _ps2, meta2 = W.load(path)
+        expect(W.coverage(ks2, meta2)["complete"],
+               "fixture: the table's OWN claim is self-consistent")
+        aud = CL.audit_member(I_TEST, path)
+        expect(aud["k_max"] == kmax and aud["ok"] is False
+               and aud["n_missing"] == 1 and aud["missing_sample"] == [kmax],
+               f"ledger recomputes k_max={kmax} from N,K and reports the top "
+               f"column missing (ok={aud['ok']}, k_max={aud['k_max']}, "
+               f"missing={aud['missing_sample']})")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+# Tracked artifacts that no test in this file may modify. The fill/repair
+# tests operate on temp copies; if a table change ever reaches one of these
+# again, fail loudly rather than let git status be the only witness.
+GUARDED = ("i3_sweep.json", "i5_sweep.json", "i3_witness.npz", "i5_witness.npz",
+           "i2_witness.npz", "i2_sweep.json")
+
+
+def _digest_guarded() -> dict:
+    out = {}
+    for name in GUARDED:
+        p = ROOT / "results" / name
+        out[name] = hashlib.sha256(p.read_bytes()).hexdigest() if p.exists() else None
+    return out
+
+
 def main() -> int:
+    before = _digest_guarded()
+    test_fill_and_repair_bind_to_the_table_directory()
+    test_build_family_clips_engine_band_at_kmax()
+    test_verifier_rejects_the_j0_image_entry()
+    test_bandii_count_identity_catches_a_sparse_span()
+    test_verify_reports_invalid_rows()
+    test_ledger_recomputes_kmax_from_the_family()
     test_fill_leaves_no_stale_label()
     test_ledger_catches_a_certificate_naming_another_table()
     test_deferred_column_is_not_credited_a_kill()
@@ -651,6 +933,11 @@ def main() -> int:
     test_rebuild_is_deterministic()
     test_ghost_census_claim_holds()
     test_independent_verifier_agrees()
+    after = _digest_guarded()
+    changed = [n for n in GUARDED if before[n] != after[n]]
+    expect(not changed,
+           "the suite left every tracked results artifact byte-identical"
+           + (f" -- MUTATED: {changed}" if changed else ""))
     print("\n=== WITNESS TESTS ===")
     for line in ok:
         print("  OK   ", line)

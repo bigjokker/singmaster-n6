@@ -9,7 +9,8 @@ Column k survives prime p iff exists b in [0, p-k-1] with
 which is C(k+b, k) ≡ r(p) (mod p). b is the fat-image j.
 
 Do not build Pascal rows. Do not cache F across primes.
-int64 only: s·F[b] < p² < 2^63.
+int64 only: s·F[b] < p² < 2^63 -- enforced by check_word_size at every scan
+entry point (p <= P_MAX_INT64 = 3,037,000,499); above it the kernel refuses.
 """
 
 from __future__ import annotations
@@ -123,8 +124,28 @@ def delta(p: int) -> int:
     return 2 * p - N
 
 
+# The int64 kernel's precondition. Every scan forms s*F[b] with s < p and
+# F[b] < p, so p*p must stay below 2^63; the GM path forms s*Flow+Fneg < p^2+p,
+# which the same bound keeps below 2^64. Above it numpy WRAPS silently and the
+# scan can report a false kill. Stated in the module docstring since the first
+# commit, enforced nowhere until now: refuse, do not wrap.
+P_MAX_INT64 = 3_037_000_499          # largest p with p*p < 2**63
+
+
+def check_word_size(p: int) -> int:
+    p = int(p)
+    if p * p >= 2**63:
+        raise ValueError(
+            f"p={p} exceeds the int64 kernel bound p <= {P_MAX_INT64} "
+            f"(p*p < 2^63): s*F[b] would wrap and the scan could report a "
+            f"false kill. Refusing."
+        )
+    return p
+
+
 def fact_table(p: int) -> np.ndarray:
     """F[i] = i! mod p, i = 0..p-1. Python loop, ~0.3 s at p1."""
+    p = check_word_size(p)
     F = np.empty(p, dtype=np.int64)
     F[0] = 1
     acc = 1
@@ -231,6 +252,7 @@ def _check_r(r: int, p: int) -> int:
     factorial table has no zero entry), so they would silently return "no
     survivors" -- a false certificate. Refuse instead.
     """
+    p = check_word_size(p)
     rp = int(r) % p
     if rp == 0:
         raise ValueError(
@@ -344,6 +366,7 @@ def fact_window(p: int, lo: int, n: int):
     """[lo!, (lo+1)!, ..., (lo+n-1)!] mod p, without ever building all of p."""
     import numpy as np
 
+    p = check_word_size(p)
     out = np.empty(n, dtype=np.int64)
     acc = fact_at(p, lo)
     for j in range(n):
@@ -732,17 +755,28 @@ def live_intervals(windows: list[dict], fam: Fam = FAM8) -> list[tuple[int, int]
     return ivs
 
 
-_IV_CACHE: dict[int, list[int]] = {}
+# id(ivs) -> (the list itself, its left endpoints). The entry HOLDS the list:
+# a cache keyed by id alone, with only a len() guard, answered from a dead
+# list's starts once CPython reused the address for a same-length list of
+# different intervals -- and first_live_after then bisected into the wrong
+# interval (wrong live prime, or None). Keeping a reference means the id
+# cannot be recycled while the entry lives, and `is` settles identity.
+_IV_CACHE: dict[int, tuple[list, list[int]]] = {}
+_IV_CACHE_MAX = 8
 
 
 def _iv_starts(ivs) -> list[int]:
-    """Cached list of interval left endpoints, keyed by identity of `ivs`."""
+    """Cached list of interval left endpoints for this exact `ivs` object."""
     key = id(ivs)
     got = _IV_CACHE.get(key)
-    if got is None or len(got) != len(ivs):
-        got = [lo for lo, _hi in ivs]
-        _IV_CACHE[key] = got
-    return got
+    if (got is not None and got[0] is ivs and len(got[1]) == len(ivs)
+            and (not ivs or (got[1][0] == ivs[0][0] and got[1][-1] == ivs[-1][0]))):
+        return got[1]
+    starts = [lo for lo, _hi in ivs]
+    if len(_IV_CACHE) >= _IV_CACHE_MAX:
+        _IV_CACHE.pop(next(iter(_IV_CACHE)))
+    _IV_CACHE[key] = (ivs, starts)
+    return starts
 
 
 def first_live_after(x: int, ivs: list[tuple[int, int]], d: int = D) -> int | None:

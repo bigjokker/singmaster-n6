@@ -67,14 +67,23 @@ def sandboxed_results():
     writer, so redirecting the module global covers both. Tests that read the
     REAL recorded runs use this module's own ROOT and are unaffected.
     """
+    import witness as _w
+
     tmp = Path(tempfile.mkdtemp(prefix="sweep_test_"))
     (tmp / "results").mkdir()
     real = fsw.ROOT
+    real_w = _w.ROOT
     fsw.ROOT = tmp
+    # witness resolves its own ROOT for CLI defaults; redirect it too, so a
+    # fill/repair/retarget reached through the sweep can only ever see the
+    # sandbox. (The binding itself is by table directory -- see
+    # witness.retarget_certificate -- this is the belt to that brace.)
+    _w.ROOT = tmp
     try:
         yield tmp
     finally:
         fsw.ROOT = real
+        _w.ROOT = real_w
         shutil.rmtree(tmp, ignore_errors=True)
 
 
@@ -192,6 +201,74 @@ def test_clean_run_still_clean() -> None:
     expect(rep["clean"] is True and rep["n_z_nolive"] == 0,
            "an unobstructed i=3 sweep still certifies clean")
     expect(rep["certificate"] is not None, "i=3 certificate still emitted")
+
+
+def test_certificate_basis_follows_k_exact() -> None:
+    """The certificate sentence must state what actually closed the columns
+    below the Z-jump's start, per member -- not a hardcoded 'exact k<=200'.
+
+    K_EXACT is {2..7: 200 (exact intersect), 9: 80 (modular)} and i=8 has no
+    exact band at all (k_lo_z=3, k=2 from the engine). The emitted sentence
+    said 'Together with exact k<=200' for every member, which is false for
+    i=8 and i=9. Latent only because both of their shipped records carry
+    certificate=null -- but a future clean run would have shipped it.
+    """
+    basis = getattr(fsw, "certificate_basis", None)
+    expect(callable(basis), "family_sweep exposes certificate_basis(i, k_lo_z)")
+    if not callable(basis):
+        return
+    b3 = basis(3, fsw.K_EXACT[3] + 1)
+    b9 = basis(9, fsw.K_EXACT[9] + 1)
+    b8 = basis(8, fsw.K_EXACT.get(8, 2) + 1)
+    expect("exact" in b3 and "200" in b3,
+           f"i=3 basis names the exact k<=200 run ({b3!r})")
+    expect("modular" in b9 and "80" in b9 and "200" not in b9,
+           f"i=9 basis names the modular k<=80 run, not exact k<=200 ({b9!r})")
+    expect("200" not in b8 and "exact" not in b8,
+           f"i=8 basis claims no exact band ({b8!r})")
+    out, _chk = fsw.paths(3)
+    if out.exists():
+        rep = json.loads(out.read_text(encoding="utf-8"))
+        cert = rep.get("certificate") or ""
+        expect(b3 in cert,
+               "the i=3 sweep record's certificate carries the per-member basis clause")
+
+
+def test_import_failure_does_not_lose_the_sweep_json() -> None:
+    """A finished sweep must write its record even if `import witness` fails.
+
+    The except handler around the witness build referenced `wpath`, which was
+    assigned AFTER the import inside the same try -- so an ImportError turned
+    into UnboundLocalError in the handler, main() crashed, and a finished
+    multi-hour sweep had no json at all, despite the comment 'never lose a
+    finished sweep to this'.
+    """
+    i = 3
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+    saved = sys.modules.get("witness")
+    sys.modules["witness"] = None            # makes `import witness` raise
+    try:
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        try:
+            rc = fsw.main()
+        except Exception as exc:            # noqa: BLE001
+            rc = f"raised {type(exc).__name__}: {exc}"
+    finally:
+        if saved is None:
+            sys.modules.pop("witness", None)
+        else:
+            sys.modules["witness"] = saved
+    expect(rc == 0 and out.exists(),
+           f"a failed `import witness` still writes the sweep json (rc={rc!r}, "
+           f"json exists={out.exists()})")
+    if out.exists():
+        rep = json.loads(out.read_text(encoding="utf-8"))
+        expect(rep.get("witness_ok") is False and rep.get("certificate") is None
+               and rep.get("clean") is True,
+               "and the record says witness_ok=False, certificate withheld, "
+               "sweep verdict preserved")
 
 
 def test_m_route_matches_lucas_route_exactly() -> None:
@@ -668,6 +745,8 @@ def main() -> int:
         test_resume_of_unfinished_phase_is_not_clean()
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
+        test_certificate_basis_follows_k_exact()
+        test_import_failure_does_not_lose_the_sweep_json()
         test_resume_reproduces_an_uninterrupted_run()
         test_m_route_matches_lucas_route_exactly()
         test_incremental_done_keys_equals_full_rederivation()

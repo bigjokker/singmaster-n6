@@ -193,6 +193,31 @@ K_EXACT = {2: 200, 3: 200, 4: 200, 5: 200, 6: 200, 7: 200, 9: 80}
 # i=2..7: exact k_extra=200 in fibonacci_i1-7.json
 # i=9: modular k<=80 all impossible. i=1 is 3003 (N=8), skip.
 # i=8 closed by the dedicated pipeline.
+# What closed each member's pre-Z band, for the certificate sentence. The
+# sentence used to hardcode "exact k<=200" for every i, which is false for i=9
+# (modular k<=80) and i=8 (no pre-Z band at all: the Z-jump starts at k=3).
+K_EXACT_KIND = {2: "exact intersect", 3: "exact intersect", 4: "exact intersect",
+                5: "exact intersect", 6: "exact intersect", 7: "exact intersect",
+                9: "modular"}
+
+
+def certificate_basis(i: int, k_lo_z: int) -> str:
+    """One clause stating what closed the columns below the Z-jump's start.
+
+    The witness table carries an engine witness for every column k < k_lo_z
+    regardless (witness._build_family), so the certificate rests on the table
+    alone; this clause names the INDEPENDENT run that also closed that band,
+    per member, rather than asserting an exact k<=200 result that only
+    i=2..7 have.
+    """
+    if k_lo_z <= 2:
+        return "No column lies below the Z-jump's start."
+    kind = K_EXACT_KIND.get(i)
+    if kind is None:
+        return (f"Columns k<{k_lo_z} carry engine witnesses in the table; "
+                f"no separate pre-Z run exists for i={i}.")
+    return (f"Columns k<={K_EXACT[i]} were also closed independently by the "
+            f"{kind} run, and carry engine witnesses in the table.")
 
 
 
@@ -738,11 +763,15 @@ def main() -> int:
     # certified). A run may legitimately be clean=True with certificate=None.
     witness_ok = True
     withheld = None
+    # Bound BEFORE the try: the except handler reads it. With it assigned
+    # after `import witness` inside the try, an ImportError became an
+    # UnboundLocalError in the handler, main() crashed, and a finished sweep
+    # had no json at all -- the exact loss the handler exists to prevent.
+    wpath = ROOT / "results" / f"i{i}_witness.npz"
     if clean:
         try:
             import witness as _witness
 
-            wpath = ROOT / "results" / f"i{i}_witness.npz"
             witness_meta = _witness._build_family(i, chk, wpath)
             print(
                 f"  witnesses {witness_meta['n_witnesses']} -> {wpath.name}  "
@@ -811,8 +840,8 @@ def main() -> int:
         "clean": clean,
         "certificate": (
             f"Every extra k in [2, k_max] except {{K, K+1}} for i={i} "
-            f"has r(p) notin I_{{p,k}}. Together with exact k<=200 and "
-            f"two family columns, N(C(N,K))=6. Not Singmaster. "
+            f"has r(p) notin I_{{p,k}}. {certificate_basis(i, k_lo_z)} "
+            f"Together with the two family columns, N(C(N,K))=6. Not Singmaster. "
             f"Witness prime for every column: results/i{i}_witness.npz "
             f"(sha256 {witness_meta['sha256'][:16] if witness_meta and 'sha256' in witness_meta else 'n/a'}); "
             f"re-check with: python scripts/witness.py verify "
