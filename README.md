@@ -48,6 +48,7 @@ the prime list did not kill it.
 | `scripts/test_work_census.py` | the exact scan-work census and its gates |
 | `scripts/test_rp_cost.py` | the r(p)-vs-scan split of a Z-jump job on the *no-`r_expected`* fallback path |
 | `scripts/test_collide.py` | the collide frontier abuts the 2017 bound (first 61 / 101-digit value, not one decade up) |
+| `scripts/test_k10_intersective.py` | Q28's (2,3) branch: the curve, its 15 small integral points, the rank-2 Jacobian, the two kills, and that nothing claims the list complete |
 
 ```text
 python scripts/test_sweeps.py
@@ -162,7 +163,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k6_intersective.json` | \((x)_6-c\) is **never** intersective — proved, not searched |
 | `results/k7_intersective.json` | \((x)_7-c\): only \(c=\pm896,\pm17472,\pm459648\) even factor, and 5 divides none. Modulo effective Thue |
 | `results/k8_intersective.json` | \((x)_8-c\): five cases, all closed; the exceptional locus is a genus-3 curve with only degenerate points |
-| `results/k10_intersective.json` | \((x)_{10}-c\): all cases closed; only a genus-1 gap remains. Difficulty is not monotone in \(k\) |
+| `results/k10_intersective.json` | \((x)_{10}-c\): four cases closed, the (2,3) case reduced to one Magma `IntegralQuarticPoints` call (Jacobian of rank 2; not run). Difficulty is not monotone in \(k\) |
 | `results/k9_intersective.json` | \((x)_9-c\): three branches, all closed; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
 | `results/ghost_census.json` | Certified non-ghosts — **stale**: 7 members, and its i=8 digest is the pre-repair table |

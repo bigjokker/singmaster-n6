@@ -54,8 +54,30 @@ THE GAP is a single genus-1 (elliptic) integral-point computation for the
 (2,3) branch. That is the most computable kind of gap there is -- strictly
 better than Q26's Thue equations or Q27's genus-3 curve.
 
+THE GAP, MADE PRECISE (2026-08-23, step [5]).  The quartic has rational
+points, so it is an elliptic curve over Q; its Jacobian is
+
+    E: Y^2 = X^3 - 792 X + 9801      (classical I, J invariants, scaled by 48)
+
+with E(Q) = Z/2 x Z^2: torsion <(-33, 0)>, rank EXACTLY 2 by descent via
+the 2-isogeny with kernel (-33, 0) -- all 8 phi-Selmer candidates on E are
+realised by points, and of the 8 phi-hat candidates on E' only the two with
+points have Q_3-points (the negative classes on E have no real points), so
+Sha(E)[2] = 0, the Selmer bound is the rank, and there is no rank-0
+shortcut (rank 0 would have made the rational points finite and the list
+elementary).  The complete list of integral points with |a| <= 10^7 is 15
+values of a, the largest |a| = 730, so the |a| <= 6000 search missed
+nothing below 10^7; of their 30 (b, c) pairs ten give c = 0,
+eighteen give c with rad(10!) not dividing c, and two are the candidates
+above (a = -730, -250).
+Listing ALL integral points of a rank-2 genus-1 quartic provably is the
+elliptic-logarithm method (Tzanakis, Acta Arith. 75 (1996)); the routine
+that does it is Magma's IntegralQuarticPoints, and no Magma, Sage or PARI
+is installed on this machine.  So the (2,3) branch is NOT PROVED here:
+everything up to the finite list is.
+
     python scripts/k10_intersective.py
-    python scripts/k10_intersective.py --beta_max 1500 --a_max 6000
+    python scripts/k10_intersective.py --beta_max 1500 --a_max 6000 --points_max 10000000
 """
 
 from __future__ import annotations
@@ -260,10 +282,224 @@ def case_2_3(a_max: int) -> dict:
     return {"genus": 1, "candidates": out}
 
 
+# ---------------------------------------------------------------------------
+# Step [5]: the (2,3) gap, made precise.  Nothing here is a proof that the
+# integral-point list is complete; it is everything short of that proof.
+# ---------------------------------------------------------------------------
+
+QUARTIC = (5, 1320, 126456, 5102240, 72824400)  # y^2 = q0 a^4 + ... + q4
+JAC_A4, JAC_A6 = -792, 9801  # Jacobian E: Y^2 = X^3 + a4 X + a6
+JAC_SCALE = 48  # X -> 48^2 X, Y -> 48^3 Y from the raw (I, J) model
+TWO_TORSION_X = -33  # (-33, 0) is the rational 2-torsion point of E
+JAC_RANK = 2
+POINTS_MAX = 10**7
+PROVED = False  # the (2,3) branch: finite list NOT certified complete
+MAGMA_COMMAND = (
+    "IntegralQuarticPoints([5, 1320, 126456, 5102240, 72824400], [-250, 74880]);"
+)
+GAP = "integral points on the genus-1 curve for the (2,3) branch"
+
+
+def quartic(av: int) -> int:
+    q0, q1, q2, q3, q4 = QUARTIC
+    return (((q0 * av + q1) * av + q2) * av + q3) * av + q4
+
+
+def integral_points(a_max: int = POINTS_MAX) -> list[tuple[int, int]]:
+    """Every integral point (a, y >= 0) of y^2 = Q(a) with |a| <= a_max.
+
+    Complete for that window by construction; it says nothing about |a| > a_max.
+    """
+    try:
+        from gmpy2 import is_square, isqrt
+    except ImportError:  # pragma: no cover
+        from math import isqrt
+
+        def is_square(v):
+            r = isqrt(v)
+            return r * r == v
+
+    pts = []
+    for av in range(-a_max, a_max + 1):
+        v = quartic(av)
+        if v >= 0 and is_square(v):
+            pts.append((av, int(isqrt(v))))
+    return pts
+
+
+def point_to_c(av: int, yv: int) -> list[tuple[int, int]]:
+    """The (b, c) pairs behind an integral point: b = (3a^2+330a+8778 +- y)/2,
+    1024c from the constant-term identity.  Only integral b and c are returned."""
+    s = 3 * av * av + 330 * av + 8778
+    out = []
+    if (s + yv) % 2:
+        return out
+    for bv in sorted({(s + yv) // 2, (s - yv) // 2}):
+        cn = (
+            av**3 * bv + 165 * av**2 * bv - 2 * av * bv**2 + 8778 * av * bv
+            - 165 * bv**2 + 172810 * bv - 893025
+        )
+        if cn % 1024 == 0:
+            out.append((bv, cn // 1024))
+    return out
+
+
+def _sqfree_divisors(n: int) -> list[int]:
+    out = []
+    for d in sp.divisors(abs(n)):
+        if d == 1 or all(e == 1 for e in sp.factorint(d).values()):
+            out += [d, -d]
+    return sorted(out, key=abs)
+
+
+def _homog_point(d: int, A: int, B: int, bound: int = 60):
+    """Small (w, z, N) with N^2 = d w^4 + A w^2 z^2 + (B/d) z^4, gcd(w,z)=1, z>0."""
+    Bd = B // d
+    for z in range(1, bound + 1):
+        for w in range(-bound, bound + 1):
+            if sp.gcd(w, z) != 1:
+                continue
+            v = d * w**4 + A * w * w * z * z + Bd * z**4
+            if v >= 0:
+                r, ex = sp.integer_nthroot(v, 2)
+                if ex:
+                    return (w, z, int(r))
+    return None
+
+
+def _no_padic_points(d: int, A: int, B: int, p: int, k: int) -> bool:
+    """Certificate: no (w, z, N) mod p^k with (w, z) not both = 0 mod p.
+
+    A Q_p-point can be scaled so w, z are p-adic integers not both in pZ_p
+    (then N is a p-adic integer too), so a solution would reduce to one mod p^k.
+    """
+    Bd, m = B // d, p**k
+    sq = {(n * n) % m for n in range(m)}
+    for w in range(m):
+        for z in range(m):
+            if w % p == 0 and z % p == 0:
+                continue
+            if (d * w**4 + A * w * w * z * z + Bd * z**4) % m in sq:
+                return False
+    return True
+
+
+def _image(A: int, B: int) -> dict:
+    """im(alpha) for Y^2 = X^3 + A X^2 + B X (Silverman X.4.9), every squarefree
+    d | B decided: a point, no real points, or no Q_p-points for p in {2,3,5,11}."""
+    decided = {}
+    for d in _sqfree_divisors(B):
+        pt = _homog_point(d, A, B)
+        if pt:
+            decided[d] = ("point", pt)
+            continue
+        if d < 0 and B // d < 0 and A <= 0:
+            decided[d] = ("no real points", None)  # every term <= 0, zero only at w=z=0
+            continue
+        for p in (2, 3, 5, 11):
+            for k in (1, 2, 3):
+                if _no_padic_points(d, A, B, p, k):
+                    decided[d] = (f"no Q_{p}-points (mod {p}^{k})", None)
+                    break
+            if d in decided:
+                break
+        if d not in decided:
+            decided[d] = ("UNDECIDED", None)
+    return decided
+
+
+def _span(ds: list[int]) -> list[int]:
+    from sympy.ntheory.factor_ import core as sqcore
+
+    S = {1}
+    for d in ds:
+        S = S | {(1 if s * d > 0 else -1) * int(sqcore(abs(s * d))) for s in S}
+    return sorted(S, key=abs)
+
+
+def jacobian() -> dict:
+    """The Jacobian of y^2 = Q(a), its torsion, and its rank by 2-isogeny descent."""
+    q0, q1, q2, q3, q4 = QUARTIC
+    I = 12 * q0 * q4 - 3 * q1 * q3 + q2**2
+    J = 72 * q0 * q2 * q4 + 9 * q1 * q2 * q3 - 27 * q0 * q3**2 - 27 * q4 * q1**2 - 2 * q2**3
+    a4, a6 = -27 * I, -27 * J
+    check(a4 % JAC_SCALE**4 == 0 and a6 % JAC_SCALE**6 == 0, "scale by 48")
+    check((a4 // JAC_SCALE**4, a6 // JAC_SCALE**6) == (JAC_A4, JAC_A6), "E: Y^2 = X^3 - 792X + 9801")
+    X0 = TWO_TORSION_X
+    check(X0**3 + JAC_A4 * X0 + JAC_A6 == 0, "(-33, 0) on E")
+    disc = -16 * (4 * JAC_A4**3 + 27 * JAC_A6**2)
+    # torsion: prime-to-p torsion injects into E(F_p) at good p, so |tors| divides
+    # gcd over good p of #E(F_p) (up to p-parts, killed by using several p)
+    g = 0
+    for p in sp.primerange(5, 200):
+        if disc % p == 0:
+            continue
+        sq = {}
+        for y in range(p):
+            sq[y * y % p] = sq.get(y * y % p, 0) + 1
+        n = 1 + sum(sq.get((xx**3 + JAC_A4 * xx + JAC_A6) % p, 0) for xx in range(p))
+        g = sp.gcd(g, n)
+    check(g == 2, f"torsion order divides {g}, expected 2")
+    tors = 2  # divides 2 and (-33, 0) has order 2
+    # descent via the 2-isogeny with kernel (-33, 0): shift X -> X - 33
+    A, B = -99, 2475
+    check(sp.expand((x - 33) ** 3 + JAC_A4 * (x - 33) + JAC_A6 - (x**3 + A * x**2 + B * x)) == 0, "shift")
+    A2, B2 = -2 * A, A * A - 4 * B  # 198, -99
+    check(not issq(A * A - 4 * B) and not issq(A2 * A2 - 4 * B2), "E[2](Q) = E'[2](Q) = Z/2")
+    imE, imE2 = _image(A, B), _image(A2, B2)
+    und = [("E", d) for d, v in imE.items() if v[0] == "UNDECIDED"]
+    und += [("E'", d) for d, v in imE2.items() if v[0] == "UNDECIDED"]
+    check(not und, f"undecided Selmer classes: {und}")
+    sE = _span([d for d, v in imE.items() if v[0] == "point"])
+    sE2 = _span([d for d, v in imE2.items() if v[0] == "point"])
+    rank = sp.log(sp.Integer(len(sE) * len(sE2)) / 4, 2)
+    check(rank == JAC_RANK, f"rank {rank}, expected {JAC_RANK}")
+    gens = [(-30, 81), (12, 45)]  # independent mod 2E(Q): classes d = 3 and d = 5
+    check(all(Y * Y == X**3 + JAC_A4 * X + JAC_A6 for X, Y in gens), "points on E")
+    return {
+        "I": int(I), "J": int(J), "a4": JAC_A4, "a6": JAC_A6, "scale": JAC_SCALE,
+        "torsion": tors, "rank": int(rank),
+        "im_alpha": sE, "im_alpha_prime": sE2,
+        "obstructed": {str(d): v[0] for d, v in imE2.items() if v[0] != "point"},
+        "points_of_infinite_order": gens,
+    }
+
+
+def step5(points_max: int) -> dict:
+    print("  [5] the (2,3) gap, made precise: Jacobian, rank, complete small-point list")
+    jac = jacobian()
+    print(f"      Jacobian E: Y^2 = X^3 + ({jac['a4']}) X + {jac['a6']}   (I, J invariants, scaled by {jac['scale']})")
+    print(f"      E(Q)_tors = Z/{jac['torsion']} = <({TWO_TORSION_X}, 0)>")
+    certs = sorted(set(jac["obstructed"].values()))
+    print(f"      rank E(Q) = {jac['rank']} by 2-isogeny descent: |im alpha| = {len(jac['im_alpha'])} (all realised),"
+          f" |im alpha'| = {len(jac['im_alpha_prime'])}")
+    print(f"        the other {len(jac['obstructed'])} classes on E': {'; '.join(certs)}")
+    print("      -> Sha(E)[2] = 0, the Selmer bound is the rank; no rank-0 shortcut; E(Q) = Z/2 x Z^2")
+    pts = integral_points(points_max)
+    big = max(abs(av) for av, _ in pts)
+    zero = nonrad = surv = 0
+    for av, yv in pts:
+        for _, cv in point_to_c(av, yv):
+            if cv == 0:
+                zero += 1
+            elif cv % RAD10:
+                nonrad += 1
+            else:
+                surv += 1
+    print(f"      integral points with |a| <= {points_max}: {len(pts)}, largest |a| = {big}")
+    print(f"        a in {[av for av, _ in pts]}")
+    print(f"        (b, c) pairs: {zero} with c = 0, {nonrad} with rad(10!) not dividing c, {surv} candidates (the two above)")
+    print("      NOT PROVED: the complete integral-point list needs the elliptic-logarithm")
+    print("      method (Tzanakis 1996); no Magma/Sage/PARI on this machine.  The command:")
+    print(f"        Magma> {MAGMA_COMMAND}")
+    return {"jacobian": jac, "points": pts, "largest_abs_a": big}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--beta_max", type=int, default=1500)
     ap.add_argument("--a_max", type=int, default=6000)
+    ap.add_argument("--points_max", type=int, default=POINTS_MAX)
     ap.add_argument("--json_out", type=Path, default=None)
     args = ap.parse_args()
 
@@ -273,16 +509,20 @@ def main() -> int:
     r14 = case_1_4(args.beta_max)
     rmr = case_multiroot()
     r23 = case_2_3(args.a_max)
+    step5(args.points_max)
     print()
-    print("  RESULT: every case closed.")
+    print("  RESULT: every case closed -- (2,3) modulo a computation not done here.")
     print("    (5)         Jordan, no computation")
     print("    (1,4)       unconditional -- n=4 has odd derangements, NO curve")
     print("    >=2 roots   compact curve, bounded search, RIGOROUS: c=0 only")
-    print("    (2,3)       genus-1 curve; 2 candidates, both die at p=11,13")
-    print("  GAP: one elliptic integral-point computation for (2,3).")
-    print("       Strictly easier than Q26's Thue or Q27's genus-3 curve.")
+    print("    (2,3)       genus-1 curve, Jacobian of rank 2; 2 candidates, both die at p=11,13")
+    print("  GAP: one elliptic integral-point computation for (2,3) -- NOT done here.")
+    print("       Strictly easier than Q26's Thue or Q27's genus-3 curve, but it needs")
+    print("       Magma's IntegralQuarticPoints (or an elliptic-log implementation).")
 
     if args.json_out:
+        # The artifact records steps [0]-[4] only; step [5] is pinned by
+        # scripts/test_k10_intersective.py and must not change these bytes.
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(
             json.dumps(
@@ -293,7 +533,7 @@ def main() -> int:
                     "case_multiroot": rmr,
                     "case_2_3": r23,
                     "intersective_found": 0,
-                    "gap": "integral points on the genus-1 curve for the (2,3) branch",
+                    "gap": GAP,
                 },
                 indent=2,
             ),

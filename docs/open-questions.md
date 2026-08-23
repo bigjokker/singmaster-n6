@@ -644,7 +644,7 @@ partitions to grind, while `k=10` is even with a quintic `g` where the same
 divided-difference trick applies. Full write-up in
 [`q27-k8-intersective.md`](q27-k8-intersective.md).
 
-### Q28. Is `(x)_10 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo one elliptic computation) 2026-08-20
+### Q28. Is `(x)_10 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo one elliptic computation) 2026-08-20 — BLOCKED on that computation (Magma `IntegralQuarticPoints`, not available here), made precise 2026-08-23
 **No -- and k=10 is CHEAPER than k=8.** Difficulty in this family is **not
 monotone in k**; it is governed by whether `g` has an irreducible CUBIC factor.
 
@@ -670,8 +670,22 @@ bound had to be computed.) **(2,3)** reduces to `y^2 = 5a^4+1320a^3+126456a^2
 +5102240a+72824400`, squarefree, **GENUS 1**; exactly two candidates survive
 `rad(10!)|c` and both die, at `p=11` and `p=13`.
 
-**Gap**: one elliptic integral-point computation. The mildest in the ladder --
-easier than Q26's Thue or Q27's genus 3.
+**Gap** (made precise 2026-08-23, NOT closed): one elliptic integral-point
+computation. The quartic is an elliptic curve over Q with Jacobian
+`E: Y^2 = X^3 - 792X + 9801`, `E(Q) = Z/2 x Z^2` -- rank EXACTLY 2 by descent
+via the 2-isogeny with kernel `(-33,0)`: all 8 phi-Selmer candidates on E are
+realised by points, and of the 8 phi-hat candidates on E' only the two with
+points have Q_3-points (the negative classes on E have no real points), so
+Sha(E)[2] = 0 and the Selmer bound is the rank -- no rank-0 shortcut. Every
+integral point with `|a| <= 10^7` has `|a| <= 730` (fifteen of them, the two
+candidates among them); nothing is known about `|a| > 10^7`, and a bigger
+search is not a proof. The routine that
+proves the list complete is Magma's
+`IntegralQuarticPoints([5,1320,126456,5102240,72824400], [-250,74880])`
+(Tzanakis 1996); Sage's `integral_points` is Weierstrass-only and PARI has
+none; no Magma/Sage/PARI on this machine. The mildest gap in the ladder --
+easier than Q26's Thue or Q27's genus 3 -- but open. Pinned by
+`scripts/test_k10_intersective.py`.
 
 **Corrected ordering by difficulty: 6 < 10 < 7 < 8.** Scaling: case count is
 `p(k/2)`; where a curve IS needed its genus is `(m-1)(m-2)/2`, m=k/2 -- so
