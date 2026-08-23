@@ -520,7 +520,11 @@ weaken the others, which stand on their own certificates.
 * **Not "3003 is the only \(N=8\)"**, and not "this is the only infinite
   family". Neither is touched.
 * **Not the `nearby` or `collide` results.** Different searches over
-  different objects; a null there is not part of this theorem.
+  different objects; a null there is not part of this theorem. (Nor are the
+  recorded `collide` nulls contiguous with the 2017 bound: they start at
+  62-digit values, one decade above the first value the classifier calls
+  past. The scan start was corrected on 2026-08-23; the artifacts were not
+  re-run.)
 * **Not `results/coverage_ledger.json`, and not `results/ghost_census.json`.**
   Both are stale. The ledger json predates the coverage/binding split, and
   its \(i=8\) row still asserts a certificate digest that the current

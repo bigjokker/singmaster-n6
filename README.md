@@ -26,7 +26,7 @@ now says so rather than printing COMPLETE — see **Coverage** below.
 | `intersect` | Exact extra-rep on a Fibonacci member (builds \(m\)) |
 | `modular` | Lucas / image obstruction: prove a column cannot represent \(m_i\) **without** building \(m\) |
 | `nearby` | \(C(n,k)=C(n-d,k+e)\) for unsettled \((d,e)\) — exhaustive, not sampled |
-| `collide` | Finite \(m\)-slice of \(C(n,k)=C(m,l)\) |
+| `collide` | Finite \(m\)-slice of \(C(n,k)=C(m,l)\). The past-2017 start now abuts the bound (first 61-digit value; 101 for \(l\ge10\)); the recorded `results/collide_*.json` were run from one decade higher (62 / 102 digits) and do **not** cover that first decade |
 | `sanity` | Catalog, classifier, Lucas, image, 3003 tripwire |
 
 ```text
@@ -47,6 +47,7 @@ the prime list did not kill it.
 | `scripts/test_sizelaw.py` | the size law and the escalation trigger |
 | `scripts/test_work_census.py` | the exact scan-work census and its gates |
 | `scripts/test_rp_cost.py` | the r(p)-vs-scan split of a Z-jump job on the *no-`r_expected`* fallback path |
+| `scripts/test_collide.py` | the collide frontier abuts the 2017 bound (first 61 / 101-digit value, not one decade up) |
 
 ```text
 python scripts/test_sweeps.py

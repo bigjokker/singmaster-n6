@@ -1045,6 +1045,24 @@ def frontier_digits_for_l(l: int) -> int:
     return VALUE_DIGITS_2017_LGE10 if l >= 10 else VALUE_DIGITS_2017
 
 
+def collide_frontier_m(l: int) -> int:
+    """The first m a past-2017 collide scan of column l may start at.
+
+    `pair_is_past_2017` calls a value past the bound when it has MORE than
+    cap = frontier_digits_for_l(l) digits. The first such value is the first
+    C(m,l) >= 10**cap -- cap+1 digits -- which is min_m_for_digits(l, cap).
+
+    This used to be min_m_for_digits(l, cap + 1) at three separate call
+    sites: the first value >= 10**(cap+1), i.e. the first (cap+2)-digit
+    value. So the entire (cap+1)-digit decade -- the first one the classifier
+    itself calls past the bound -- was never scanned by any run; every
+    recorded collide artifact starts at 62 digits (l < 10) or 102 (l >= 10).
+    One helper, so the three sites cannot drift apart again; the scan start
+    abuts the predicate rather than sitting one decade above it.
+    """
+    return min_m_for_digits(l, frontier_digits_for_l(l))
+
+
 def pair_is_past_2017(n: int, k: int, m: int, l: int, value: mpz) -> bool:
     """True if this collision sits outside every 2017 complete region."""
     if max(n, m) <= ROW_BOUND_2017:
@@ -1729,9 +1747,7 @@ def run_collide(
         raise ValueError("require k < l")
     settled = (k, l) in SETTLED_KL
     if past_2017_only and not settled:
-        start_digits = frontier_digits_for_l(l) + 1
-        m_front = min_m_for_digits(l, start_digits)
-        m_min = max(m_min, m_front)
+        m_min = max(m_min, collide_frontier_m(l))
     print(
         f"\n=== COLLIDE C(n,{k})=C(m,{l})  m={m_min}..{m_max}  "
         f"settled={settled}  workers={workers} ===",
@@ -1859,7 +1875,7 @@ def run_collide_auto(
     )
     for k, l in pairs:
         if past_2017_only:
-            m0 = min_m_for_digits(l, frontier_digits_for_l(l) + 1)
+            m0 = collide_frontier_m(l)
         else:
             m0 = 2 * l
         if m0 > COLLIDE_HARD_SKIP_M:
@@ -2091,10 +2107,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         else:
             m_lo = args.min_m
             if past:
-                m_lo = max(
-                    m_lo,
-                    min_m_for_digits(args.l, frontier_digits_for_l(args.l) + 1),
-                )
+                m_lo = max(m_lo, collide_frontier_m(args.l))
             m_hi = args.max_m if args.max_m is not None else m_lo + args.max_steps - 1
             h, c = run_collide(
                 args.k,
