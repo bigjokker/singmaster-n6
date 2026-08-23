@@ -591,6 +591,20 @@ def main() -> int:
         write_jsonl(chk, {"event": "phase_complete", "phase": "bandii", "n_alive": 0 if not alive else len(alive)})
         bii_left = [] if not alive else alive
         n_bii_left = len(bii_left)
+        # D4: columns still alive at the cap, judged as columns. Each faced
+        # the Band II primes up to and including its last (k+g); peers are
+        # the columns that entered pass 1. The per-round ledger cannot see a
+        # lone survivor (its E_r is just that column's next-prime survival).
+        if bii_left:
+            caps = ledger_bii.cap_survivors(
+                ((int(row["k"]),
+                  [q for q in primes[:CAP_BII] if q <= int(row["k"]) + int(row["g"])])
+                 for row in bii_left),
+                peers=n_bii)
+            fired = [r["k"] for r in caps if r["escalate"]]
+            print(f"  BII cap survivors {len(caps)}: "
+                  + (f"** ESCALATE ** {fired[:10]}" if fired else "all ordinary by peers x Lambda"),
+                  flush=True)
     else:
         # Band II can exhaust CAP_BII with survivors and still write
         # phase_complete, so read the recorded count rather than assuming 0.
@@ -713,6 +727,26 @@ def main() -> int:
         z_left = current + z_deferred
         n_z_left = len(z_left)
         n_z_nolive = len(z_none)
+        # D4: every column alive at the cap (or deferred past it), judged as
+        # a column over the live primes it actually faced, (k, k+g] on the
+        # ladder, against the columns that entered the phase. A survivor
+        # whose recorded last prime is not on the ladder is a corrupt record
+        # and is refused by chain_to rather than assessed.
+        if z_left:
+            from sizelaw import chain_to
+
+            entries, caps = [], []
+            for row in z_left:
+                kk, last = int(row["k"]), int(row["k"]) + int(row["g"])
+                try:
+                    entries.append((kk, chain_to(kk, last, ivs, fam.D)))
+                except ValueError as exc:
+                    caps.append(ledger_z.cap_unassessable(kk, str(exc)))
+            caps += ledger_z.cap_survivors(entries, peers=n_z)
+            fired = [r["k"] for r in caps if r["escalate"]]
+            print(f"  Z cap survivors {len(caps)}: "
+                  + (f"** ESCALATE ** {fired[:10]}" if fired else "all ordinary by peers x Lambda"),
+                  flush=True)
     elif "zjump" in complete:
         z_left, z_none = [], []
         n_z_left = _phase_count(done, "zjump", "n_alive")

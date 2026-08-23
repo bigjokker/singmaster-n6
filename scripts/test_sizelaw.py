@@ -390,7 +390,135 @@ def test_recorded_bandii_passes_stay_ordinary() -> None:
                   f"ordinary under the repaired tail")
 
 
+def test_cap_survivor_check_fires_on_a_lone_column_to_the_cap() -> None:
+    """D4. The per-round rule cannot see its motivating case.
+
+    With ONE column entering a round, E_r is that column's own next-prime
+    survival -- 0.04..0.21 in Band II, ~0.63 at small k -- so it is never
+    below THRESHOLD and P(X >= 1 | E_r) is never below TAIL_ALPHA. A column
+    surviving every Band II pass to the cap is therefore recorded 'ordinary'
+    in every round, although its run has Lambda ~ 3e-10 and the whole phase
+    expected ~3e-4 such columns. The phase-level check judges each column
+    still alive at the cap with the SAME machinery (peers x Lambda against
+    THRESHOLD / TAIL_ALPHA); the per-round records are untouched.
+    """
+    from bandii_kernel import CAP, KMAX, KMIN, PRIMES
+
+    k = KMIN                                   # 4126649, largest g/p in Band II
+    primes = PRIMES[:CAP]
+    peers = KMAX - KMIN + 1                    # 1,055,989 columns entered pass 1
+    ledger = S.RoundLedger("bandii")
+    # every round as the sweep would record it: one column enters, one survives
+    for rnd, p in enumerate(primes, start=1):
+        e = ledger.expect([(k, p)])
+        ledger.record(rnd, 1, e, 1)
+    per_round = [r["escalate"] for r in ledger.rounds]
+    expect(not any(per_round) and all(r["expected"] > S.THRESHOLD for r in ledger.rounds),
+           "fixture: the per-round rule stays silent on a lone survivor at every pass "
+           f"(E_r in [{min(r['expected'] for r in ledger.rounds):.3f}, "
+           f"{max(r['expected'] for r in ledger.rounds):.3f}])")
+    lam = S.run_lambda(k, primes)
+    expect(lam < 1e-8 and peers * lam < S.THRESHOLD,
+           f"fixture: Lambda={lam:.3g} over {len(primes)} passes, "
+           f"peers x Lambda = {peers*lam:.3g} < {S.THRESHOLD}")
+
+    cap = getattr(ledger, "cap_survivors", None)
+    expect(callable(cap), "RoundLedger exposes cap_survivors(entries, peers)")
+    if not callable(cap):
+        return
+    rows = ledger.cap_survivors([(k, primes)], peers=peers)
+    v = ledger.verdict()
+    expect(len(rows) == 1 and rows[0]["escalate"] is True
+           and abs(rows[0]["lambda"] - lam) < 1e-20
+           and abs(rows[0]["expected"] - peers * lam) < 1e-12,
+           f"the cap survivor is judged with peers x Lambda: expected "
+           f"{rows[0]['expected']:.3g}, escalate={rows[0]['escalate']}")
+    expect(v["escalate"] is True and v["escalating_survivors"] == [k]
+           and v["escalating_rounds"] == [] and v["evaluated"],
+           f"the PHASE verdict fires on the cap survivor although no round fired "
+           f"(rounds {v['escalating_rounds']}, survivors {v['escalating_survivors']})")
+    expect(v["cap_survivors"] == rows and v["cap_peers"] == peers,
+           "the verdict carries the survivor rows and the peer count it used")
+
+
+def test_cap_survivor_check_stays_ordinary_on_high_survival_runs() -> None:
+    """Run length is still not the criterion. Two real cap-reaching runs
+    that the law expects must NOT fire:
+
+      * i=9 k=11, run 8, Lambda ~ 2.2e-2 -- ordinary against the small-k
+        census population (79 columns, expected ~1.7);
+      * i=9 Z-jump k=87 alive at round 12/12 with three siblings: Lambda
+        ~ 4e-3 against 28.3M Band I columns, expected ~1e5. The sweep
+        recorded round 12 with expected 4.08 and observed 4: ordinary, and
+        the phase check must agree.
+    """
+    from bandii_kernel import cells, live_intervals, make_fam
+
+    fam9 = make_fam(9)
+    surv9, kill9, _ = S.live_run(fam9.N, fam9.K, 11, cap=20)
+    expect(len(surv9) == 8 and kill9 == 449, "fixture: i=9 k=11 run 8, killed at 449")
+    ivs = live_intervals(cells(fam9), fam9)
+    # results/i9_sweep.json records k=87 alive at round 12 with g=8692, i.e.
+    # its last prime was 8779; the ladder from 87 starts at 8623, the first
+    # live prime above sqrt(N). Twelve rungs end exactly there.
+    chain87 = S.zjump_chain(87, ivs, fam9.D, 12)
+    expect(len(chain87) == 12 and chain87[0] == 8623 and chain87[-1] == 87 + 8692,
+           f"fixture: i=9 k=87 faces 12 live primes 8623..8779 (got {chain87[:1]}..{chain87[-1:]})")
+
+    ledger = S.RoundLedger("zjump")
+    cap = getattr(ledger, "cap_survivors", None)
+    if not callable(cap):
+        expect(False, "RoundLedger exposes cap_survivors(entries, peers)")
+        return
+    n_z = fam9.K - 81                          # columns entering the i=9 Z phase
+    rows = ledger.cap_survivors([(87, chain87)], peers=n_z)
+    expect(rows[0]["escalate"] is False and rows[0]["expected"] > 1,
+           f"i=9 k=87 at round 12/12 is ordinary (Lambda {rows[0]['lambda']:.3g}, "
+           f"expected {rows[0]['expected']:.3g} over {n_z:,} peers)")
+    small = S.RoundLedger("small-k")
+    rows = small.cap_survivors([(11, surv9)], peers=79)
+    expect(rows[0]["escalate"] is False and 1 < rows[0]["expected"] < 3,
+           f"i=9 k=11 run 8 is ordinary (Lambda {rows[0]['lambda']:.3g}, "
+           f"expected {rows[0]['expected']:.3g})")
+    expect(ledger.verdict()["escalate"] is False and small.verdict()["escalate"] is False,
+           "neither phase verdict fires on a high-survival long run")
+
+
+def test_chain_to_last_prime_reconstructs_what_a_survivor_faced() -> None:
+    """A survivor record stores k and g = p_last - k. The primes it actually
+    faced are the live primes in (k, k+g]; that is what the cap check must
+    use, not a count guessed from the cap.
+    """
+    from bandii_kernel import D, cells, live_intervals
+
+    fn = getattr(S, "chain_to", None)
+    expect(callable(fn), "sizelaw exposes chain_to(k, last_p, ivs, d)")
+    if not callable(fn):
+        return
+    ivs = live_intervals(cells())
+    ref = S.zjump_chain(2227205, ivs, D, 6)
+    got = fn(2227205, ref[-1], ivs, D)
+    expect(got == ref, f"chain_to reproduces the 6-prime fat-cell chain ({got[:3]}...)")
+    got1 = fn(2227205, ref[0], ivs, D)
+    expect(got1 == ref[:1], "chain_to stops at the last prime the column faced")
+    try:
+        fn(2227205, ref[0] + 1, ivs, D)          # not a live prime: corrupt record
+        expect(False, "a last prime that is not on the ladder was accepted")
+    except ValueError as exc:
+        expect(True, "a last prime off the live ladder is refused, not guessed")
+        led = S.RoundLedger("zjump")
+        row = led.cap_unassessable(2227205, str(exc))
+        v = led.verdict()
+        expect(row["escalate"] is True and row["lambda"] is None
+               and v["escalate"] is True and v["escalating_survivors"] == [2227205],
+               "an unassessable cap survivor is recorded as an escalation with its "
+               "reason, not dropped and not called ordinary")
+
+
 def main() -> int:
+    test_cap_survivor_check_fires_on_a_lone_column_to_the_cap()
+    test_cap_survivor_check_stays_ordinary_on_high_survival_runs()
+    test_chain_to_last_prime_reconstructs_what_a_survivor_faced()
     test_image_size_against_measurement()
     test_survival_vec_matches_scalar()
     test_poisson_tail_survives_band_ii_scale()

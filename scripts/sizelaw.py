@@ -291,6 +291,8 @@ class RoundLedger:
         self.phase = phase
         self.threshold = threshold
         self.rounds: list[dict] = []
+        self.survivors: list[dict] = []
+        self.peers: int | None = None
 
     def expect(self, pairs) -> float:
         """Sum survival over (k, p) pairs about to be tested.
@@ -311,8 +313,56 @@ class RoundLedger:
         self.rounds.append(row)
         return row
 
+    def cap_survivors(self, entries, peers: int) -> list[dict]:
+        """Judge every column still alive at the phase's cap. (D4)
+
+        The per-round rule is memoryless: with ONE column entering a round,
+        E_r is that column's own next-prime survival -- 0.04..0.21 in Band
+        II, ~0.63 at small k -- never below THRESHOLD, and P(X >= 1 | E_r) is
+        never below TAIL_ALPHA. So a lone column surviving every pass to the
+        cap reads 'ordinary' in every round, although its run has Lambda
+        ~ 3e-10 (i=8 Band II k=4126649 over 14 passes) and the whole phase
+        expected ~3e-4 such columns. That is the motivating anomaly, and the
+        per-round ledger cannot see it.
+
+        This judges each cap survivor with the SAME machinery the small-k
+        census already uses: Lambda over the primes the column ACTUALLY
+        faced, weighed against how many columns had a chance to do it --
+        expected = peers x Lambda, observed = 1, the same THRESHOLD and
+        TAIL_ALPHA. No new rule. Run length never enters: i=9's four Z-jump
+        columns alive at round 12/12 have Lambda ~ 4e-3 over 28.3M peers,
+        expected ~1e5, and stay ordinary, exactly as their round did.
+
+        `entries` are (k, primes_faced) pairs; `peers` is the number of
+        columns that entered the phase. The per-round records are untouched;
+        verdict() fires on either.
+        """
+        self.peers = int(peers)
+        rows = []
+        for k, primes in entries:
+            primes = [int(p) for p in primes]
+            lam = run_lambda(int(k), primes)
+            rows.append(assess(int(k), primes, expected=self.peers * lam,
+                               observed=1, threshold=self.threshold))
+        rows.sort(key=lambda r: r["k"])
+        self.survivors.extend(rows)
+        return rows
+
+    def cap_unassessable(self, k: int, reason: str) -> dict:
+        """A cap survivor whose chain cannot be reconstructed (its recorded
+        last prime is not on the live ladder). The record and the ladder
+        disagree, so no Lambda exists to judge; that is not 'ordinary', it is
+        a flag -- record it as an escalation with the reason, and keep going
+        so the sweep's json is still written."""
+        row = {"k": int(k), "run": None, "primes": [], "lambda": None,
+               "expected": None, "observed": 1, "escalate": True,
+               "reason": f"unassessable: {reason}"}
+        self.survivors.append(row)
+        return row
+
     def verdict(self) -> dict:
         firing = [r for r in self.rounds if r["escalate"]]
+        firing_caps = [r for r in self.survivors if r["escalate"]]
         return {
             "phase": self.phase,
             "threshold": self.threshold,
@@ -321,11 +371,19 @@ class RoundLedger:
             # re-run here, so nothing was judged. Absence of evidence is not
             # "no escalation"; say which it is.
             "evaluated": bool(self.rounds),
-            "escalate": bool(firing),
+            "escalate": bool(firing or firing_caps),
             "escalating_rounds": [r["round"] for r in firing],
+            # Columns alive at the cap, each judged by peers x Lambda over the
+            # primes it actually faced. Empty when nothing reached the cap.
+            "cap_peers": self.peers,
+            "n_cap_survivors": len(self.survivors),
+            "cap_survivors": self.survivors[:100],
+            "escalating_survivors": [r["k"] for r in firing_caps],
             "note": (
-                "Escalation is on expected count, not run length. A long run in "
-                "a high-g/p regime is ordinary; see scripts/sizelaw.py."
+                "Escalation is on expected count, not run length: per round "
+                "over the columns entering it, and per column alive at the cap "
+                "(peers x Lambda over the primes it faced). A long run in a "
+                "high-g/p regime is ordinary; see scripts/sizelaw.py."
                 if self.rounds
                 else "not evaluated in this run: the phase was empty, skipped, "
                 "or resumed from a checkpoint"
@@ -378,6 +436,34 @@ def zjump_chain(k: int, ivs, d: int, n: int):
         out.append(p)
         x = p
     return out
+
+
+def chain_to(k: int, last_p: int, ivs, d: int, limit: int = 256) -> list[int]:
+    """The live primes column k faced, from the first after k through last_p.
+
+    A survivor record stores k and g = p_last - k, so the chain a cap
+    survivor actually walked is the live ladder in (k, k+g]. Reconstruct it
+    from the ladder rather than guessing a count from the cap. A last_p that
+    is not ON the ladder means the record and the ladder disagree; refuse
+    rather than assess a chain the column never walked.
+    """
+    from bandii_kernel import first_live_after
+
+    out: list[int] = []
+    x = int(k)
+    last_p = int(last_p)
+    while len(out) < limit:
+        p = first_live_after(x, ivs, d)
+        if p is None or p > last_p:
+            break
+        out.append(p)
+        if p == last_p:
+            return out
+        x = p
+    raise ValueError(
+        f"k={k}: last prime {last_p} is not on the live ladder after k "
+        f"(walked {len(out)} primes, reached {out[-1] if out else None})"
+    )
 
 
 # ---------------------------------------------------------------------------

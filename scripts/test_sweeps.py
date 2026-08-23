@@ -345,6 +345,47 @@ def test_resume_refuses_a_changed_chunk_partition() -> None:
             f.unlink(missing_ok=True)
 
 
+def test_cap_survivors_are_judged_at_phase_end() -> None:
+    """D4 wiring. When a phase ends with columns alive at its cap, the sweep
+    record's escalation block must carry one judged row per survivor --
+    Lambda over the primes it actually faced, peers x Lambda against the
+    same threshold -- for BOTH phases. Caps of 1 at i=4 leave both phases
+    with survivors; every one faced exactly one prime, so all are ordinary,
+    and the point here is the wiring, not the verdict (test_sizelaw pins
+    the verdicts).
+    """
+    i = 4
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+    saved = (fsw.CAP_BII, fsw.CAP_Z, fsw.CAP_Z_SMALL_K)
+    try:
+        fsw.CAP_BII, fsw.CAP_Z, fsw.CAP_Z_SMALL_K = 1, 1, 1
+        sys.argv = ["family_sweep.py", "--i", str(i)]
+        fsw.main()
+    finally:
+        fsw.CAP_BII, fsw.CAP_Z, fsw.CAP_Z_SMALL_K = saved
+    rep = json.loads(out.read_text(encoding="utf-8"))
+    expect(rep["clean"] is False and rep["n_bii_alive"] > 0 and rep["n_z_alive"] > 0,
+           f"fixture: caps of 1 leave survivors in both phases "
+           f"(bii {rep['n_bii_alive']}, z {rep['n_z_alive']})")
+    for phase, n_alive, peers in (("bandii", rep["n_bii_alive"], rep["n_bii"]),
+                                  ("zjump", rep["n_z_alive"], rep["n_z"])):
+        v = rep["escalation"][phase]
+        rows = v.get("cap_survivors") or []
+        expect(v.get("n_cap_survivors") == n_alive and v.get("cap_peers") == peers,
+               f"{phase}: every cap survivor is judged ({v.get('n_cap_survivors')} of "
+               f"{n_alive}) against the {peers} columns that entered the phase")
+        expect(rows and all(r["run"] == 1 and "lambda" in r and "expected" in r
+                            and r["expected"] == peers * r["lambda"] for r in rows),
+               f"{phase}: each row carries run, Lambda and expected = peers x Lambda")
+        expect(all(r["escalate"] is False for r in rows) and not v.get("escalating_survivors")
+               and v["escalate"] is False,
+               f"{phase}: one-prime survivors are ordinary, phase verdict does not fire")
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+
+
 def test_import_failure_does_not_lose_the_sweep_json() -> None:
     """A finished sweep must write its record even if `import witness` fails.
 
@@ -858,6 +899,7 @@ def main() -> int:
         test_clean_run_still_clean()
         test_certificate_basis_follows_k_exact()
         test_sparse_records_carry_their_column_list()
+        test_cap_survivors_are_judged_at_phase_end()
         test_import_failure_does_not_lose_the_sweep_json()
         test_resume_reproduces_an_uninterrupted_run()
         test_resume_refuses_a_changed_chunk_partition()
