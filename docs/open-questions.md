@@ -679,7 +679,16 @@ points have Q_3-points (the negative classes on E have no real points), so
 Sha(E)[2] = 0 and the Selmer bound is the rank -- no rank-0 shortcut. Every
 integral point with `|a| <= 10^7` has `|a| <= 730` (fifteen of them, the two
 candidates among them); nothing is known about `|a| > 10^7`, and a bigger
-search is not a proof. The routine that
+search is not a proof. Chebotarev pass (2026-08-23, `k10_chebotarev.py`):
+a killing prime EXISTS for every (2,3) c except on an explicit no-kill locus
+-- R(t^2)-1024c = (2,2,3,3) over Z with a square-class coincidence (exactly
+D_q*D_k square resurfacing) -- where h has a root mod EVERY prime (Q27's
+even-derangement trap via the cubic factor). Unconditional: every (2,3) c < 0 is killed (the deep shape
+needs the one real root >= 0); c > 0 killed off the locus, which forces
+b = nu^2 and lives on a GENUS-3 double cover of the curve. Searches to
+b <= 10^12 find nothing on it beyond c = 0. The remaining statement is "the
+no-kill locus has no integer point with c != 0" -- still implied by the
+Magma call. The routine that
 proves the list complete is Magma's
 `IntegralQuarticPoints([5,1320,126456,5102240,72824400], [-250,74880])`
 (Tzanakis 1996); Sage's `integral_points` is Weierstrass-only and PARI has

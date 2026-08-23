@@ -49,6 +49,7 @@ the prime list did not kill it.
 | `scripts/test_rp_cost.py` | the r(p)-vs-scan split of a Z-jump job on the *no-`r_expected`* fallback path |
 | `scripts/test_collide.py` | the collide frontier abuts the 2017 bound (first 61 / 101-digit value, not one decade up) |
 | `scripts/test_k10_intersective.py` | Q28's (2,3) branch: the curve, its 15 small integral points, the rank-2 Jacobian, the two kills, and that nothing claims the list complete |
+| `scripts/test_k10_chebotarev.py` | Q28's Chebotarev pass: the kill trichotomy, the no-kill shape's reality, c<0 closed, the locus on its genus-3 cover, still BLOCKED |
 
 ```text
 python scripts/test_sweeps.py
