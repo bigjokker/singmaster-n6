@@ -39,6 +39,7 @@ from (N, K, k, p) alone.
 from __future__ import annotations
 
 import argparse
+import bisect
 import hashlib
 import json
 import sys
@@ -235,6 +236,42 @@ def _survivors_of(recs: list[dict]) -> dict[int, int]:
     return out
 
 
+def _spans(recs: list[dict]) -> list[list[int]]:
+    """Merged [k_lo, k_hi] of a round's records: the columns it could have hit.
+
+    Deliberately CONSERVATIVE. A record is exact when n_cols == k_hi-k_lo+1
+    (a contiguous chunk); when the round's live columns are scattered the span
+    over-covers. Over-covering is the safe direction: a column that really was
+    scanned always lies inside its own record's span, so this never mistakes a
+    genuine kill for an untested column. It only fails to notice an untested
+    column that happens to fall inside a sparse span -- and the count identity
+    below is what catches that residue.
+
+    Measured on i=8: 99.8% of records are exact, and at round 13 -- the round
+    where k=1021 vanished -- the single record is exact and does not contain
+    1021. So the column is provably never-scanned from fields the checkpoint
+    has carried all along; nothing ever read them.
+    """
+    iv = sorted((int(r["k_lo"]), int(r["k_hi"])) for r in recs if "k_lo" in r)
+    merged: list[list[int]] = []
+    for lo, hi in iv:
+        if merged and lo <= merged[-1][1] + 1:
+            merged[-1][1] = max(merged[-1][1], hi)
+        else:
+            merged.append([lo, hi])
+    return merged
+
+
+def _scanned(merged: list[list[int]], k: int) -> bool:
+    """Could this round have tested column k? Empty spans mean "unknown"."""
+    if not merged:
+        return True                      # no k_lo on the records: legacy, allow
+    i = bisect.bisect_right(merged, [k, k]) - 1
+    if i >= 0 and merged[i][0] <= k <= merged[i][1]:
+        return True
+    return i + 1 < len(merged) and merged[i + 1][0] <= k <= merged[i + 1][1]
+
+
 def _n_ran(recs: list[dict]) -> int:
     """How many columns the RUN actually scanned in this round.
 
@@ -275,6 +312,12 @@ def build_bandii(rows, k_lo, k_hi, primes, pass_of, declared_alive=frozenset()):
         absent = alive - survivors
         killed = absent - declared_alive
         unresolved |= absent & declared_alive
+        # A column absent from the survivors was either killed or never
+        # tested. Only the records can tell them apart.
+        spans = _spans(recs)
+        untested = {k for k in killed if not _scanned(spans, k)}
+        killed -= untested
+        unresolved |= untested
         for k in killed:
             witness[k] = p
         n_ran = _n_ran(recs)
@@ -307,9 +350,15 @@ def build_zjump(rows, k_lo, k_hi, ivs, d, round_of, declared_alive=frozenset()):
             break
         survivors = _survivors_of(recs)
         seen = {int(r["p"]) for r in recs}
+        spans = _spans(recs)
         credited = 0
         for k, lp in last_p.items():
             if k in survivors:
+                continue
+            if not _scanned(spans, k):
+                # No record in this round covers k, so nothing tested it.
+                # Hand it to the engine rather than inventing a killer.
+                unresolved.add(k)
                 continue
             if k in declared_alive:
                 # The run finished with this column still ALIVE. Whatever its

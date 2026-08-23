@@ -563,7 +563,9 @@ def test_deferred_column_is_not_credited_a_kill() -> None:
     "missing 0, ok=True" over a certificate that check_witness rejects. i=8
     shipped k=1021 -> p=3517 that way, and re-minted it on every rebuild.
 
-    Both guards are exercised, because each covers the other's blind spot:
+    Coverage decides killed-vs-untested where the records can prove it, and
+    the count identity catches the residue a sparse span can hide. Both are
+    exercised, because each covers the other's blind spot:
     the declared-alive list is exact but the sweep json truncates it above
     100, and the count identity needs no list but only fires when the records
     carry n_cols. And two non-regression cases, since a guard that also
@@ -585,13 +587,23 @@ def test_deferred_column_is_not_credited_a_kill() -> None:
                 "n_cols": n_cols, "survivors": survivors,
                 "seconds": 0.0, "n_survivors": len(survivors)}
 
-    # b deferred, json truncated: only the count identity can see it
+    # b deferred and OUTSIDE every record's span: the round provably never
+    # touched it, so it is handed to the engine rather than crashing the build
+    w, alive = W.build_zjump([rec(a, 1, [])], a, b, ivs, fam.D, tag)
+    expect(w == {a: p} and alive == {b},
+           "a column no record covers is left unresolved, not credited "
+           "and not a hard failure")
+
+    # b deferred but INSIDE a sparse span -- coverage cannot separate them, so
+    # the count identity is what catches it. This is the residue case, and the
+    # reason both guards stay.
+    sparse = rec(b, 1, [])          # span [a,b] but only 1 column scanned
     try:
-        w, _ = W.build_zjump([rec(a, 1, [])], a, b, ivs, fam.D, tag)
-        expect(False, f"deferred column credited a kill: {w}")
+        w, _ = W.build_zjump([sparse], a, b, ivs, fam.D, tag)
+        expect(False, f"sparse-span deferral credited a kill: {w}")
     except RuntimeError as exc:
         expect("never scanned" in str(exc),
-               "count identity refuses a kill for an unscanned column")
+               "count identity catches a deferral hidden in a sparse span")
 
     # b deferred, and the sweep json lists it as still alive
     w, alive = W.build_zjump([rec(a, 1, [])], a, b, ivs, fam.D, tag,
@@ -617,12 +629,9 @@ def test_deferred_column_is_not_credited_a_kill() -> None:
     # and Band II carries the same guard
     brec = {"tag": "bii1", "p": p, "prime_index": 1, "k_lo": a, "k_hi": a,
             "n_cols": 1, "survivors": [], "seconds": 0.0, "n_survivors": 0}
-    try:
-        w, _ = W.build_bandii([brec], a, b, [p], W._pass_tag("bii"))
-        expect(False, f"Band II credited an unscanned column: {w}")
-    except RuntimeError as exc:
-        expect("never scanned" in str(exc),
-               "Band II refuses a kill for an unscanned column too")
+    w, alive = W.build_bandii([brec], a, b, [p], W._pass_tag("bii"))
+    expect(w == {a: p} and b in alive,
+           "Band II leaves an uncovered column unresolved too")
 
 
 def main() -> int:
