@@ -52,9 +52,18 @@ rather than absorbed into a fudge:
                they were filled in, so the table is trusted over the label.
 
 Scan work and wall clock are reported as TWO numbers. They are not the same
-number and the gap between them is not constant: it measured 5.6x at i=7 and
-9.4x at i=8. Until that gap is itemised, a faster scan cannot be quoted as a
-faster job, and no wall clock is extrapolated to an unrun member here.
+number and the gap between them is not constant.
+
+STALE, 2026-08-23 -- READ BEFORE QUOTING THE CORE-HOUR COLUMN. SCAN_RATE
+below was measured on the numpy `(s * F) % p` loop, and production has run
+the Granlund-Montgomery kernel since 8e64945; results/i8_sweep.json was
+regenerated under it (52dc1ac, 7508 s -> 174 s). So the scan core-hours this
+file prints, and the "5.6x at i=7 / 9.4x at i=8" gap once quoted here, are
+both stale by roughly the kernel speedup. The visible symptom is i=8 printing
+"scan is 209.66% of wall", which is impossible: it is the constant, not the
+run. The EXACT element counts and every gate are unaffected -- they are
+integer reconstructions from the record and do not use SCAN_RATE. Re-measuring
+is a job, not a documentation fix, so no replacement constant is chosen here.
 
     python scripts/work_census.py
     python scripts/work_census.py --i 9
@@ -88,6 +97,14 @@ from bandii_kernel import (  # noqa: E402
 # indicative core-hour figure -- it is a machine property, not a claim about
 # the sweep, and it is deliberately quoted to three digits because the probe
 # bugs this file replaces were factors of 8 to 150, not 10%.
+#
+# STALE (noted 2026-08-23): since 8e64945, 2026-08-22, that kernel is no
+# longer what runs. The
+# default is Granlund-Montgomery, which is several times faster, so every
+# core-hour figure derived from this constant reads high -- at i=8 high
+# enough to print a scan share above 100% of wall. Deliberately NOT replaced
+# by a guess: the number is only meaningful measured on this machine over the
+# kernel actually in use. Element counts and gates do not touch it.
 SCAN_RATE = 1.865e8
 
 

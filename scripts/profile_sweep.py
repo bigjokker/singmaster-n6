@@ -35,9 +35,19 @@ Consequently `--sample` no longer controls the answer. It controls the
 precision of the modelled multi-pass correction (a ~1.07-1.13 factor) and
 nothing else. `--check` gates the whole thing against `work_census.py`.
 
-Scan work and wall clock are reported as TWO numbers. wall/scan measured 6.11x
-at i=7 and 10.27x at i=8 -- it is not constant, so a faster scan is not a
-faster job, and no wall clock is extrapolated to an unrun member.
+Scan work and wall clock are reported as TWO numbers, and the gap between
+them is not constant: a faster scan is not a faster job, and no wall clock is
+extrapolated to an unrun member.
+
+STALE, 2026-08-23: the "6.11x at i=7 and 10.27x at i=8" this file used to
+quote is a ratio against work_census.SCAN_RATE, which was measured on the old
+numpy loop; production has run the Granlund-Montgomery kernel since 8e64945.
+Precisely: the i=8 half moved (its recorded wall was regenerated under GM,
+7,508 s -> 174 s), while at i=7 work_census still prints 6.11x today, because
+results/i7_sweep.json was never re-run. The pair is unreliable because its
+DENOMINATOR is a pre-GM constant, not because both numbers visibly changed.
+The rate this profiler MEASURES at run time is current; the fixed reference
+it is compared against is not.
 
     python scripts/profile_sweep.py --i 9
     python scripts/profile_sweep.py --i 8 --check
@@ -354,9 +364,10 @@ def report(r: dict) -> None:
         w = r["recorded_wall_core_h"]
         print(f"    WALL CLOCK {w:.4f} core-h recorded  -> wall/scan "
               f"{w / r['scan_core_h_hi']:.2f}x - {w / r['scan_core_h_lo']:.2f}x")
-        print("    These are two different numbers. Against work_census's fixed")
-        print("    reference rate the ratio is 6.11x at i=7 and 10.27x at i=8 --")
-        print("    not constant, so do not extrapolate it to an unrun member.")
+        print("    These are two different numbers, and their ratio is not")
+        print("    constant -- do not extrapolate it to an unrun member. (The")
+        print("    once-quoted 6.11x/10.27x was against work_census.SCAN_RATE,")
+        print("    a pre-Granlund-Montgomery figure; it is stale, not current.)")
     elif r.get("record_partial"):
         print("    WALL CLOCK not comparable: this record is partial (its `seconds`")
         print("    covers only a resumed leg). No ratio is printed.")

@@ -7,8 +7,15 @@ unsettled nearby-row and column-pair collisions.
 This does **not** prove Singmaster's conjecture. It does prove
 \(N\bigl(C(F_{18}F_{19},F_{16}F_{19})\bigr)=6\) exactly: every extra left-half
 column \(2\le k\le k_{\max}\), \(k\notin\{K,K+1\}\), carries a modular kill
-certificate — and since 2026-08-20 every one of those certificates is
-**recorded and independently checkable**, for i=2 through i=8.
+certificate — and every one of those certificates is **recorded and
+independently checkable**: for i=2 through i=8 since 2026-08-20, and for i=9
+since 2026-08-22, when its table was harvested (`c061eeb`).
+
+Two of those members ship *unbound*: i=8 and i=9 have complete, verifiable
+witness tables, but their sweep records carry `certificate: null`, because
+neither run ended clean (i=8 dropped a column it had not killed; i=9 left
+four alive at its cap). That is the honest state, and the coverage ledger
+now says so rather than printing COMPLETE — see **Coverage** below.
 
 ## Engine
 
@@ -39,7 +46,7 @@ the prime list did not kill it.
 | `scripts/test_witness.py` | the certificate verifier |
 | `scripts/test_sizelaw.py` | the size law and the escalation trigger |
 | `scripts/test_work_census.py` | the exact scan-work census and its gates |
-| `scripts/test_rp_cost.py` | that r(p), not the scan, is a Z-jump job's cost |
+| `scripts/test_rp_cost.py` | the r(p)-vs-scan split of a Z-jump job on the *no-`r_expected`* fallback path |
 
 ```text
 python scripts/test_sweeps.py
@@ -88,7 +95,17 @@ under audit:
 python scripts/coverage_ledger.py
 ```
 
-All seven members report COMPLETE: **6,067,902 columns, 0 missing, 0 extra**.
+It reports two facts per member, separately, and requires both:
+*coverage-complete* (the witnessed set is exactly the claimed set) and
+*bound* (a sweep certificate names this table by digest). Eight members,
+**41,590,228 columns, 0 missing, 0 extra**; i=2..7 COMPLETE AND BOUND; i=8
+and i=9 *coverage complete, UNBOUND*, since their sweep records carry no
+certificate. Unbound is neither a coverage hole nor a clean bill, so the
+script prints it as its own state and **exits 1**.
+
+`results/coverage_ledger.json` in the tree predates that split and still
+shows the old single verdict; the script is the current statement, not that
+file.
 
 ### Independent re-checks
 
@@ -113,17 +130,25 @@ falling-factorial local–global question: each recorded \((k,p)\) certifies tha
 "ghost". The output carries its own caveats, worth reading before quoting the
 count.
 
+**`results/ghost_census.json` is stale and has not been regenerated.** It
+lists seven members and 6,067,902 values, so it predates i=9; worse, its i=8
+entry names digest `b4c02030`, the table as it stood *before* the k=1021
+repair — the one that held the false 1021 → 3517 row. So its count is not a
+statement about the current i=8 table and should not be quoted as one.
+
 ## Results worth keeping
 
 Witness tables are the proof object; the sweep JSONs are the run records.
 
 | File | Claim |
 |---|---|
-| `results/coverage_ledger.json` | Every member covers \([2,k_{\max}]\setminus\{K,K+1\}\) exactly. 6,067,902 columns |
-| `results/i8_witness.npz` | i=8: 5,182,634 per-column certificates, \(k=2..5{,}182{,}637\) |
+| `results/coverage_ledger.json` | Stale: written before coverage and binding were separated. Run `scripts/coverage_ledger.py` for the current statement (8 members, 41,590,228 columns, i=8/i=9 UNBOUND) |
+| `results/i9_witness.npz` | i=9: 35,522,326 per-column certificates, \(k=2..35{,}522{,}329\); 83 engine-filled (k=2..80 and the four Lucas columns) |
+| `results/i8_witness.npz` | i=8: 5,182,634 per-column certificates, \(k=2..5{,}182{,}637\); two rows are not from the sweep (engine fill k=2, repair 1021: 3517 → 1051) |
 | `results/i7_witness.npz` | i=7: 756,133 certificates |
 | `results/i2..i6_witness.npz` | 46 / 339 / 2,344 / 16,091 / 110,315 certificates |
-| `results/i8_sweep.json` | i=8 by one uniform method, \(k=3..k_{\max}\) plus Band II. clean, 7508 s on 4 workers |
+| `results/i8_sweep.json` | i=8 by one uniform method, \(k=3..k_{\max}\) plus Band II. **`clean=false`**, `certificate=null`, `n_z_alive=1` (k=1021), 174 s on 8 workers — the honest record of the regenerated run |
+| `results/i9_sweep.json` | i=9 Band II + Z-jump. **`clean=false`**, `certificate=null`, four columns alive at Z-jump cap 12 (k=87/399/553/1281), later killed by full Lucas below \(\sqrt N\) |
 | `results/i7_sweep.json` | i=7 Band II + Z-jump, \(N=6\) (95 s) |
 | `results/i2..i6_sweep.json` | same pipeline, \(N=6\) each (0.7–7.9 s) |
 | `results/fibonacci_i8_k300.json` | Exact: i=8 has no extra left-half with \(2\le k\le 300\), no central. ~16.3 h |
@@ -139,7 +164,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k10_intersective.json` | \((x)_{10}-c\): all cases closed; only a genus-1 gap remains. Difficulty is not monotone in \(k\) |
 | `results/k9_intersective.json` | \((x)_9-c\): three branches, all closed; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
-| `results/ghost_census.json` | Certified non-ghosts, with its own caveats |
+| `results/ghost_census.json` | Certified non-ghosts — **stale**: 7 members, and its i=8 digest is the pre-repair table |
 | `results/bandii_sweep.json` | Historical Band II \(p>N/2\): 1,055,989 columns, died at prime 8 |
 | `results/zjump.json` | Historical Band I remnant: 3,215,816 columns, 0 anomalies |
 | `results/walk_369.json` | 369 triples walked past prime 3: max run 6, counts match the size law |
@@ -155,6 +180,13 @@ small-\(k\) extra-rep; modular already killed those columns.
 Every extra \(k\in[2,k_{\max}]\setminus\{K,K+1\}\) has an unconditional
 modular certificate, all 5,182,634 of them recorded and verifiable.
 \(N(C(F_{18}F_{19},F_{16}F_{19}))=6\). Not Singmaster.
+
+The claim rests on the **table**, not on the sweep record: two of those rows
+did not come from the sweep (k=2 filled by the engine, k=1021 repaired
+3517 → 1051 after the sweep credited a prime it had only survived), and
+`results/i8_sweep.json` is correspondingly `clean=false` with no certificate.
+Coverage is complete and every sampled certificate verifies; the ledger
+therefore reports i=8 as *coverage complete, UNBOUND*.
 
 - [`docs/i8-N6.md`](docs/i8-N6.md) — the \(N=6\) theorem, as a note
 - [`docs/band-I.md`](docs/band-I.md) — lemmas and census behind it
@@ -175,6 +207,18 @@ tested against, and `family_sweep.py` records expected-vs-observed for every
 pass. Escalate when a column survives a round that expected almost none
 (\(E_r<10^{-2}\)), or when far more survive than the law allows (Poisson upper
 tail \(<10^{-3}\)).
+
+That rule is per round, and it is blind to one case: when a single column
+enters a round, \(E_r\) is just that column's own next-prime survival
+(0.04–0.21 in Band II), never below \(10^{-2}\) — so a lone column
+surviving *every* pass to the cap read "ordinary" in every round, though its
+run is the anomaly the trigger exists for. So each column still alive at a
+phase's cap is judged again, as a column: \(\Lambda\) over the primes it
+actually faced, against the columns that entered the phase, with the same
+threshold. i=8 Band II \(k=4{,}126{,}649\) through 14 passes would fire
+(\(\Lambda=3.3\times10^{-10}\), peers \(\times\) \(\Lambda=3.5\times10^{-4}\));
+i=9's \(k=11\) run of 8 and its four columns at the Z-jump cap do not. The
+phase verdict is the per-round fire **or** the cap-survivor fire.
 
 ```text
 python scripts/sizelaw.py run --i 9 --k 11
@@ -197,23 +241,50 @@ measurement, so the pipeline carries a profiler rather than an argument:
 python scripts/profile_sweep.py --i 9
 ```
 
-It samples each phase and reports the split between the image scan, r(p) and
-prime assignment. The split is the part to trust; wall-clock projection is
-good to about a factor of two, so quote \(i=10\) as an order of magnitude, not
-a number. Since the factorial table was removed (below), **both phases are now
-scan-dominated**.
+It reports each phase's scan work; wall-clock projection is good to about a
+factor of two, so quote \(i=10\) as an order of magnitude, not a number.
+What the code makes checkable without a new measurement: a production
+Z-jump worker computes **no \(r(p)\) at all**. The parent reduces \(m\)
+against a whole round's primes at once (`USE_M_FOR_RP`, a remainder tree),
+so `_job` takes its `r_expected` branch and calls only the scan; Band II's
+\(r(p)\) is a handful of multiplies, also parent-side. Note what that means
+for `scripts/test_rp_cost.py`: it measures the *other* branch, the
+no-`r_expected` fallback, where r(p) is indeed almost the whole cost. No
+artifact in the tree currently measures a per-phase scan-vs-r(p) split on
+the GM kernel, so none is quoted here.
 
-The distinct-prime count integrates prime density over the live intervals
-rather than sampling a window near the range start, which is biased ~2x high;
-the integrated form recovers i=8's recorded 124,830 primes to 0.2%.
+**Stale, and knowingly so:** `work_census.SCAN_RATE = 1.865e8` was measured on
+the old numpy `(s*F) % p` loop, and production has run the
+Granlund–Montgomery kernel since `8e64945`. Every figure derived from that
+constant is stale with it — the census's core-hour column, its "5.6x / 9.4x",
+and the profiler's "6.11x at i=7 and 10.27x at i=8". The visible symptom is
+i=8 printing "scan is 209.66% of wall", which is the constant, not the run.
+Both files say so in place. Re-measuring is a job, not a doc fix, so no
+replacement number is quoted here.
 
 ## Checkpoints
 
-Every run's jsonl opens with a schema header pinning the version and the run's
-parameters (`i`, `N`, `K`, `k_max`, `k_lo_z`, caps). Resume verifies it and
-refuses on mismatch, or on a checkpoint with no header at all. Resume merges
-old records with new ones, so a silent format or parameter change would produce
-a certificate over columns that were never all tested the same way.
+A run's jsonl opens with a schema header pinning the version and the run's
+parameters (`i`, `N`, `K`, `k_max`, `k_lo_z`, the caps, and since 2026-08-23
+`n_chunks`, because the chunk partition *is* the resume key). Resume refuses
+on mismatch, or on a checkpoint with no header at all: it merges old records
+with new ones, so a silent format or parameter change would produce a
+certificate over columns that were never all tested the same way.
+
+Two limits worth knowing. The comparison covers only keys present in **both**
+the header and the current parameters, so a checkpoint written before a key
+existed still resumes — deliberate, and why `n_chunks` could be added without
+a schema bump. And not every jsonl in the tree has a header:
+`results/i9_sweep.jsonl`, the file i=9's table was built from, predates the
+schema and starts with a data record; `scripts/migrate_checkpoint.py` exists
+to stamp one on such a file after checking its records against the
+parameters, and `witness.py build` does not require one.
+
+A record's coverage is exact from `[k_lo, k_hi]` only when the chunk is
+contiguous. Since 2026-08-23 a *sparse* chunk also carries `ks`, its exact
+column list, so the builder never infers coverage from a span that
+over-covers; checkpoints written before that keep the over-covering span and
+are read exactly as before.
 
 A run's jsonl is the only record of which prime killed which column, so a clean
 `family_sweep` builds the witness table from it before it stops mattering.
@@ -222,7 +293,7 @@ A run's jsonl is the only record of which prime killed which column, so a clean
 
 ### Documents
 
-- [`docs/open-questions.md`](docs/open-questions.md) — the ranked question list, Q1–Q24, with outcomes
+- [`docs/open-questions.md`](docs/open-questions.md) — the ranked question list, Q1–Q30, with outcomes
 - [`docs/audit-2026-08-20.md`](docs/audit-2026-08-20.md) — first-principles audit of the pipeline
 - [`docs/extra-questions.md`](docs/extra-questions.md) — Q2/Q3/Q8/Q12/Q15/Q16/Q17/Q18, with the declines and why
 - [`docs/q14-intersective.md`](docs/q14-intersective.md) — can \((x)_k-c\) be intersective? Settled for \(k\le 5\)

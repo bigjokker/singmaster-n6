@@ -1,5 +1,51 @@
 SINGMASTER — session refresher (hand this file back FIRST)
 ================================================================================
+READ THIS FIRST (playground state, 2026-08-23)
+----------------------------------------------
+This file is a LIVE-TREE log. Most of it describes
+Desktop\Singmaster. In THIS clone (Desktop\Claude-Singmaster) the
+following are already true, and the body below is stale wherever it
+disagrees:
+
+  * results\i9_witness.npz  n=35,522,326  n_unresolved=0
+    sha256 e375de14…   (NOT 35,522,243 / 4 / 3f01fb6d…).
+    It holds k=2..80 (83 engine fills in all) AND the four Lucas rows
+    k=87/399/553/1281 -> p=191/421/557/1321. PATH FORWARD 3 items (1)
+    and (2) are DONE here. Do not re-do them.
+  * coverage_ledger.py covers i=2..9: 41,590,228 columns, 0 missing,
+    0 extra (NOT "i=2..8 only, 6,067,902"). Item (3) is DONE here.
+    Since 2026-08-23 it reports coverage and BINDING as two facts:
+    i=2..7 COMPLETE AND BOUND; i=8 and i=9 "coverage complete,
+    UNBOUND", because their sweep records carry certificate=null.
+    The script EXITS 1 while any member is unbound. That is the
+    true signal, not a failure. results\coverage_ledger.json predates
+    the split — run the script, do not read that file.
+  * results\i8_sweep.json is clean=false, certificate=null,
+    n_z_alive=1 (k=1021), 174 s / 8 workers. k=1021 is CLOSED: it had
+    only SURVIVED p=3517, its row was repaired to p=1051 (verifies),
+    and the sweep no longer drops deferred columns. Do not reopen it.
+    N(m_8)=6 stands on the witness table, not on that json.
+  * Only the write-up of i=3..9 is left of PATH FORWARD 3.
+  * Still true and still binding: do not start a job, do not touch the
+    live tree, do not start i=10.
+  * "Uncommitted / parked bandii_kernel.py" below is a LIVE-TREE statement
+    and is false here. In this clone bandii_kernel.py is committed and
+    clean (git status is empty for it): scan_ks_half is the DEFAULT scan
+    path (USE_HALF_SCAN=True), the p^2<=N Lucas guard in
+    scan_columns_general is live, and the windowed and Granlund-Montgomery
+    scans are wired too. Nothing here needs parking, wiring or reverting.
+    What genuinely is not wired: image_hit_tablefree is used by the
+    verifier but not by the sweep, and r_two_digit_delta is used for r(p),
+    not as a delta cross-check inside binom_mod_lucas.
+  * NOT IN THIS CLONE (live-tree only, every pointer to them below is
+    a live-tree pointer): scripts\ghost_sieve.py,
+    scripts\falling_criteria.py, docs\kernel-ghosts.md,
+    docs\criteria-birthday.md, docs\claude-packets\,
+    CLAUDE-JOB1.txt / CLAUDE-JOB2.txt / CLAUDE-NEXT.txt.
+    Commits a5984fa / af29bd8 / c0e155c / c4af9d5 are not objects in this
+    clone at all (git cat-file: "not a valid object"); per PATHS below they
+    are the live repo's. This clone's root commit is d5be060.
+
 Updated 2026-08-22. Family i=2..8 CLOSED (N=6 each). i=1 is
 3003 (N=8), skip. i=9 FINISHED 2026-08-21 23:49 (live
 Desktop\Singmaster). json EXISTS, jsonl EXISTS (219 MB, keep).
@@ -31,8 +77,9 @@ Z-jump 28,284,383 columns, cap-12 left 4, json.clean=false
 (correct: two-digit Z-jump never scanned p≤√N=8605).
 Checkpoint: Desktop\Singmaster\results\i9_sweep.jsonl  (keep)
 Final:      Desktop\Singmaster\results\i9_sweep.json
-Witness:    results\i9_witness.npz  (live + playground, same
+Witness:    results\i9_witness.npz  (live tree, as harvested:
             sha256 3f01fb6d…  n=35,522,243  unresolved=4)
+            PLAYGROUND now: e375de14…  n=35,522,326  unresolved=0
 Pre-flight r(p1)=27989611 still matches jsonl first record.
 
 PRE-REGISTERED Band II curve (size law, 0 fitted params):
@@ -79,7 +126,8 @@ prime. Independent witness.check_witness ok (lucas route):
   k=1281  p=1321  r=434  g=40
 Do not treat json.clean=false as a new N=8. Do not assume
 void kills; these four now have primes. They are NOT yet
-in the npz (n_unresolved=4).
+in the npz (n_unresolved=4). [PLAYGROUND 2026-08-23: they ARE in the
+npz now, k=87/399/553/1281 -> 191/421/557/1321, n_unresolved=0.]
 
 FINISHED MACHINE (was LIVE 2026-08-19; closed 2026-08-21 23:49):
   live: C:\Users\wwwsa\Desktop\Singmaster
@@ -115,6 +163,7 @@ harder." Not a new G(k). Do not reopen a 20-engine whiteboard.
    clean i=9 as "the family theorem" ((2b) is already DONE:
    2022 does not apply). The four primes are not yet in the
    npz. Ledger still i=2..8.
+   [PLAYGROUND 2026-08-23: both done here; ledger covers i=2..9.]
 
 2. THEN, before any new engine:
    (a) DONE 2026-08-20 (Claude Job 2, HARD). Full text in
@@ -173,6 +222,14 @@ harder." Not a new G(k). Do not reopen a 20-engine whiteboard.
      (b) witness fill --i 9 for k=2..80
      (c) coverage_ledger.py (still reports i=2..8 only,
          6,067,902 columns)
+   [PLAYGROUND 2026-08-23: (a), (b) and (c) are ALL DONE in this
+   clone. npz 35,522,326 / unresolved 0 / sha e375de14…; ledger
+   i=2..9, 41,590,228 columns, 0 missing, 0 extra, i=9 reported
+   coverage-complete but UNBOUND (its sweep json has
+   certificate=null, correct for a clean=false run). The arithmetic
+   above checks exactly: 35,522,243 + 79 + 4 = 35,522,326. Only the
+   i=3..9 write-up is left. Do not re-run (a)-(c) here; the live tree
+   may still be in the old state.]
    Stage 1–2 JSON have rows[].q per k. Stage 3 summary,
    zjump.json, bandii_sweep.json, and family i{N}_sweep.json
    do NOT store per-k (k,p,r) witnesses — that is why the
@@ -359,6 +416,7 @@ Z-jump cap-12 left k=87,399,553,1281; full Lucas killed all
 four at the first live p<√N; check_witness ok. json.clean=false
 is correct (sweep never scanned p≤8605). Witness npz harvested,
 n_unresolved=4, k=2..80 unfilled, ledger still i=2..8.
+  [PLAYGROUND 2026-08-23: filled; ledger i=2..9. See READ THIS FIRST.]
 Do not start i=10. Do not resume i=9. PATH FORWARD 3.
 
 
