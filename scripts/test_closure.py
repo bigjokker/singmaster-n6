@@ -156,9 +156,16 @@ def test_deferred_columns_close_through_the_engine() -> None:
                f"(added {fl['added']}, {len(fl['unresolved'])} left)")
 
         aud = CL.audit_member(I_TEST, wpath)
-        expect(aud["ok"] and aud["n_missing"] == 0 and aud["n_extra"] == 0,
-               f"ledger COMPLETE after fill ({aud['n_witnessed']:,} witnessed, "
+        expect(aud.get("coverage_complete") and aud["n_missing"] == 0 and aud["n_extra"] == 0,
+               f"ledger coverage-complete after fill ({aud['n_witnessed']:,} witnessed, "
                f"missing {aud['n_missing']}, extra {aud['n_extra']})")
+        # The sweep was NOT clean (forced deferral), so its record carries no
+        # certificate: coverage-complete, but nothing names this table. The
+        # ledger must say UNBOUND, never COMPLETE -- i=8/i=9 ship in this state.
+        expect(aud.get("bound") is False and not aud.get("ok")
+               and aud.get("state") == "UNBOUND",
+               f"and the member is UNBOUND (certificate=null), not COMPLETE "
+               f"(state={aud.get('state')!r}, ok={aud.get('ok')!r})")
 
         # Coverage complete is not validity. Check the filled columns really do
         # kill -- this is the assertion the original defect would have failed.

@@ -20,6 +20,19 @@ This script states the global claim and checks it:
 exactly -- no missing column, no extra column, and k_max recomputed from N and
 K rather than read back from the file that is being checked.
 
+Two facts per member, reported SEPARATELY and both required for `ok`:
+
+    coverage_complete   the witnessed set is exactly the claimed set
+    bound               a sweep certificate names THIS table by digest
+
+A member with a complete table and certificate=null in its sweep record is
+UNBOUND: coverage holds, nothing certifies it. That is not a coverage hole
+and it is not COMPLETE either -- it is the k=1021 shape, a local check
+passing while the claim is not certified. i=8 and i=9 ship in that state
+(clean=false after the k=1021 repair, no certificate), and the ledger used
+to print COMPLETE for them because certificate=null made the binding check
+vacuous (`cert_ok is not False`). It prints UNBOUND now.
+
     python scripts/coverage_ledger.py
     python scripts/coverage_ledger.py --json_out results/coverage_ledger.json
 """
@@ -76,6 +89,17 @@ def audit_member(i: int, path: Path) -> dict:
                 cert_sha = m.group(1)
                 cert_ok = meta["sha256"].startswith(cert_sha)
 
+    family_absent = not ({fam.K, fam.K + 1} & got)
+    coverage_complete = not missing and not extra and family_absent
+    # Bound means a certificate exists AND names this table. None (no sweep
+    # record, or certificate=null) is NOT "not contradicted" -- it is unbound.
+    bound = cert_ok is True
+    if coverage_complete and bound:
+        state = "COMPLETE"
+    elif coverage_complete:
+        state = "UNBOUND"
+    else:
+        state = "INCOMPLETE"
     return {
         "i": i,
         "N": fam.N,
@@ -88,13 +112,14 @@ def audit_member(i: int, path: Path) -> dict:
         "missing_sample": missing[:20],
         "n_extra": len(extra),
         "extra_sample": extra[:20],
-        "family_columns_correctly_absent": not ({fam.K, fam.K + 1} & got),
+        "family_columns_correctly_absent": family_absent,
         "sha256": meta["sha256"],
         "certificate_sha256": cert_sha,
         "certificate_names_this_table": cert_ok,
-        "ok": (not missing and not extra
-               and not ({fam.K, fam.K + 1} & got)
-               and cert_ok is not False),
+        "coverage_complete": coverage_complete,
+        "bound": bound,
+        "state": state,
+        "ok": coverage_complete and bound,
     }
 
 
@@ -119,9 +144,13 @@ def main() -> int:
         return 1
     rows.sort(key=lambda r: r["i"])
 
-    print("  claim: witnessed(i) == [2, k_max] \\ {K, K+1}, exactly\n")
+    print("  claim: witnessed(i) == [2, k_max] \\ {K, K+1}, exactly,")
+    print("         AND a sweep certificate names the table on disk\n")
     print(f"  {'i':>3} {'k_max':>10} {'expected':>11} {'witnessed':>11} "
           f"{'missing':>8} {'extra':>7}  verdict")
+    labels = {"COMPLETE": "COMPLETE",
+              "UNBOUND": "coverage complete, UNBOUND (no certificate names this table)",
+              "INCOMPLETE": "INCOMPLETE"}
     for r in rows:
         if "error" in r:
             print(f"  {r['i']:>3} {'-':>10} {'-':>11} {'-':>11} {'-':>8} {'-':>7}  "
@@ -129,24 +158,36 @@ def main() -> int:
             continue
         print(f"  {r['i']:>3} {r['k_max']:>10,} {r['n_expected']:>11,} "
               f"{r['n_witnessed']:>11,} {r['n_missing']:>8} {r['n_extra']:>7}  "
-              f"{'COMPLETE' if r['ok'] else 'INCOMPLETE'}")
+              f"{labels[r['state']]}")
         if r["missing_sample"]:
             print(f"        missing: {r['missing_sample']}")
         if r["extra_sample"]:
             print(f"        extra:   {r['extra_sample']}")
 
+    incomplete = [r for r in rows if not r.get("coverage_complete")]
+    unbound = [r for r in rows if r.get("state") == "UNBOUND"]
     bad = [r for r in rows if not r.get("ok")]
     total = sum(r.get("n_witnessed", 0) for r in rows)
-    print(f"\n  members audited {len(rows)}   incomplete {len(bad)}   "
-          f"columns witnessed {total:,}")
-    print("  RESULT", "ALL COMPLETE" if not bad else "GAPS PRESENT")
+    print(f"\n  members audited {len(rows)}   incomplete {len(incomplete)}   "
+          f"unbound {len(unbound)}   columns witnessed {total:,}")
+    if not bad:
+        verdict = "ALL COMPLETE AND BOUND"
+    elif incomplete:
+        verdict = "GAPS PRESENT"
+    else:
+        verdict = "UNBOUND MEMBERS: " + ", ".join(f"i={r['i']}" for r in unbound)
+    print("  RESULT", verdict)
     print("\n  Note: completeness is about COVERAGE. That every witness is also")
-    print("  VALID is a separate check -- scripts/witness.py verify.")
+    print("  VALID is a separate check -- scripts/witness.py verify. An UNBOUND")
+    print("  member has complete coverage but no certificate naming its table;")
+    print("  its closure rests on the table and this ledger, not on a sweep record.")
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(json.dumps(
             {"search": "coverage_ledger", "n_members": len(rows),
-             "n_incomplete": len(bad), "total_columns": total, "members": rows},
+             "n_incomplete": len(incomplete), "n_unbound": len(unbound),
+             "n_ok": len(rows) - len(bad),
+             "total_columns": total, "members": rows},
             indent=2), encoding="utf-8")
         print(f"  wrote {args.json_out}")
     return 0 if not bad else 1

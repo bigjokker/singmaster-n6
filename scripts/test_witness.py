@@ -530,6 +530,25 @@ def test_ledger_catches_a_certificate_naming_another_table() -> None:
         good = CL.audit_member(i, tmp / src.name)
         expect(good["certificate_names_this_table"] is True and good["ok"],
                "ledger accepts a certificate that names the table on disk")
+        expect(good.get("coverage_complete") is True and good.get("bound") is True
+               and good.get("state") == "COMPLETE",
+               f"a bound member reports coverage_complete AND bound "
+               f"(state={good.get('state')!r})")
+
+        # S2: the SAME complete table next to a sweep record whose certificate
+        # is null. Coverage is intact; nothing names this table. That is not
+        # COMPLETE -- it is the k=1021 shape: a local check passing while the
+        # claim is not certified. i=8 and i=9 ship in exactly this state.
+        (tmp / sweep_src.name).write_text(
+            json.dumps({**rep, "certificate": None, "clean": False}), encoding="utf-8")
+        unb = CL.audit_member(i, tmp / src.name)
+        expect(unb["n_missing"] == 0 and unb["n_extra"] == 0
+               and unb.get("coverage_complete") is True,
+               "certificate=null: coverage is still reported complete")
+        expect(unb.get("bound") is False and unb["ok"] is False
+               and unb.get("state") == "UNBOUND",
+               f"certificate=null: the member is UNBOUND, not ok, not COMPLETE "
+               f"(bound={unb.get('bound')!r}, ok={unb['ok']!r}, state={unb.get('state')!r})")
 
         # now point the certificate at a different table
         import re
@@ -540,7 +559,8 @@ def test_ledger_catches_a_certificate_naming_another_table() -> None:
         expect(bad["certificate_names_this_table"] is False,
                f"ledger DETECTS a certificate naming another table "
                f"({bad['certificate_sha256']})")
-        expect(bad["ok"] is False,
+        expect(bad["ok"] is False and bad.get("bound") is False
+               and bad.get("state") != "COMPLETE",
                "and a member whose certificate names another table is not COMPLETE")
         expect(bad["n_missing"] == 0 and bad["n_extra"] == 0,
                "coverage itself is still reported as intact -- the two failures "
@@ -797,8 +817,10 @@ def test_build_family_clips_engine_band_at_kmax() -> None:
                f"rebuilt i=2 claim is complete and exact "
                f"(missing {cov['n_missing']}, extra {cov['n_extra']})")
         aud = CL.audit_member(i, path)
-        expect(aud.get("ok") and aud["n_extra"] == 0 and aud["n_missing"] == 0,
-               f"ledger accepts the rebuilt i=2 table (extra {aud.get('n_extra')})")
+        expect(aud.get("coverage_complete") and aud["n_extra"] == 0 and aud["n_missing"] == 0,
+               f"ledger finds the rebuilt i=2 table coverage-complete (extra {aud.get('n_extra')})")
+        expect(aud.get("bound") is False and not aud.get("ok"),
+               "and, with no sweep record next to it, UNBOUND rather than ok")
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
