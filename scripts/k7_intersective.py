@@ -47,14 +47,20 @@ not divide c. In fact 5 divides none of 896, 17472, 459648. Since (x)_7
 vanishes identically on F_5 (any 7 consecutive residues contain a multiple of
 5), f_c == -c mod 5, which is nonzero. No root mod 5.
 
-THE GAP. Siegel proves both curves have finitely many integral points, and
-Baker's method makes that effective, but this script does not carry out the
-effective computation -- it searches |a| up to a bound and cross-checks
-against brute-force factorisation of (x)_7 - c over a range of c. The two
-methods agree exactly. Closing the gap properly means running a Thue solver
-(PARI/GP's `thue`) on the two curves. Until then this is "no counterexample
-exists below the search bound, and only finitely many can exist anywhere",
-not a finished theorem.
+THE GAP -- updated 2026-08-23. This script searches |a| up to a bound and
+cross-checks against brute force; the two methods agree exactly. The 2026-08-20
+text here proposed closing the gap with PARI's `thue`. That was WRONG on both
+branches, in opposite directions:
+  * Branch B needs no solver at all: its leading form factors as a definite
+    quadratic times the 2cos(2pi/7) cubic, RUNGE'S METHOD applies, and
+    scripts/k7_runge.py proves the list {0, -+896} complete. CLOSED.
+  * Branch A was never a Thue equation: Phi = 0 is a SMOOTH plane cubic --
+    genus 1, Jacobian of rank >= 1 with trivial torsion -- and its integral
+    points need the elliptic-log method on a cubic model, which no installed
+    tool provides. scripts/k7_branchA.py; still BLOCKED there.
+So the one remaining gap is Branch A's list; every 2+5 value with
+IRREDUCIBLE quintic not of Galois group D5/F20-with-matching-subfield is
+killed by Chebotarev regardless (k7_branchA.py step [2]).
 
     python scripts/k7_intersective.py
     python scripts/k7_intersective.py --a_max 3000 --brute 400000
@@ -240,10 +246,11 @@ def main() -> int:
     print("  RESULT: the only c with f_c reducible and all factors of degree >= 2")
     print("          are c = +-896, +-17472, +-459648, and 5 divides none of them,")
     print("          so none has a root mod 5. Not intersective.")
-    print("  GAP:    Siegel gives finiteness on both curves; this script does not")
-    print("          carry out the effective (Baker/Thue) computation, so the lists")
-    print("          are complete only up to the search bound. PARI/GP `thue` on")
-    print("          the two curves would close it.")
+    print("  GAP:    updated 2026-08-23. Branch B is CLOSED by Runge's method")
+    print("          (scripts/k7_runge.py: complete list, no solver needed).")
+    print("          Branch A is a genus-1 plane cubic, NOT a Thue equation")
+    print("          (scripts/k7_branchA.py): still blocked on its integral")
+    print("          points. The old 'PARI thue would close it' was wrong.")
 
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)

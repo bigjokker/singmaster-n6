@@ -50,6 +50,7 @@ the prime list did not kill it.
 | `scripts/test_collide.py` | the collide frontier abuts the 2017 bound (first 61 / 101-digit value, not one decade up) |
 | `scripts/test_k10_intersective.py` | Q28's (2,3) branch: the curve, its 15 small integral points, the rank-2 Jacobian, the two kills, and that nothing claims the list complete |
 | `scripts/test_k10_chebotarev.py` | Q28's Chebotarev pass: the kill trichotomy, the no-kill shape's reality, c<0 closed, the locus on its genus-3 cover, still BLOCKED |
+| `scripts/test_k7_runge.py` | Q26: Branch B's Runge certificate (empty trap, 19 points, c = 0, +-896 only) and Branch A's corrected geometry (genus 1, rank >= 1, the D5/F20 trap) |
 
 ```text
 python scripts/test_sweeps.py
@@ -162,7 +163,8 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/nearby_k2M-8M_de8.json` | Nearby, \(k=2\text{M}..8\text{M}\), \(d,e\le 8\), `new_hits=0` |
 | `results/intersective_search.json` | \(k=5..15\), \(|c|\le 10^9\): every survivor a genuine falling-factorial value, 0 intersective |
 | `results/k6_intersective.json` | \((x)_6-c\) is **never** intersective — proved, not searched |
-| `results/k7_intersective.json` | \((x)_7-c\): only \(c=\pm896,\pm17472,\pm459648\) even factor, and 5 divides none. Modulo effective Thue |
+| `results/k7_intersective.json` | \((x)_7-c\): only \(c=\pm896,\pm17472,\pm459648\) even factor, and 5 divides none. Historical: see `k7_runge.json` |
+| `results/k7_runge.json` | \((x)_7-c\), 3+4 branch CLOSED by Runge: all 19 quintic-curve points have \(A\le36\); complete list \(c\in\{0,\pm896\}\). The 2+5 branch is a rank-\(\ge1\) genus-1 cubic (never a Thue equation), still blocked |
 | `results/k8_intersective.json` | \((x)_8-c\): five cases, all closed; the exceptional locus is a genus-3 curve with only degenerate points |
 | `results/k10_intersective.json` | \((x)_{10}-c\): four cases closed, the (2,3) case reduced to one Magma `IntegralQuarticPoints` call (Jacobian of rank 2; not run). Difficulty is not monotone in \(k\) |
 | `results/k9_intersective.json` | \((x)_9-c\): three branches, all closed; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
@@ -324,7 +326,7 @@ A run's jsonl is the only record of which prime killed which column, so a clean
 - [`docs/extra-questions.md`](docs/extra-questions.md) — Q2/Q3/Q8/Q12/Q15/Q16/Q17/Q18, with the declines and why
 - [`docs/q14-intersective.md`](docs/q14-intersective.md) — can \((x)_k-c\) be intersective? Settled for \(k\le 5\)
 - [`docs/q25-k6-intersective.md`](docs/q25-k6-intersective.md) — \(k=6\) settled too: for even \(k\) the sextic is a **cubic** in \(t^2\)
-- [`docs/q26-k7-intersective.md`](docs/q26-k7-intersective.md) — \(k=7\), modulo one effective-Thue step: odd \(k\) gets **no** reduction
+- [`docs/q26-k7-intersective.md`](docs/q26-k7-intersective.md) — \(k=7\), 3+4 branch closed by Runge, 2+5 modulo one elliptic integral-point step: odd \(k\) gets **no** reduction
 - [`docs/q27-k8-intersective.md`](docs/q27-k8-intersective.md) — \(k=8\): the difficulty hides in a **genus-3 curve**, whose points are exactly the degenerate ones
 - [`docs/q28-k10-intersective.md`](docs/q28-k10-intersective.md) — \(k=10\) is **cheaper than \(k=8\)**: difficulty tracks cubic factors, not \(k\)
 - [`docs/q29-k9-intersective.md`](docs/q29-k9-intersective.md) — \(k=9\): eight shapes collapse to three branches; a **second** obstruction mechanism

@@ -101,7 +101,8 @@ PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
      could live (docs/q11-what-is-the-claim.md): nearby at
      larger k and (d,e); collide range (D5 still skips the
      61-digit decade past the 2017 bound); intersective gaps
-     (Q26 Thue, Q28 one elliptic, Q29 effective Siegel).
+     (Q26 one elliptic -- its 3+4 branch now CLOSED by Runge,
+     never Thue; Q28 one elliptic; Q29 effective Siegel).
      Effectiveness is bought by covering more kinds of ground,
      not another family member. A hit on nearby/collide is a
      new collision. i=10 is another instance of a pattern

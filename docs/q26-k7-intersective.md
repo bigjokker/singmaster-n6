@@ -1,14 +1,18 @@
 # Q26 — `(x)_7 − c` is never intersective (with one gap, stated)
 
-Worked out 2026-08-20, immediately after Q25. Verified by
-`scripts/k7_intersective.py`; artifact `results/k7_intersective.json`.
+Worked out 2026-08-20, immediately after Q25; Branch B closed and the gap
+restated 2026-08-23 (§5). Verified by `scripts/k7_intersective.py`,
+`scripts/k7_runge.py` and `scripts/k7_branchA.py`; artifacts
+`results/k7_intersective.json` (historical) and `results/k7_runge.json`;
+pinned by `scripts/test_k7_runge.py`.
 
 **Status: weaker than Q25, and deliberately labelled so.** Q25 is a proof.
-This is a proof *modulo an effective Thue computation I did not run*. The
-structure is complete and both curves are provably finite by Siegel; what is
-missing is the certificate that the integer-point lists are exhaustive rather
-than merely unbeaten below the search bound. That gap is mechanical, not
-conceptual — see §5.
+This is a proof *modulo one elliptic integral-point computation* — Branch A
+below. The original text said "modulo an effective Thue computation"; §5
+explains why that framing was wrong on both branches, in opposite
+directions: Branch B needed no solver at all and is now **closed**
+unconditionally by Runge's method, while Branch A was never a Thue equation
+— it is a smooth genus-1 cubic, the same wall as Q28's quartic.
 
 ---
 
@@ -88,10 +92,13 @@ and substituting into the second gives a plane curve `C(A,b) = 0` of degree 5,
 whose leading form `2A⁵−9A⁴b+12A³b²−A²b³−9Ab⁴+4b⁵` is squarefree with five
 distinct roots — Siegel again.
 
-**The degenerate locus matters.** When `3a²−2b−14 = 0` the linear solve is
-invalid and must be handled separately. My first pass skipped it and reported
-"no nontrivial 3+4 exists", which was wrong: the locus is not empty, and it is
-exactly where the only nontrivial solution lives —
+**The degenerate locus matters — and it is finite by pure algebra.** When
+`3a²−2b−14 = 0` the linear solve is invalid and must be handled separately.
+My first pass skipped it and reported "no nontrivial 3+4 exists", which was
+wrong: the locus is not empty, and it is exactly where the only nontrivial
+solution lives. (No Siegel needed here: substituting `b = (3a²−14)/2` into
+the vanishing numerator gives `(7/4)·a³(a²−4) = 0`, so `a ∈ {0, ±2}` exactly
+— three points, no search.) The solution:
 
 \[
 (a,b,d)=(2,-1,14)\ \Longrightarrow\ c=-896,
@@ -132,21 +139,90 @@ is the main reason to believe the case analysis is not missing a branch.
 
 ---
 
-## 5. The gap, stated plainly
+## 5. The gap — restated 2026-08-23: half closed, half corrected
 
-Siegel proves both curves have finitely many integral points, and Baker's
-method makes the bound effective. **I did not carry out the effective
-computation.** So the lists above are complete up to `|a| ≤ 400` and
-cross-checked against brute force to `c ≤ 400000`, but not proved exhaustive.
+The 2026-08-20 text under this heading proposed closing both branches with
+PARI/GP's `thue`. That was wrong twice over, and in opposite directions.
 
-Closing it is mechanical: run PARI/GP's `thue` on the two curves. Branch A is
-a genuine cubic Thue equation and `thue` handles it directly; Branch B is
-degree 5 and may need `thue` on the leading form plus a bounded search. Neither
-is research — it is an afternoon with the right tool, which this machine does
-not currently have installed.
+**Branch B is CLOSED — no solver was ever needed.** The quintic's leading
+form factors over `Q`:
 
-Until then the honest statement is: **no counterexample exists below the search
-bound, and only finitely many can exist anywhere.**
+```text
+F5 = (2A² − 5Ab + 4b²) · (A³ − 2A²b − Ab² + b³) = Q2 · K3
+```
+
+`Q2` is positive definite (disc `−7`) and `K3(1, w) = w³ − w² − 2w + 1` is
+the cyclic cubic of discriminant `49` — the field `Q(2cos(2π/7))`, `k = 7`
+announcing itself. Two coprime factors mean **Runge's method** applies, and
+the definiteness of `Q2` makes it sharp: the two `Q2`-branches at infinity
+are complex, so every real point of the curve runs along one of `K3`'s three
+real branches, and the degree-4 polynomial `W2` (constructed so its
+expansion along each branch has no positive power of `A` — a property
+re-verified symbolically on every run) is bounded there. On an integer point
+with `A ≥ 111184`, the integer `m = W2(A,b)` would have to lie within that
+branch's certified error of that branch's limit. The three conjugate limits
+are `w0 = −294ω² + 69ω + 449 ≈ −94.199, +421.478, −381.278` (trace exactly
+`−54`), their distances to the nearest integer are `0.199, 0.478, 0.278`,
+and the certified per-branch errors are `0.0073, 0.121, 0.0006` — each
+smaller than its own margin. So there are no integer points at all with
+`A ≥ 111184`; a modular-sieve sweep over `0 ≤ A` below the threshold
+(`A ≥ 0` suffices: `A = a²`) finds exactly nineteen points, all with
+`A ≤ 36`. Complete list of 3+4 values: `c = 0` and `c = ±896`. Both die at
+5. `scripts/k7_runge.py` is the certificate — exact rational interval
+arithmetic end to end, ~3–4 minutes, no external CAS; an earlier draft of
+its final inequality mixed a 4-term Newton anchor with a 5-term series tail
+and was caught in adversarial review — the committed chain uses one anchor
+throughout. Artifact: `results/k7_runge.json`.
+
+**Branch A was never a Thue equation.** `Φ(A,b) = 0` is a *smooth* plane
+cubic — no affine singular point, three smooth points at infinity — hence
+**genus 1**: `thue` solves `F(x,y) = m` for homogeneous `F` and simply does
+not apply. Via the pencil of lines through `(0,−1)` the Jacobian is
+
+```text
+E:  Y² = X³ − 1764·X + 28224  =  X³ − 42²·X + 168²
+```
+
+with **trivial torsion** (gcd of `#E(F_p)` is 1) and visible integer points
+— `(0,168)`, `(21,21)`, `(28,28)` — each therefore of **infinite order**:
+rank ≥ 1, `E(Q)` is infinite, and there is no rank-0 shortcut. Siegel still
+gives finiteness of the *integral* points of `Φ`; certifying that list needs
+the elliptic-logarithm method on a **cubic model** (Stroeker–Tzanakis), and
+no installed tool provides it — Magma's `IntegralPoints` takes Weierstrass
+models, and the birational map does not preserve integrality. **Branch A
+stays blocked there**, the exact analogue of Q28's rank-2 quartic.
+
+**Chebotarev narrows what the missing list is for** (`scripts/k7_branchA.py`
+§2). A 2+5 value is killed at `p` iff the quadratic is inert and the quintic
+rootless — Frobenius `(transposition, derangement)`. Among the transitive
+subgroups of `S₅` only `S₅` has an *odd* derangement (its twenty
+`(2,3)`-elements); `C₅, D₅, F₂₀, A₅` have only 5-cycles, all even. `C₅` and
+`A₅` admit no `C₂`-quotient, so the full product appears and
+`(inert, 5-cycle)` kills; `S₅` kills through `(2,3)` even with a shared
+subfield. The one escape: **quintic group `D₅` or `F₂₀` whose unique
+quadratic subfield is `Q(√(a²−4b))`** — then every class fixes a root and no
+unramified prime kills. The trap is real:
+`(x²+x−1)(x⁵−2)` — `Q(√5)` on both sides — has a root modulo every prime
+tested, while the mismatched control `(x²+x+1)(x⁵−2)` dies at 11. This is
+the k=7 instance of the even-derangement mechanism of Q27/Q28 (the pair
+witnesses the group theory; neither factor product is of the form
+`(x)_7 − c`). Both recorded candidates' quintics are `S₅` (a `(2,3)` pattern
+mod 37 resp. 103 certifies it), so they were never in the trap. The
+trichotomy assumes the quintic irreducible; a `2+2+3` counterexample would
+need its own no-kill configuration among two quadratics and a cubic, not
+analysed here — but every `2+2+3` value lies on the Branch-A curve too, so
+the enumeration below covers it.
+
+The honest statement now: **the 3+4 branch is a theorem; the 2+5 branch has
+no counterexample below the search bound, only finitely many can exist
+anywhere, and any counterexample with irreducible quintic would need a
+`D₅/F₂₀` quintic with matched subfield *and* `7! | c`.** The remaining
+certificate is the integral-point list of one rank-≥1 elliptic cubic —
+the elliptic-log method for general genus-1 models: Stroeker–Tzanakis,
+*Computing all integer solutions of a genus 1 equation*, Math. Comp. 72
+(2003), 1917–1933. (Magma's only non-Weierstrass cubic routine,
+`SIntegralDesbovesPoints`, takes special Desboves-form cubics only, which
+`Φ` is not.)
 
 ---
 
@@ -155,7 +231,8 @@ bound, and only finitely many can exist anywhere.**
 - `k ≤ 4` — Q14, elementary.
 - `k = 5` — Q14, one Pell equation.
 - `k = 6` — Q25, proved outright via the `t²` reduction.
-- `k = 7` — this note, modulo effective Thue.
+- `k = 7` — this note: the 3+4 branch is a theorem (Runge, §5); the 2+5
+  branch modulo one elliptic integral-point computation.
 - `k = 8` — open, and now the natural target: even, so the reduction applies
   and it becomes a **quartic** `g` with `e₁ = 1+9+25+49 = 84`. The analogue of
   Q25's Case 3 is a surface rather than a bounded conic, which is the first

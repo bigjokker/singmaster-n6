@@ -568,10 +568,11 @@ Operationally this changes nothing -- our `c = k!m` has 3.1M digits and the
 census still relies on Q14 section 6's per-column termination certificate.
 Full write-up in [`q25-k6-intersective.md`](q25-k6-intersective.md).
 
-### Q26. Is `(x)_7 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Thue) 2026-08-20
+### Q26. Is `(x)_7 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo one elliptic computation) 2026-08-20 — Branch B CLOSED by Runge, Branch A corrected (genus 1, never Thue) 2026-08-23
 **No counterexample exists, and only finitely many can.** Weaker than Q25 and
-labelled so: Q25 is a proof, this is a proof modulo an effective Thue
-computation not carried out.
+labelled so: Q25 is a proof, this is a proof modulo one elliptic
+integral-point computation not carried out (Branch A; the 3+4 branch is now
+closed outright by Runge).
 
 Odd `k` gets NO degree reduction. The odd analogue of Q25's trick exists --
 `f_c(y)f_c(-y) = T(y^2)` with `T(v) = c^2 - v S(v)^2` -- but `deg T = 7`, not
@@ -597,9 +598,25 @@ identically on `F_5`, so `f_c == -c != 0` there: no root mod 5.
 
 Cross-validated: brute-force factorisation for EVERY integer `c` in
 `[0,400000]` finds exactly the two candidates in that range that the curves
-predict. **The gap** is that Siegel gives finiteness but the effective
-(Baker/Thue) computation was not run, so the lists are complete only to
-`|a| <= 400`. PARI/GP `thue` on the two curves would close it.
+predict. **The gap, restated 2026-08-23**: the old "PARI thue would close
+it" was wrong on both branches. **Branch B (3+4) is CLOSED** -- its leading
+form splits as (definite quadratic) x (the disc-49 cyclic cubic of the field
+Q(2cos 2pi/7)), so
+RUNGE applies: a bounded-at-infinity polynomial W2 traps the integer W2(A,b)
+near per-branch limits (trace -54) whose distances to Z beat the certified
+errors, so no point has A >= 111184; a sieve over 0 <= A below (A = a^2, so
+A >= 0 suffices) finds 19 points, all A <= 36: the complete 3+4 list is
+c in {0, +-896}, killed at 5 (`k7_runge.py`, `results/k7_runge.json`).
+**Branch A is a smooth plane cubic** -- genus 1, NOT a Thue equation:
+Jacobian Y^2 = X^3 - 1764X + 28224 with trivial torsion and (0,168) of
+infinite order, so rank >= 1 and no rank-0 shortcut; its integral points
+need elliptic-log machinery on a cubic model (Stroeker-Tzanakis), not
+installed: still BLOCKED (`k7_branchA.py`). Chebotarev kills every 2+5
+value with irreducible quintic except group D5/F20 with matching quadratic
+subfield -- witnessed by (x^2+x-1)(x^5-2) having a root mod every prime
+tested (a group-theory witness, not an (x)_7 - c) -- the k=7 instance of
+Q27/Q28's even-derangement trap. Pinned by
+`scripts/test_k7_runge.py`.
 
 Next target is `k = 8`, not `k = 9`: even, so Q25's reduction applies, giving
 a quartic `g` with `e1 = 84`, where Case 3 becomes a surface rather than a
