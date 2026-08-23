@@ -605,6 +605,24 @@ def test_deferred_column_is_not_credited_a_kill() -> None:
         expect("never scanned" in str(exc),
                "count identity catches a deferral hidden in a sparse span")
 
+    # Q30: the SAME sparse span, now carrying its column list. Coverage is
+    # exact, b is provably untested, and the build REPAIRS (hands b to the
+    # engine) instead of stopping the line. This is the case that had to raise
+    # above and must not raise here.
+    w, alive = W.build_zjump([{**sparse, "ks": [a]}], a, b, ivs, fam.D, tag)
+    expect(w == {a: p} and alive == {b},
+           "with explicit ks, a deferral inside a sparse span is left "
+           "unresolved -- not credited, not a hard failure")
+
+    # and a column list that disagrees with the record's own count is corrupt:
+    # refuse to infer anything from it rather than guess
+    try:
+        w, _ = W.build_zjump([{**sparse, "ks": [a, b]}], a, b, ivs, fam.D, tag)
+        expect(False, f"a ks list contradicting n_cols was used for coverage: {w}")
+    except RuntimeError as exc:
+        expect("disagree" in str(exc),
+               "a ks list that contradicts the record's n_cols is refused")
+
     # b deferred, and the sweep json lists it as still alive
     w, alive = W.build_zjump([rec(a, 1, [])], a, b, ivs, fam.D, tag,
                              declared_alive=frozenset({b}))
@@ -632,6 +650,18 @@ def test_deferred_column_is_not_credited_a_kill() -> None:
     w, alive = W.build_bandii([brec], a, b, [p], W._pass_tag("bii"))
     expect(w == {a: p} and b in alive,
            "Band II leaves an uncovered column unresolved too")
+    # Q30, Band II half: a sparse span WITH ks repairs, WITHOUT ks raises
+    bsparse = {**brec, "k_hi": b}                     # span [a,b], n_cols 1
+    try:
+        w, _ = W.build_bandii([bsparse], a, b, [p], W._pass_tag("bii"))
+        expect(False, f"Band II legacy sparse span credited {w}")
+    except RuntimeError as exc:
+        expect("never scanned" in str(exc),
+               "Band II legacy sparse span still raises on the count identity")
+    w, alive = W.build_bandii([{**bsparse, "ks": [a]}], a, b, [p], W._pass_tag("bii"))
+    expect(w == {a: p} and alive == {b},
+           "Band II sparse span with explicit ks leaves the deferred column "
+           "unresolved, not credited and not a hard failure")
 
 
 def test_fill_and_repair_bind_to_the_table_directory() -> None:

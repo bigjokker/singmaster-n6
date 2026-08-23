@@ -874,6 +874,9 @@ def chunk_ks(ks: list[int], p: int, n_chunks: int) -> list[list[int]]:
 CHECKPOINT_SCHEMA = 2
 # 1: original chunk records {tag|prime_index|round, p, k_lo, k_hi, survivors}
 # 2: survivor records additionally carry "k_odd" (2026-08-20)
+#    + optional "ks" on a chunk record whose n_cols != k_hi-k_lo+1: the exact
+#      column list of a sparse chunk (Q30, 2026-08-23). Optional, so no bump:
+#      a record without it is read exactly as before (span, over-covering).
 
 
 def checkpoint_identity(**params) -> dict:

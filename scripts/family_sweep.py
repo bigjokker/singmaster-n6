@@ -237,7 +237,7 @@ def _job(payload: tuple) -> dict:
         rows = scan_ks_windowed(p, r, ks)
     else:
         r, rows = scan_columns_general(p, ks, N=N, K=K)
-    return {
+    rec = {
         "p": p,
         "r": r,
         "k_lo": int(ks[0]),
@@ -247,6 +247,18 @@ def _job(payload: tuple) -> dict:
         "survivors": rows,
         "seconds": round(time.time() - t0, 3),
     }
+    # Q30. A record's coverage is exact from [k_lo, k_hi] only when the chunk
+    # is contiguous (n_cols == span). A SPARSE chunk -- a late round whose live
+    # columns are scattered -- over-covers its span, and a column the sweep
+    # deferred that happens to fall inside it is then indistinguishable from a
+    # killed one; the builder's count identity turns that into a hard failure
+    # rather than a minted witness (i=8's k=1021 escaped it only because round
+    # 13 was dense). Write the column list on sparse records only, so coverage
+    # is exact everywhere and the builder infers nothing. Dense records (99.8%
+    # of i=8) stay as they were; existing checkpoints are never rewritten.
+    if rec["n_cols"] != rec["k_hi"] - rec["k_lo"] + 1:
+        rec["ks"] = [int(k) for k in ks]
+    return rec
 
 
 def _phase_count(done: list[dict], phase: str, field: str) -> int:

@@ -112,6 +112,29 @@ def test_deferred_columns_close_through_the_engine() -> None:
                f"the survivor list is truncated ({n_alive} alive, "
                f"{len(listed)} listed), so coverage is the only guard left")
 
+        # Q30: every sparse chunk record the sweep wrote must carry its exact
+        # column list, so the builder never has to infer coverage from a span
+        # that over-covers. Dense records must not (their span is exact).
+        n_sparse = n_dense = 0
+        bad_ks = []
+        for r in W.read_jsonl(chk):
+            if "k_lo" not in r:
+                continue
+            span = int(r["k_hi"]) - int(r["k_lo"]) + 1
+            if int(r["n_cols"]) == span:
+                n_dense += 1
+                if "ks" in r:
+                    bad_ks.append(("dense record carries ks", r["p"], r["k_lo"]))
+            else:
+                n_sparse += 1
+                ks = r.get("ks")
+                if (ks is None or len(ks) != int(r["n_cols"])
+                        or any(k < r["k_lo"] or k > r["k_hi"] for k in ks)):
+                    bad_ks.append(("sparse record ks wrong", r["p"], r["k_lo"], ks))
+        expect(n_sparse > 0 and not bad_ks,
+               f"every sparse chunk record carries its exact column list "
+               f"({n_sparse} sparse, {n_dense} dense, {len(bad_ks)} wrong {bad_ks[:2]})")
+
         wpath = tmp / "results" / f"i{I_TEST}_witness.npz"
         meta = W._build_family(I_TEST, chk, wpath)
         expect(meta["n_unresolved"] == n_alive,

@@ -236,8 +236,8 @@ def _survivors_of(recs: list[dict]) -> dict[int, int]:
     return out
 
 
-def _spans(recs: list[dict]) -> list[list[int]]:
-    """Merged [k_lo, k_hi] of a round's records: the columns it could have hit.
+def _spans(recs: list[dict]) -> tuple[list[list[int]], set[int]]:
+    """What a round's records say it could have hit: spans, plus exact columns.
 
     Deliberately CONSERVATIVE. A record is exact when n_cols == k_hi-k_lo+1
     (a contiguous chunk); when the round's live columns are scattered the span
@@ -251,21 +251,56 @@ def _spans(recs: list[dict]) -> list[list[int]]:
     where k=1021 vanished -- the single record is exact and does not contain
     1021. So the column is provably never-scanned from fields the checkpoint
     has carried all along; nothing ever read them.
+
+    Q30 (2026-08-23). A sparse record may now carry its column list `ks`
+    (family_sweep._job writes it exactly when n_cols != k_hi-k_lo+1). Such a
+    record is EXACT and contributes its columns, not its span; only dense
+    records and legacy sparse records without `ks` contribute a span. So on a
+    checkpoint written after Q30 the builder infers nothing, and on an older
+    one it over-covers exactly as before -- existing jsonl are never rewritten.
+
+    Returns (merged spans, explicit column set): see _scanned.
     """
-    iv = sorted((int(r["k_lo"]), int(r["k_hi"])) for r in recs if "k_lo" in r)
+    iv: list[tuple[int, int]] = []
+    exact: set[int] = set()
+    for r in recs:
+        if "k_lo" not in r:
+            continue
+        lo, hi = int(r["k_lo"]), int(r["k_hi"])
+        if "ks" in r:
+            ks = [int(k) for k in r["ks"]]
+            # The list is the run's own statement of what it scanned; a list
+            # that disagrees with the record's own span or count is corrupt,
+            # and guessing from a corrupt record is how a witness gets minted.
+            if ("n_cols" in r and len(ks) != int(r["n_cols"])) or any(
+                k < lo or k > hi for k in ks
+            ):
+                raise RuntimeError(
+                    f"record p={r.get('p')} [{lo},{hi}] carries ks that disagree "
+                    f"with its own n_cols/span; refusing to infer coverage from it"
+                )
+            exact.update(ks)
+            continue
+        iv.append((lo, hi))
     merged: list[list[int]] = []
-    for lo, hi in iv:
+    for lo, hi in sorted(iv):
         if merged and lo <= merged[-1][1] + 1:
             merged[-1][1] = max(merged[-1][1], hi)
         else:
             merged.append([lo, hi])
-    return merged
+    return merged, exact
 
 
-def _scanned(merged: list[list[int]], k: int) -> bool:
-    """Could this round have tested column k? Empty spans mean "unknown"."""
+def _scanned(cov, k: int) -> bool:
+    """Could this round have tested column k? No records at all means "unknown"."""
+    merged, exact = cov
+    if k in exact:
+        return True
     if not merged:
-        return True                      # no k_lo on the records: legacy, allow
+        # No span-bearing record: legacy checkpoint without k_lo -- allow, as
+        # before -- unless the round is described entirely by explicit column
+        # lists, in which case absence from them is the answer.
+        return not exact
     i = bisect.bisect_right(merged, [k, k]) - 1
     if i >= 0 and merged[i][0] <= k <= merged[i][1]:
         return True

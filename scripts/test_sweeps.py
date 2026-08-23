@@ -234,6 +234,36 @@ def test_certificate_basis_follows_k_exact() -> None:
                "the i=3 sweep record's certificate carries the per-member basis clause")
 
 
+def test_sparse_records_carry_their_column_list() -> None:
+    """Q30. A chunk record whose columns are not contiguous must say WHICH
+    columns it scanned; a contiguous one must not (99.8% of i=8's records
+    are contiguous and their [k_lo, k_hi] is already exact).
+
+    Without the list, a sparse record's span over-covers, and a column the
+    sweep deferred that falls inside it can only be told from a killed one
+    by the count identity -- which stops the build rather than repairing it.
+    """
+    fam = bk.make_fam(5)
+    ivs = bk.live_intervals(bk.cells(fam), fam)
+    a = 300
+    p = bk.first_live_after(a, ivs, fam.D)
+    r = int(binom_mod_lucas(fam.N, fam.K, p))
+    expect(r != 0, f"fixture: p={p} is live for i=5")
+    # same bucket, a gap inside: [a, a+1, a+3] spans 4 columns but scans 3
+    rec = fsw._job(("z", p, [a, a + 1, a + 3], fam.N, fam.K, r))
+    expect(rec["n_cols"] == 3 and rec["k_lo"] == a and rec["k_hi"] == a + 3,
+           "fixture: the chunk is sparse (3 columns over a span of 4)")
+    expect(rec.get("ks") == [a, a + 1, a + 3],
+           f"a sparse chunk record carries its exact column list (got {rec.get('ks')})")
+    dense = fsw._job(("z", p, [a, a + 1, a + 2], fam.N, fam.K, r))
+    expect("ks" not in dense,
+           "a contiguous chunk record carries no column list (its span is exact)")
+    bii = fsw._job(("bii", bk.first_primes_above(fam.N2, fam.D, bk.kmax_of(fam)[0])[0],
+                    [fam.K + 2, fam.K + 5], fam.N, fam.K, None))
+    expect(bii.get("ks") == [fam.K + 2, fam.K + 5],
+           "Band II sparse chunks carry the list as well")
+
+
 def test_import_failure_does_not_lose_the_sweep_json() -> None:
     """A finished sweep must write its record even if `import witness` fails.
 
@@ -746,6 +776,7 @@ def main() -> int:
         test_nolive_is_not_clean()
         test_clean_run_still_clean()
         test_certificate_basis_follows_k_exact()
+        test_sparse_records_carry_their_column_list()
         test_import_failure_does_not_lose_the_sweep_json()
         test_resume_reproduces_an_uninterrupted_run()
         test_m_route_matches_lucas_route_exactly()
