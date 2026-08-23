@@ -549,9 +549,86 @@ def test_ledger_catches_a_certificate_naming_another_table() -> None:
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def test_deferred_column_is_not_credited_a_kill() -> None:
+    """A column the sweep never scanned must NOT get a witness.
+
+    This is the k=1021 defect, reduced to its smallest form. The builders used
+    to infer "absent from this round's survivors" => "killed by this round's
+    prime". A DEFERRED column is absent too: past CAP_Z the sweep drops big-k
+    columns from `current` entirely, so they stop appearing in records without
+    ever having been tested.
+
+    Nothing downstream caught it. The coverage ledger checks that every column
+    HAS a witness, not that the witness is VALID, so it reported
+    "missing 0, ok=True" over a certificate that check_witness rejects. i=8
+    shipped k=1021 -> p=3517 that way, and re-minted it on every rebuild.
+
+    Both guards are exercised, because each covers the other's blind spot:
+    the declared-alive list is exact but the sweep json truncates it above
+    100, and the count identity needs no list but only fires when the records
+    carry n_cols. And two non-regression cases, since a guard that also
+    refuses legitimate builds is not a fix.
+    """
+    from bandii_kernel import cells, first_live_after, live_intervals
+
+    fam = make_fam(5)
+    ivs = live_intervals(cells(fam), fam)
+    prev = first_live_after(300, ivs, fam.D)
+    p = first_live_after(prev, ivs, fam.D)
+    while p - prev < 2:
+        prev, p = p, first_live_after(p, ivs, fam.D)
+    a, b = prev, prev + 1          # same bucket => same next live prime
+    tag = W._pass_tag("z")
+
+    def rec(k_hi, n_cols, survivors):
+        return {"tag": "z1", "p": p, "k_lo": a, "k_hi": k_hi,
+                "n_cols": n_cols, "survivors": survivors,
+                "seconds": 0.0, "n_survivors": len(survivors)}
+
+    # b deferred, json truncated: only the count identity can see it
+    try:
+        w, _ = W.build_zjump([rec(a, 1, [])], a, b, ivs, fam.D, tag)
+        expect(False, f"deferred column credited a kill: {w}")
+    except RuntimeError as exc:
+        expect("never scanned" in str(exc),
+               "count identity refuses a kill for an unscanned column")
+
+    # b deferred, and the sweep json lists it as still alive
+    w, alive = W.build_zjump([rec(a, 1, [])], a, b, ivs, fam.D, tag,
+                             declared_alive=frozenset({b}))
+    expect(b not in w and b in alive and w.get(a) == p,
+           "a column the run declares alive is left unresolved, not credited")
+
+    # non-regression: both genuinely scanned and killed
+    w, alive = W.build_zjump([rec(b, 2, [])], a, b, ivs, fam.D, tag)
+    expect(w == {a: p, b: p} and not alive,
+           "a genuine two-column kill still builds")
+
+    # non-regression: a legacy record with no n_cols must not false-alarm
+    legacy = rec(b, 2, [])
+    del legacy["n_cols"]
+    try:
+        w, _ = W.build_zjump([legacy], a, b, ivs, fam.D, tag)
+        expect(w == {a: p, b: p},
+               "a legacy record without n_cols builds as before")
+    except RuntimeError as exc:
+        expect(False, f"count identity false-alarmed on a legacy record: {exc}")
+
+    # and Band II carries the same guard
+    brec = {"tag": "bii1", "p": p, "prime_index": 1, "k_lo": a, "k_hi": a,
+            "n_cols": 1, "survivors": [], "seconds": 0.0, "n_survivors": 0}
+    try:
+        w, _ = W.build_bandii([brec], a, b, [p], W._pass_tag("bii"))
+        expect(False, f"Band II credited an unscanned column: {w}")
+    except RuntimeError as exc:
+        expect("never scanned" in str(exc),
+               "Band II refuses a kill for an unscanned column too")
+
+
 def main() -> int:
     test_fill_leaves_no_stale_label()
     test_ledger_catches_a_certificate_naming_another_table()
+    test_deferred_column_is_not_credited_a_kill()
     test_repair_replaces_a_false_certificate()
     test_against_exact_arithmetic()
     test_rejects_bad_certificates()

@@ -235,30 +235,71 @@ def _survivors_of(recs: list[dict]) -> dict[int, int]:
     return out
 
 
-def build_bandii(rows, k_lo, k_hi, primes, pass_of):
-    """Band II: pass j tests every still-alive column against primes[j-1]."""
+def _n_ran(recs: list[dict]) -> int:
+    """How many columns the RUN actually scanned in this round.
+
+    Jobs partition the round's live columns and done_keys dedups them, so the
+    sum of n_cols is exact. Older writers omit n_cols, and a partial sum would
+    be worse than none -- it would under-count and fire a false alarm -- so
+    this is all-or-nothing: 0 means "unknown, do not check".
+    """
+    if not recs or not all("n_cols" in r for r in recs):
+        return 0
+    return sum(int(r["n_cols"]) for r in recs)
+
+
+def build_bandii(rows, k_lo, k_hi, primes, pass_of, declared_alive=frozenset()):
+    """Band II: pass j tests every still-alive column against primes[j-1].
+
+    A column is credited a kill ONLY if the run actually scanned it. Absence
+    from a pass's survivor list is NOT evidence of death: a column the sweep
+    DEFERRED is absent too, and crediting it mints a false certificate that
+    the coverage ledger cannot catch, because the ledger checks that every
+    column HAS a witness, not that the witness is valid. That is exactly how
+    i=8 shipped k=1021 -> p=3517 with `missing 0, ok=True`.
+
+    Two guards, deliberately independent:
+      * `declared_alive` -- columns the run itself reported still living. Exact
+        when the sweep json lists them, but it truncates above 100.
+      * a per-pass count identity against the recorded n_cols, which needs no
+        list at all and so survives that truncation.
+    """
     alive = set(range(k_lo, k_hi + 1))
     witness: dict[int, int] = {}
+    unresolved: set[int] = set()
     for j, p in enumerate(primes, start=1):
         recs = [r for r in rows if pass_of(r) == j]
         if not recs:
             break
         survivors = set(_survivors_of(recs))
-        for k in alive - survivors:
+        absent = alive - survivors
+        killed = absent - declared_alive
+        unresolved |= absent & declared_alive
+        for k in killed:
             witness[k] = p
+        n_ran = _n_ran(recs)
+        tested = len(survivors & alive) + len(killed)
+        if n_ran and tested != n_ran:
+            raise RuntimeError(
+                f"Band II pass {j} (p={p}): the run scanned {n_ran} columns, "
+                f"the builder accounted for {tested}. Crediting a kill to a "
+                f"column that was never scanned is how a false certificate is "
+                f"minted -- refusing to guess."
+            )
         alive &= survivors
         if not alive:
             break
-    return witness, alive
+    return witness, alive | unresolved
 
 
-def build_zjump(rows, k_lo, k_hi, ivs, d, round_of):
+def build_zjump(rows, k_lo, k_hi, ivs, d, round_of, declared_alive=frozenset()):
     """Z-jump: each column jumps to the first LIVE prime above its last one."""
     from bandii_kernel import first_live_after
 
     last_p = {k: k for k in range(k_lo, k_hi + 1)}
     witness: dict[int, int] = {}
     untestable: set[int] = set()
+    unresolved: set[int] = set()
     rnd = 1
     while last_p:
         recs = [r for r in rows if round_of(r) == rnd]
@@ -266,8 +307,15 @@ def build_zjump(rows, k_lo, k_hi, ivs, d, round_of):
             break
         survivors = _survivors_of(recs)
         seen = {int(r["p"]) for r in recs}
+        credited = 0
         for k, lp in last_p.items():
             if k in survivors:
+                continue
+            if k in declared_alive:
+                # The run finished with this column still ALIVE. Whatever its
+                # absence from this round looks like, no prime killed it --
+                # the sweep deferred it past CAP_Z and stopped testing it.
+                unresolved.add(k)
                 continue
             p = first_live_after(lp, ivs, d)
             if p is None:
@@ -279,9 +327,22 @@ def build_zjump(rows, k_lo, k_hi, ivs, d, round_of):
                     f"the checkpoint's prime set: builder and run disagree"
                 )
             witness[k] = p
+            credited += 1
+        # `p in seen` only proves the prime was used SOMEWHERE in the round,
+        # not that it was used on THIS column -- which is why it let k=1021
+        # through. The count identity is the check that binds the two.
+        n_ran = _n_ran(recs)
+        tested = len(survivors) + credited
+        if n_ran and tested != n_ran:
+            raise RuntimeError(
+                f"Z-jump round {rnd}: the run scanned {n_ran} columns, the "
+                f"builder accounted for {tested} ({len(survivors)} survivors "
+                f"+ {credited} credited kills). Refusing to credit a kill to a "
+                f"column that was never scanned."
+            )
         last_p = dict(survivors)
         rnd += 1
-    return witness, set(last_p) | untestable
+    return witness, set(last_p) | untestable | unresolved
 
 
 # ---------------------------------------------------------------------------
@@ -650,6 +711,40 @@ def build_i8(chk_bandii: Path, chk_zjump: Path, out: Path) -> dict:
     return save(out, meta, witness)
 
 
+def _declared_alive(chk: Path, i: int) -> tuple[frozenset, frozenset]:
+    """Columns the SWEEP itself reported as still alive, from its json.
+
+    The sweep knows exactly which columns it deferred past CAP_Z and never
+    finished testing; the checkpoint records do not, because a deferred column
+    simply stops appearing. Reading the run's own verdict is the only exact
+    way to tell "absent because killed" from "absent because dropped".
+
+    Truncation is the catch: the json writes the list only when the count is
+    <= 100, and [] otherwise. So this returns what it can and the count
+    identity in the builders covers the rest.
+    """
+    js = chk.parent / f"i{i}_sweep.json"
+    if not js.exists():
+        return frozenset(), frozenset()
+    try:
+        d = json.loads(js.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return frozenset(), frozenset()
+
+    def ks(key: str, n_key: str) -> frozenset:
+        listed = d.get(key) or []
+        got = frozenset(int(x["k"]) if isinstance(x, dict) else int(x)
+                        for x in listed)
+        n = int(d.get(n_key) or 0)
+        if n and len(got) != n:
+            print(f"  note: sweep reports {n} live {key} but lists "
+                  f"{len(got)} -- the list is truncated, so the count "
+                  f"identity is the only guard for the remainder", flush=True)
+        return got
+
+    return ks("bii_survivors", "n_bii_alive"), ks("z_survivors", "n_z_alive")
+
+
 def _build_family(i: int, chk: Path, out: Path) -> dict:
     """Build from a family_sweep / bandii_sweep / zjump checkpoint."""
     from bandii_kernel import (
@@ -666,12 +761,15 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
     rows = read_jsonl(chk)
     primes = first_primes_above(fam.N2, fam.D, kmax, n=max(CAP_BII, 16))[:CAP_BII]
 
+    dec_bii, dec_z = _declared_alive(chk, i)
+
     w_bii, alive_bii = build_bandii(
         rows,
         fam.K + 2,
         kmax,
         primes,
         _pass_tag("bii"),
+        declared_alive=dec_bii,
     )
     k_lo_z = K_EXACT.get(i, 2) + 1
     if k_lo_z < fam.K:
@@ -683,6 +781,7 @@ def _build_family(i: int, chk: Path, out: Path) -> dict:
             ivs,
             fam.D,
             _pass_tag("z"),
+            declared_alive=dec_z,
         )
     else:
         w_z, alive_z = {}, set()
