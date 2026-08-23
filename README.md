@@ -175,6 +175,19 @@ witness, and their checkpoints are gone — which is why i=8 was re-derived in
 one uniform pass. Do not build \(m_{10}\) (~147 million digits) to answer
 small-\(k\) extra-rep; modular already killed those columns.
 
+## Family i=2..9
+
+\(N\bigl(C(F_{2i+2}F_{2i+3},\,F_{2i}F_{2i+3})\bigr)=6\) for every
+\(i=2,\dots,9\): 41,590,228 extra columns, each with a recorded,
+independently checkable modular certificate, and no central solution.
+i=8 and i=9 are *coverage complete, UNBOUND* — their runs ended
+`clean=false`, so no sweep certificate names their tables, which does not
+touch the theorem.
+
+- [`docs/family-N6.md`](docs/family-N6.md) — the family \(N=6\) note:
+  statement, lemmas, per-member exhaustion, the provenance exceptions, and
+  the commands to re-check it
+
 ## i=8 extra columns
 
 Every extra \(k\in[2,k_{\max}]\setminus\{K,K+1\}\) has an unconditional
