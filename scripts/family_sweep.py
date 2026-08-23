@@ -463,9 +463,20 @@ def main() -> int:
     # that tested up to 15 rounds under-describes it. Record both. Adding a
     # key is backward compatible -- check_checkpoint only compares keys that
     # are present in the recorded header, so pre-existing headers still pass.
+    #
+    # n_chunks is identity too (D3). done_keys are (tag, p, k_lo, k_hi) --
+    # chunk BOUNDARIES -- so a resume under a different partition sees every
+    # chunk as pending and re-scans it, while run_jobs also recovers the old
+    # records' survivors of the same tag: every pass-1 survivor twice
+    # (327 -> 654 at i=5), a false ESCALATE, doubled n_alive, clean=True, and
+    # only the witness builder's count identity standing between that and a
+    # certificate. Refuse the merge, as check_checkpoint's docstring promised.
+    # A legacy header without the key still resumes (at the default partition
+    # it was written with); one that carries it refuses any other value.
     ident = dict(i=i, N=fam.N, K=fam.K, k_max=kmax, k_lo_z=k_lo_z,
                  cap_bii=CAP_BII, cap_z=CAP_Z,
-                 cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K)
+                 cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K,
+                 n_chunks=N_CHUNKS)
     check_checkpoint(chk, **ident)
     if not chk.exists() or chk.stat().st_size == 0:
         write_jsonl(chk, checkpoint_identity(**ident))

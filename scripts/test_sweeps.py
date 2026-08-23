@@ -264,6 +264,87 @@ def test_sparse_records_carry_their_column_list() -> None:
            "Band II sparse chunks carry the list as well")
 
 
+def test_resume_refuses_a_changed_chunk_partition() -> None:
+    """D3. The chunk partition is part of a run's identity; resuming under a
+    different one must be REFUSED, not merged.
+
+    done_keys are (tag, p, k_lo, k_hi) -- chunk boundaries. With N_CHUNKS
+    absent from the checkpoint header, a resume under N_CHUNKS=16 of a pass
+    written at 32 passed check_checkpoint, every new chunk looked pending and
+    was re-scanned, AND run_jobs recovered the old records' survivors of the
+    same tag: every pass-1 survivor twice (327 -> 654 at i=5), a false
+    ESCALATE, doubled n_alive in the record, clean=True. The only thing that
+    stopped a certificate was the witness builder's count identity -- a guard
+    built for a different bug. check_checkpoint's docstring already promised
+    to refuse exactly this merge.
+
+    Three things pinned: a changed partition against a header that carries
+    the key is refused; the same partition resumes and reproduces the
+    uninterrupted run; a legacy header without the key still resumes at the
+    default partition (the 90f105c compatibility rule -- no schema bump).
+    """
+    i = 5
+    out, chk = fsw.paths(i)
+    for f in (out, chk):
+        f.unlink(missing_ok=True)
+    sys.argv = ["family_sweep.py", "--i", str(i)]
+    fsw.main()
+    base = json.loads(out.read_text(encoding="utf-8"))
+    base_alive1 = base["phases"]["bandii"][0]["n"]
+    expect(base["clean"] is True and base["certificate"], "fixture: baseline i=5 run is clean")
+
+    lines = chk.read_text(encoding="utf-8").splitlines()
+    header = lines[0]
+    bii1 = [ln for ln in lines[1:] if '"tag": "bii1"' in ln]
+    expect(json.loads(header).get("event") == "schema" and len(bii1) == fsw.N_CHUNKS,
+           f"fixture: pass 1 was written as {len(bii1)} chunks at N_CHUNKS={fsw.N_CHUNKS}")
+
+    def cut(hdr: str) -> None:
+        out.unlink(missing_ok=True)
+        chk.write_text("\n".join([hdr] + bii1) + "\n", encoding="utf-8")
+
+    saved = fsw.N_CHUNKS
+    try:
+        # 1. changed partition against a header that records it: refuse
+        cut(header)
+        fsw.N_CHUNKS = 16
+        refused = False
+        try:
+            fsw.main()
+        except SystemExit as exc:
+            refused = "n_chunks" in str(exc)
+        if refused:
+            expect(True, "a resume under a different N_CHUNKS is refused by the header")
+        else:
+            rep = json.loads(out.read_text(encoding="utf-8")) if out.exists() else {}
+            got = rep.get("phases", {}).get("bandii", [{}])[0].get("n")
+            expect(False, f"a resume under a different N_CHUNKS was ACCEPTED "
+                          f"(pass-1 n_alive {got} vs {base_alive1}, clean={rep.get('clean')})")
+
+        # 2. same partition: resumes and reproduces the uninterrupted run
+        fsw.N_CHUNKS = saved
+        cut(header)
+        fsw.main()
+        rep = json.loads(out.read_text(encoding="utf-8"))
+        expect(rep["phases"]["bandii"][0]["n"] == base_alive1
+               and rep["clean"] is True and rep["certificate"] == base["certificate"],
+               f"the same partition resumes and reproduces the run "
+               f"(pass-1 n_alive {rep['phases']['bandii'][0]['n']} vs {base_alive1})")
+
+        # 3. legacy header without the key: still resumes at the default
+        legacy = json.loads(header)
+        legacy.pop("n_chunks", None)
+        cut(json.dumps(legacy))
+        fsw.main()
+        rep = json.loads(out.read_text(encoding="utf-8"))
+        expect(rep["phases"]["bandii"][0]["n"] == base_alive1 and rep["clean"] is True,
+               "a legacy header without n_chunks still resumes at the default partition")
+    finally:
+        fsw.N_CHUNKS = saved
+        for f in (out, chk):
+            f.unlink(missing_ok=True)
+
+
 def test_import_failure_does_not_lose_the_sweep_json() -> None:
     """A finished sweep must write its record even if `import witness` fails.
 
@@ -779,6 +860,7 @@ def main() -> int:
         test_sparse_records_carry_their_column_list()
         test_import_failure_does_not_lose_the_sweep_json()
         test_resume_reproduces_an_uninterrupted_run()
+        test_resume_refuses_a_changed_chunk_partition()
         test_m_route_matches_lucas_route_exactly()
         test_incremental_done_keys_equals_full_rederivation()
         test_extended_rounds_defer_rather_than_drop()
