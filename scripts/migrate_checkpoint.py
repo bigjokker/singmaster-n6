@@ -40,7 +40,6 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from bandii_kernel import (  # noqa: E402
     CHECKPOINT_SCHEMA,
     checkpoint_identity,
-    kmax_of,
     make_fam,
 )
 
@@ -54,8 +53,13 @@ def looks_live(path: Path, seconds: float = 6.0) -> bool:
 
 def audit(path: Path, ident: dict) -> dict:
     """Check every record against the parameters the header would claim."""
+    from family_sweep import z_cap
+
     fam_K, kmax, k_lo_z = ident["K"], ident["k_max"], ident["k_lo_z"]
-    cap_bii, cap_z = ident["cap_bii"], ident["cap_z"]
+    # The Z-jump's cap is the sweep's loop bound, not cap_z alone: every
+    # small-k member runs to cap_z_small_k (15). Auditing against cap_z (12)
+    # refused the legitimate z13/z14 records of every finished long run.
+    cap_bii, cap_z = ident["cap_bii"], z_cap(ident)
 
     n = 0
     problems: list[str] = []
@@ -136,18 +140,14 @@ def main() -> int:
         print(f"  {args.chk}: missing or empty")
         return 1
 
-    # Built exactly as family_sweep builds it, so the header written here is
-    # the one the sweep will check against on resume. Importing the constants
-    # rather than restating them is the point: a future cap change lands in
-    # both at once.
-    from family_sweep import CAP_BII, CAP_Z, CAP_Z_SMALL_K, K_EXACT, SMALL_K
+    # THE identity family_sweep writes -- the same function, not a restated
+    # dict -- so the header stamped here is the one the sweep checks against
+    # on resume, n_chunks included. A restated copy drifted once (D3 added
+    # n_chunks to the sweep; this file did not have it).
+    from family_sweep import run_identity
 
     fam = make_fam(args.i)
-    kmax, _ = kmax_of(fam)
-    ident = dict(i=args.i, N=fam.N, K=fam.K, k_max=kmax,
-                 k_lo_z=K_EXACT.get(args.i, 2) + 1,
-                 cap_bii=CAP_BII, cap_z=CAP_Z,
-                 cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K)
+    ident = run_identity(args.i)
 
     print(f"  checkpoint : {args.chk}")
     print(f"  size       : {args.chk.stat().st_size:,} bytes")

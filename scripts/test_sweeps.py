@@ -386,6 +386,87 @@ def test_cap_survivors_are_judged_at_phase_end() -> None:
         f.unlink(missing_ok=True)
 
 
+def test_migrator_uses_the_sweeps_pass_cap_and_identity() -> None:
+    """D8. migrate_checkpoint.audit bounded z<n> pass indices by cap_z (12),
+    but the sweep's loop bound is CAP_Z_SMALL_K (15) whenever k_lo_z <
+    SMALL_K -- every member -- so the migrator refused legitimate z13/z14
+    records (real ones exist in results/i8_sweep.jsonl) on exactly the
+    finished long runs it was written for. The header it stamps must be the
+    identity family_sweep writes today, n_chunks included, and the cap it
+    checks against must be the same rule the sweep runs to.
+    """
+    import migrate_checkpoint as MC
+
+    i = 5
+    ident_fn = getattr(fsw, "run_identity", None)
+    expect(callable(ident_fn), "family_sweep exposes run_identity(i)")
+    if not callable(ident_fn):
+        return
+    ident = ident_fn(i)
+    fam = bk.make_fam(i)
+    expect(ident.get("cap_z_small_k") == fsw.CAP_Z_SMALL_K
+           and ident.get("n_chunks") == fsw.N_CHUNKS
+           and ident.get("small_k") == fsw.SMALL_K
+           and ident.get("k_lo_z") == fsw.K_EXACT[i] + 1 and ident.get("K") == fam.K,
+           f"run_identity carries cap_z_small_k and n_chunks ({ident})")
+    expect(ident["k_lo_z"] < ident["small_k"],
+           "fixture: this member runs its Z-jump to CAP_Z_SMALL_K, like every member")
+
+    def rec(tag, k, p):
+        return {"tag": tag, "p": p, "k_lo": k, "k_hi": k, "n_cols": 1,
+                "survivors": [], "n_survivors": 0, "seconds": 0.0}
+
+    tmp = Path(tempfile.mkdtemp(prefix="migrate_test_"))
+    try:
+        kz = ident["k_lo_z"] + 5
+        kb = fam.K + 5
+        cases = {
+            "z13": ([rec("z13", kz, kz + 100)], True),
+            "z15": ([rec("z15", kz, kz + 100)], True),
+            "z16": ([rec("z16", kz, kz + 100)], False),
+            "bii14": ([rec("bii14", kb, kb + 10**6)], True),
+            "bii15": ([rec("bii15", kb, kb + 10**6)], False),
+        }
+        for name, (records, accepted) in cases.items():
+            f = tmp / f"{name}.jsonl"
+            f.write_text("".join(json.dumps(r) + "\n" for r in records), encoding="utf-8")
+            rep = MC.audit(f, ident)
+            cap_msgs = [p for p in rep["problems"] if "outside cap" in p]
+            if accepted:
+                expect(not rep["problems"],
+                       f"{name}: a legitimate record is accepted (problems={rep['problems']})")
+            else:
+                expect(cap_msgs and len(rep["problems"]) == len(cap_msgs),
+                       f"{name}: a pass past the phase's cap is still refused ({cap_msgs})")
+
+        # 4. the ident that would be stamped IS the sweep's: a real header
+        #    from a sandboxed run, minus the event/version envelope
+        out, chk = fsw.paths(2)
+        for f in (out, chk):
+            f.unlink(missing_ok=True)
+        sys.argv = ["family_sweep.py", "--i", "2"]
+        fsw.main()
+        header = json.loads(chk.read_text(encoding="utf-8").splitlines()[0])
+        stamped = bk.checkpoint_identity(**ident_fn(2))
+        expect(header == stamped,
+               f"the header family_sweep writes equals checkpoint_identity(**run_identity(i)) "
+               f"(diff keys: {sorted(k for k in set(header) | set(stamped) if header.get(k) != stamped.get(k))})")
+        for f in (out, chk):
+            f.unlink(missing_ok=True)
+
+        # 5. inspect-only on the real i=8 checkpoint, which carries z13/z14:
+        #    the only problem may be its existing header.
+        real = ROOT / "results" / "i8_sweep.jsonl"
+        if real.exists():
+            rep8 = MC.audit(real, ident_fn(8))
+            expect(rep8["problems"] == ["line 1: already has a schema header"]
+                   and rep8["tags"].get("z13") and rep8["tags"].get("z14"),
+                   f"results/i8_sweep.jsonl: z13/z14 are not problems "
+                   f"({rep8['problems'][:3]})")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def test_import_failure_does_not_lose_the_sweep_json() -> None:
     """A finished sweep must write its record even if `import witness` fails.
 
@@ -900,6 +981,7 @@ def main() -> int:
         test_certificate_basis_follows_k_exact()
         test_sparse_records_carry_their_column_list()
         test_cap_survivors_are_judged_at_phase_end()
+        test_migrator_uses_the_sweeps_pass_cap_and_identity()
         test_import_failure_does_not_lose_the_sweep_json()
         test_resume_reproduces_an_uninterrupted_run()
         test_resume_refuses_a_changed_chunk_partition()

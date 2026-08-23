@@ -220,6 +220,37 @@ def certificate_basis(i: int, k_lo_z: int) -> str:
             f"{kind} run, and carry engine witnesses in the table.")
 
 
+def run_identity(i: int) -> dict:
+    """The parameters that identify a run of member i: what the checkpoint
+    header pins and what check_checkpoint compares on resume.
+
+    ONE source. main() writes exactly this; scripts/migrate_checkpoint.py
+    stamps exactly this onto a pre-schema checkpoint. The migrator used to
+    restate the dict and audited z<n> pass indices against cap_z (12) while
+    the sweep runs to cap_z_small_k (15) whenever k_lo_z < small_k -- every
+    member -- so it refused the legitimate z13/z14 records of the finished
+    long runs it was written for (D8). Keys: see check_checkpoint for the
+    compatibility rule (only keys present in both header and params compare).
+    """
+    fam = make_fam(i)
+    kmax, _ = kmax_of(fam)
+    k_lo_z = K_EXACT.get(i, 2) + 1
+    return dict(i=int(i), N=fam.N, K=fam.K, k_max=kmax, k_lo_z=k_lo_z,
+                cap_bii=CAP_BII, cap_z=CAP_Z,
+                cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K,
+                n_chunks=N_CHUNKS)
+
+
+def z_cap(ident: dict) -> int:
+    """The Z-jump's pass-index cap for a run with this identity: the same
+    rule main() runs to. Small-k members (every member so far) extend to
+    cap_z_small_k; a header without those keys (pre-90f105c) means cap_z."""
+    if "cap_z_small_k" in ident and "small_k" in ident:
+        small = int(ident["k_lo_z"]) < int(ident["small_k"])
+        return int(ident["cap_z_small_k"]) if small else int(ident["cap_z"])
+    return int(ident["cap_z"])
+
+
 
 def _job(payload: tuple) -> dict:
     kind, p, ks, N, K, r_expected = payload
@@ -473,10 +504,9 @@ def main() -> int:
     # certificate. Refuse the merge, as check_checkpoint's docstring promised.
     # A legacy header without the key still resumes (at the default partition
     # it was written with); one that carries it refuses any other value.
-    ident = dict(i=i, N=fam.N, K=fam.K, k_max=kmax, k_lo_z=k_lo_z,
-                 cap_bii=CAP_BII, cap_z=CAP_Z,
-                 cap_z_small_k=CAP_Z_SMALL_K, small_k=SMALL_K,
-                 n_chunks=N_CHUNKS)
+    ident = run_identity(i)
+    check(ident["N"] == fam.N and ident["K"] == fam.K and ident["k_max"] == kmax
+          and ident["k_lo_z"] == k_lo_z, "run_identity agrees with this run's family")
     check_checkpoint(chk, **ident)
     if not chk.exists() or chk.stat().st_size == 0:
         write_jsonl(chk, checkpoint_identity(**ident))
@@ -621,7 +651,7 @@ def main() -> int:
         # Survivors the extended rounds do not serve. They are SET ASIDE, never
         # dropped -- see the loop below.
         z_deferred: list = []
-        cap_z = CAP_Z_SMALL_K if k_lo_z < SMALL_K else CAP_Z
+        cap_z = z_cap(ident)          # == CAP_Z_SMALL_K if k_lo_z < SMALL_K else CAP_Z
         for rnd in range(1, cap_z + 1):
             if not current:
                 break
