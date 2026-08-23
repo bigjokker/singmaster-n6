@@ -173,6 +173,21 @@ def round_rp(fam, primes: list[int]) -> dict:
     return rmap
 SMALL_K = 10**3
 N_CHUNKS = 32
+# MEASURED at i=8, three arms, byte-identical survivors in every one:
+#     numpy@8   wall 772.6 s   Band II cpu 5071.5 s
+#     GM@8      wall 168.8 s   Band II cpu  826.6 s     kernel alone   4.58x
+#     GM@16     wall 163.6 s   Band II cpu 1347.5 s     +workers       1.03x
+# The kernel is the whole win; 8 -> 16 workers buys 3% for 2.9x the memory
+# (2,345 MB vs ~800 MB) and 1.63x MORE cpu for identical work. A 40-column
+# microbenchmark had predicted 1.61x from the worker count; it did not survive
+# real chunks -- the third component ratio in this project to fail that way.
+#
+# The cause of the cpu inflation is NOT established. "E-cores are slower here"
+# was an inference, and pinning the kernel to individual cores does not support
+# it (0.177-0.267 Gelem/s with no bimodal split, core 7 slowest and core 12
+# fastest). The competing explanation is L3/memory contention -- Band II
+# streams ~5 MB factorial windows per worker against a 36 MB L3 -- which more
+# cores of any kind would not fix. Untested either way.
 DEFAULT_WORKERS = 8
 K_EXACT = {2: 200, 3: 200, 4: 200, 5: 200, 6: 200, 7: 200, 9: 80}
 # i=2..7: exact k_extra=200 in fibonacci_i1-7.json

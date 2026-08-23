@@ -143,7 +143,67 @@ def test_toggle_round_trips() -> None:
     expect(K.USE_HALF_SCAN is True, "half-scan is the default")
 
 
+def test_gm_scan_equals_numpy_scan() -> None:
+    """The division-free scan must be byte-identical to the numpy one.
+
+    numpy does the test as (s*F) %% p, and int64 %% compiles to scalar idiv --
+    there is no SIMD integer division on x86, which is why production sat at
+    ~0.167 Gelem/s. Granlund-Montgomery replaces it: with pinv = p^-1 mod 2^64,
+    p | d iff d*pinv <= floor((2^64-1)/p). One multiply, one compare.
+
+    MEASURED end to end at i=8, three arms, byte-identical survivors in every
+    one: numpy@8 wall 772.6 s, GM@8 168.8 s (4.58x), GM@16 163.6 s. But a
+    faster kernel that moved a single survivor would be worthless, so what is
+    pinned here is EQUALITY, not speed -- every record, including the witness
+    index b, and both k parities (the odd branch scans the -s side downward,
+    since a hit at half-index j is a full-scan hit at g-1-j).
+    """
+    saved = K.USE_GM_SCAN
+    try:
+        for i in (5, 6, 7):
+            fam = K.make_fam(i)
+            kmax, _ = K.kmax_of(fam)
+            p = int(K.first_primes_above(fam.N2, fam.D, kmax, n=1)[0])
+            r = K.r_closed(p, N=fam.N, K=fam.K)
+            lo = fam.K + 2
+            ks = [k for k in range(lo, min(lo + 90, kmax + 1))]
+            if not ks:
+                continue
+            K.USE_GM_SCAN = False
+            want = K.scan_ks_windowed(p, r, ks)
+            K.USE_GM_SCAN = True
+            got = K.scan_ks_windowed(p, r, ks)
+            odd = sum(1 for d in want if d["k_odd"])
+            expect(got == want,
+                   f"GM scan == numpy scan at i={i} "
+                   f"({len(want)} survivors of {len(ks)} columns, {odd} odd-k)")
+            if got != want:
+                bad = [(a, b) for a, b in zip(got, want) if a != b][:2]
+                errors.append(f"  first divergence: {bad}")
+            expect(any(d["k_odd"] for d in want) or not want,
+                   f"i={i} sample exercises the odd-k negated branch "
+                   f"({odd} odd-k survivors)")
+    finally:
+        K.USE_GM_SCAN = saved
+
+    # and it must refuse r(p)=0 exactly as the numpy path does
+    K.USE_GM_SCAN = True
+    try:
+        fam = K.make_fam(5)
+        kmax, _ = K.kmax_of(fam)
+        p = int(K.first_primes_above(fam.N2, fam.D, kmax, n=1)[0])
+        try:
+            K.scan_ks_windowed(p, 0, [fam.K + 2])
+            expect(False, "GM path refuses r(p)=0")
+        except ValueError as exc:
+            expect("r(p)=0" in str(exc) and "kills nothing" in str(exc),
+                   f"GM path refuses r(p)=0 like the numpy path ({str(exc)[:46]})")
+    finally:
+        K.USE_GM_SCAN = saved
+
+
 def main() -> int:
+    test_gm_scan_equals_numpy_scan()
     test_half_equals_full()
     test_against_exact_arithmetic()
     test_reported_b_is_the_least_hit()

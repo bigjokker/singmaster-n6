@@ -191,6 +191,37 @@ USE_HALF_SCAN = True
 # them. Exact; flip to False to A/B against the table-based path.
 USE_WINDOWED_SCAN = True
 
+# Granlund-Montgomery half-scan: replace numpy's int64 `%` with a multiply and
+# a compare. There is no SIMD integer division on x86, so (s*F) % p compiles to
+# scalar idiv and production sits at ~0.167 Gelem/s. With pinv = p^-1 mod 2^64,
+# p | d iff d*pinv <= floor((2^64-1)/p). Byte-identical output, witness index
+# included. UNPROVEN end to end until the A/B says otherwise -- flip to test.
+USE_GM_SCAN = __import__("os").environ.get("SM_GM_SCAN", "1") == "1"
+
+try:
+    from numba import njit as _njit
+
+    @_njit(cache=True, nogil=True)
+    def _gm_first(Flow, Fneg, s, pinv, lim, half):
+        for b in range(half):
+            if (s * Flow[b] + Fneg[b]) * pinv <= lim:
+                return b
+        return -1
+
+    @_njit(cache=True, nogil=True)
+    def _gm_last(Flow, Fpos, s, pinv, lim, half):
+        # the -s branch wants the GREATEST half-index: a hit at j is a
+        # full-scan hit at g-1-j, which shrinks as j grows, so scanning
+        # downward returns the least full index on the first success.
+        for b in range(half - 1, -1, -1):
+            if (s * Flow[b] + Fpos[b]) * pinv <= lim:
+                return b
+        return -1
+
+    _HAVE_NUMBA = True
+except Exception:                                   # numba is optional
+    _HAVE_NUMBA = False
+
 
 def _check_r(r: int, p: int) -> int:
     """r=0 would make the scan report every column killed, which is false.
@@ -348,6 +379,8 @@ def scan_ks_windowed(p: int, r: int, ks) -> list[dict]:
     H = max(halves.values())
     F_low = fact_window(p, 0, H)
     F_hi = fact_window(p, lo, hi - lo + 1)
+    if USE_GM_SCAN and _HAVE_NUMBA:
+        return _scan_ks_gm(p, rp, ks, lo, halves, F_low, F_hi)
     p64 = np.int64(p)
     out: list[dict] = []
     for k in ks:
@@ -372,6 +405,36 @@ def scan_ks_windowed(p: int, r: int, ks) -> list[dict]:
             out.append({"k": k, "g": g, "g_even": g % 2 == 0,
                         "k_odd": k % 2 == 1, "b": b})
         del eq
+    return out
+
+
+def _scan_ks_gm(p, rp, ks, lo, halves, F_low, F_hi):
+    """scan_ks_windowed's loop with the division removed. Same records."""
+    import numpy as np
+
+    pinv = np.uint64(pow(p, -1, 1 << 64))
+    lim = np.uint64(((1 << 64) - 1) // p)
+    Flow = F_low.astype(np.uint64)
+    Fpos = F_hi.astype(np.uint64)
+    Fneg = (np.uint64(p) - Fpos) % np.uint64(p)
+    out: list[dict] = []
+    for k in ks:
+        g = p - k
+        if g <= 0:
+            continue
+        half = halves[k]
+        off = k - lo
+        s = np.uint64(rp * int(F_hi[off]) % p)
+        j = _gm_first(Flow[:half], Fneg[off:off + half], s, pinv, lim, half)
+        b = int(j) if j >= 0 else None
+        if k % 2 == 1:
+            j2 = _gm_last(Flow[:half], Fpos[off:off + half], s, pinv, lim, half)
+            if j2 >= 0:
+                cand = g - 1 - int(j2)
+                b = cand if b is None else min(b, cand)
+        if b is not None:
+            out.append({"k": k, "g": g, "g_even": g % 2 == 0,
+                        "k_odd": k % 2 == 1, "b": b})
     return out
 
 
