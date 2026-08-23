@@ -236,8 +236,18 @@ phase verdict is the per-round fire **or** the cap-survivor fire.
 
 ```text
 python scripts/sizelaw.py run --i 9 --k 11
-python scripts/sizelaw.py predict --check
+python scripts/sizelaw.py run --i 8 --k 2227205 --cap 8 --ladder
+python scripts/sizelaw.py predict --i 9 --check
 ```
+
+`predict --i N` regenerates member N's own Band II curve from \((N,K)\)
+alone; `--check` scores i=8 against the pre-registration fixed before its
+run and any other member against the window and primes its run record
+carries (a member is never scored against another member's table). `run`
+assesses a column only if it was tested to a kill or to the cap: a walk
+whose prime budget runs out inside a forced-zero slab is reported as
+**NOT TESTED** with exit 2, never as "ordinary" — use `--ladder` for a
+Band I / fat-cell column, which walks the member's live-prime ladder.
 
 The law has no fitted parameters: \(|I_{p,k}|\) is the proved involution bound
 (\(g+1\) for odd \(k\), \(\lceil g/2\rceil+1\) for even) minus birthday

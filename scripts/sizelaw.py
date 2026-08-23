@@ -395,12 +395,38 @@ class RoundLedger:
 # prime chains, per regime
 # ---------------------------------------------------------------------------
 
-def live_run(N: int, K: int, k: int, cap: int = 40):
+class _Exhausted:
+    """Sentinel: the walk's prime budget ran out before `cap` live primes were
+    seen and before a kill. Distinct from None (= the column reached the cap)
+    and from a prime (= killed). Falsy, so `if kill:` still means "killed"."""
+
+    def __bool__(self) -> bool:
+        return False
+
+    def __repr__(self) -> str:
+        return "EXHAUSTED"
+
+
+EXHAUSTED = _Exhausted()
+
+
+def live_run(N: int, K: int, k: int, cap: int = 40, budget: int | None = None):
     """Small-k regime: walk primes above k, skipping dead ones, until a kill.
 
     Dead primes (r(p)=0, a Kummer carry) test nothing and must not count
     toward run length -- that conflation is what made Stage 1's max_r=89
     look alarming.
+
+    Returns (survived, kill, dead) with THREE distinct second slots:
+      a prime   -- the column was killed there, after `survived`;
+      None      -- the column survived `cap` live primes (reached the cap);
+      EXHAUSTED -- the walk's budget (`budget` primes, default cap*40) ran
+                   out first. `survived` is then a PARTIAL run, possibly
+                   empty: the column was not tested to the cap and must not
+                   be assessed as if it had been. Under a forced-zero slab
+                   the first live prime can be tens of thousands of primes
+                   away (i=8 k=2227205: 2700967), so a small budget sees
+                   only dead primes; use live_ladder for Band I columns.
     """
     import gmpy2
 
@@ -409,7 +435,8 @@ def live_run(N: int, K: int, k: int, cap: int = 40):
     p = int(k)
     survived: list[int] = []
     dead = 0
-    for _ in range(cap * 40):
+    n_budget = int(budget) if budget is not None else cap * 40
+    for _ in range(n_budget):
         p = int(gmpy2.next_prime(p))
         r = lucas_mod_pure(N, K, p)
         if r == 0:
@@ -420,7 +447,38 @@ def live_run(N: int, K: int, k: int, cap: int = 40):
         survived.append(p)
         if len(survived) >= cap:
             return survived, None, dead
-    return survived, None, dead
+    return survived, EXHAUSTED, dead
+
+
+def live_ladder(fam, k: int, cap: int = 40):
+    """Band I regime: walk the member's LIVE-PRIME LADDER above k, testing
+    each rung, until a kill or `cap` rungs. The ladder skips forced-zero
+    slabs analytically (cells / live_intervals), so this reaches the first
+    live prime of a fat-cell column in one step where a prime-by-prime walk
+    sees only dead primes. Same return shape as live_run; EXHAUSTED here
+    means the ladder ran out (no live prime left below d), which is the
+    sweep's "no live prime" anomaly, not a budget.
+    """
+    from bandii_kernel import cells, first_live_after, live_intervals
+    from witness import image_hit_tablefree, lucas_mod_pure
+
+    ivs = live_intervals(cells(fam), fam)
+    survived: list[int] = []
+    x = int(k)
+    for _ in range(cap):
+        p = first_live_after(x, ivs, fam.D)
+        if p is None:
+            return survived, EXHAUSTED, 0
+        r = lucas_mod_pure(fam.N, fam.K, p)
+        if r == 0:
+            # the ladder promised a live prime; r=0 means ladder and family
+            # disagree -- refuse rather than count it either way
+            raise RuntimeError(f"ladder prime {p} has r(p)=0 for k={k}")
+        if image_hit_tablefree(p, r, k) is None:
+            return survived, p, 0
+        survived.append(p)
+        x = p
+    return survived, None, 0
 
 
 def zjump_chain(k: int, ivs, d: int, n: int):
@@ -503,6 +561,131 @@ def expected_alive(kmin: int, kmax: int, primes) -> list[dict]:
     return rows
 
 
+def predict_member(i: int, cap: int | None = None):
+    """The Band II pre-registration curve for member i, from the model alone.
+
+    Window and primes are derived from (N, K) exactly as family_sweep derives
+    them: columns [K+2, k_max], the first CAP_BII live primes in (N/2, d]
+    above k_max. Nothing is read from a run record. Returns (rows, meta).
+
+    This is what `predict --i N` prints. It used to import i=8's module
+    constants regardless of N, so `predict --i 9` printed i=8's curve and
+    `--check` scored it against i=8's table.
+    """
+    from bandii_kernel import first_primes_above, kmax_of, make_fam
+    from family_sweep import CAP_BII
+
+    fam = make_fam(i)
+    kmax, _ = kmax_of(fam)
+    n = int(cap) if cap else CAP_BII
+    primes = first_primes_above(fam.N2, fam.D, kmax, n=max(n, 16))[:n]
+    kmin = fam.K + 2
+    rows = expected_alive(kmin, kmax, primes)
+    return rows, {"i": int(i), "N": fam.N, "K": fam.K, "kmin": kmin,
+                  "kmax": kmax, "primes": primes}
+
+
+def check_member(i: int, rows, meta, tol: float = 0.02) -> dict:
+    """Is the regenerated curve the one this member is on record with?
+
+    i=8: against the pre-registration that was fixed BEFORE its Band II run
+    (scripts/bandii_sweep.py PREREGISTER, also results/bandii_sweep.json).
+    Any other member: against its run record results/i{i}_sweep.json --
+    the window k_bii and the prime list primes_bii must be the ones derived
+    here, and the model over THAT window must equal `rows`. Where the record
+    carries per-pass observed survivors they are reported beside the model,
+    as information; the recorded run is an outcome, not a prediction, and is
+    not scored. A member is never scored against another member's table.
+    """
+    out = {"i": int(i), "against": None, "ok": False, "mismatches": 0,
+           "notes": [], "preregister_compared": False}
+    if int(i) == 8:
+        from bandii_sweep import PREREGISTER
+
+        out["against"] = "preregister"
+        out["preregister_compared"] = True
+        for row in rows:
+            pre = PREREGISTER.get(row["prime_index"])
+            if not pre:
+                continue
+            if abs(row["alive"] - pre["alive"]) > tol * max(pre["alive"], 1e-9):
+                out["mismatches"] += 1
+                out["notes"].append(
+                    f"pass {row['prime_index']}: model {row['alive']:.4g} vs "
+                    f"recorded {pre['alive']:.4g}")
+        out["ok"] = out["mismatches"] == 0
+        return out
+
+    rec_path = ROOT / "results" / f"i{i}_sweep.json"
+    if not rec_path.exists():
+        out["against"] = None
+        out["notes"].append(f"no run record {rec_path.name}; nothing to check "
+                            f"against -- the model is printed, not scored")
+        out["ok"] = False
+        return out
+    rec = json.loads(rec_path.read_text(encoding="utf-8"))
+    out["against"] = "sweep_record"
+    k_bii = [int(x) for x in rec.get("k_bii", [])]
+    primes_rec = [int(x) for x in rec.get("primes_bii", [])]
+    if k_bii != [meta["kmin"], meta["kmax"]]:
+        out["mismatches"] += 1
+        out["notes"].append(f"window: derived [{meta['kmin']}, {meta['kmax']}] vs "
+                            f"recorded {k_bii}")
+    if primes_rec[:len(meta["primes"])] != meta["primes"]:
+        out["mismatches"] += 1
+        out["notes"].append("primes_bii in the record differ from the derived ladder")
+    if not out["mismatches"]:
+        ref = expected_alive(k_bii[0], k_bii[1], primes_rec)
+        for a, b in zip(rows, ref):
+            if abs(a["alive"] - b["alive"]) > 1e-9 * max(1.0, b["alive"]):
+                out["mismatches"] += 1
+                out["notes"].append(f"pass {a['prime_index']}: model over the derived "
+                                    f"window {a['alive']:.6g} != over the recorded "
+                                    f"window {b['alive']:.6g}")
+    observed = {int(r["prime_index"]): int(r["n"])
+                for r in (rec.get("phases") or {}).get("bandii") or []}
+    out["observed"] = observed
+    if not observed:
+        out["notes"].append("the record carries no per-pass Band II survivors "
+                            "(resumed leg); model printed without an observed column")
+    out["ok"] = out["mismatches"] == 0
+    return out
+
+
+def run_report(i: int, k: int, cap: int, peers: int, ladder: bool = False,
+               budget: int | None = None) -> dict:
+    """What `run` prints. Assesses ONLY a column that was actually tested to
+    a kill or to the cap; an exhausted walk is reported as untested, never as
+    'ordinary'."""
+    from bandii_kernel import make_fam
+
+    fam = make_fam(i)
+    if ladder:
+        survived, kill, dead = live_ladder(fam, k, cap)
+    else:
+        survived, kill, dead = live_run(fam.N, fam.K, k, cap, budget=budget)
+    base = {"i": int(i), "k": int(k), "cap": int(cap), "peers": int(peers),
+            "walk": "ladder" if ladder else "next-prime",
+            "dead_primes_skipped": dead}
+    if kill is EXHAUSTED:
+        n_budget = int(budget) if budget is not None else cap * 40
+        why = ("no live prime left on the ladder below d"
+               if ladder else
+               f"walked {n_budget} primes above k and met {len(survived)} live "
+               f"prime(s) and {dead} dead; the first live prime of a Band I "
+               f"column can sit tens of thousands of primes up. Re-run with "
+               f"--ladder (walks the member's live ladder) or a larger --budget.")
+        return {**base, "tested": False, "run": len(survived), "primes": survived,
+                "lambda": None, "expected": None, "escalate": None,
+                "reason": f"NOT TESTED: {why}", "kill_prime": None}
+    lam = run_lambda(k, survived)
+    rep = assess(k, survived, expected=peers * lam, observed=1)
+    rep.update(base)
+    rep.update({"tested": True, "kill_prime": kill,
+                "reached_cap": kill is None})
+    return rep
+
+
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
@@ -518,6 +701,12 @@ def main() -> int:
     r.add_argument("--peers", type=int, default=3000,
                    help="columns in the same regime that could have done the "
                         "same; the honest multiplier for a one-off assessment")
+    r.add_argument("--ladder", action="store_true",
+                   help="walk the member's live-prime ladder (skips forced-zero "
+                        "slabs analytically) instead of every prime above k; "
+                        "what a Band I / fat-cell column needs")
+    r.add_argument("--budget", type=int, default=None,
+                   help="primes to walk before giving up (default cap*40)")
 
     s = sub.add_parser("scan", help="small-k census ranked by surprise")
     s.add_argument("--i", type=int, required=True)
@@ -526,31 +715,34 @@ def main() -> int:
     s.add_argument("--cap", type=int, default=20)
     s.add_argument("--json_out", type=Path, default=None)
 
-    p = sub.add_parser("predict", help="regenerate a Band II pre-registration")
+    p = sub.add_parser("predict", help="regenerate a member's Band II curve "
+                                        "from the model alone")
     p.add_argument("--i", type=int, default=8)
     p.add_argument("--check", action="store_true",
-                   help="compare against the recorded pre-registration")
+                   help="i=8: compare against its pre-registration; other i: "
+                        "against the window and primes in results/i{i}_sweep.json")
 
     args = ap.parse_args()
     from bandii_kernel import make_fam
 
     if args.cmd == "run":
-        fam = make_fam(args.i)
-        survived, kill, dead = live_run(fam.N, fam.K, args.k, args.cap)
-        lam = run_lambda(args.k, survived)
-        rep = assess(args.k, survived, expected=args.peers * lam, observed=1)
-        rep.update({"i": args.i, "kill_prime": kill, "dead_primes_skipped": dead,
-                    "peers": args.peers})
+        rep = run_report(args.i, args.k, args.cap, args.peers,
+                         ladder=args.ladder, budget=args.budget)
         print(json.dumps(rep, indent=2))
-        return 0
+        return 0 if rep["tested"] else 2
 
     if args.cmd == "scan":
         fam = make_fam(args.i)
         rows = []
+        untested: list[int] = []
         for k in range(args.kmin, args.kmax + 1):
             if k in (fam.K, fam.K + 1):
                 continue
             survived, kill, dead = live_run(fam.N, fam.K, k, args.cap)
+            if kill is EXHAUSTED:
+                # not tested to a kill or to the cap: do not rank it, say so
+                untested.append(k)
+                continue
             if not survived:
                 continue
             lam = run_lambda(k, survived)
@@ -561,6 +753,10 @@ def main() -> int:
         longest = max(rows, key=lambda x: x["run"]) if rows else None
         print(f"  i={args.i}  k={args.kmin}..{args.kmax}  columns with run>=1: "
               f"{len(rows)}", flush=True)
+        if untested:
+            print(f"  NOT TESTED (walk budget exhausted before a kill or the cap): "
+                  f"{len(untested)} column(s), e.g. {untested[:8]} -- excluded "
+                  f"from the ranking, not called ordinary", flush=True)
         if longest:
             print(f"  longest run      k={longest['k']} run={longest['run']} "
                   f"expected={longest['expected']:.3g}", flush=True)
@@ -572,33 +768,38 @@ def main() -> int:
             args.json_out.write_text(
                 json.dumps({"search": "sizelaw_scan", "i": args.i,
                             "k_range": [args.kmin, args.kmax],
-                            "n_with_run": len(rows), "rows": rows[:500]}, indent=2),
+                            "n_with_run": len(rows), "n_untested": len(untested),
+                            "untested": untested[:500], "rows": rows[:500]}, indent=2),
                 encoding="utf-8",
             )
             print(f"  wrote {args.json_out}", flush=True)
         return 0
 
-    from bandii_kernel import CAP, KMAX, KMIN, PRIMES
-
-    rows = expected_alive(KMIN, KMAX, PRIMES[:CAP])
+    rows, meta = predict_member(args.i)
+    print(f"  i={args.i}  Band II columns [{meta['kmin']}, {meta['kmax']}]  "
+          f"{len(meta['primes'])} live primes from p1={meta['primes'][0]}")
     print(f"  {'pass':>4} {'p':>9} {'alive':>10} {'even_g':>7} {'mean_k':>10}")
     for row in rows:
         print(f"  {row['prime_index']:>4} {row['p']:>9} {row['alive']:>10.4g} "
               f"{row['even_g_frac']:>7.3f} {row['mean_k']:>10.0f}")
     if args.check:
-        from bandii_sweep import PREREGISTER
-
-        bad = 0
-        for row in rows:
-            pre = PREREGISTER.get(row["prime_index"])
-            if not pre:
-                continue
-            if abs(row["alive"] - pre["alive"]) > 0.02 * max(pre["alive"], 1e-9):
-                print(f"    MISMATCH pass {row['prime_index']}: model "
-                      f"{row['alive']:.4g} vs recorded {pre['alive']:.4g}", flush=True)
-                bad += 1
-        print(f"  pre-registration check: {'OK' if not bad else str(bad)+' mismatches'}")
-        return 0 if not bad else 1
+        chk = check_member(args.i, rows, meta)
+        for note in chk["notes"]:
+            print(f"    {note}", flush=True)
+        obs = chk.get("observed") or {}
+        if obs:
+            print(f"  {'pass':>4} {'model':>10} {'observed':>9}   (observed is the "
+                  f"recorded run: an outcome, not scored)")
+            for row in rows:
+                if row["prime_index"] in obs:
+                    print(f"  {row['prime_index']:>4} {row['alive']:>10.4g} "
+                          f"{obs[row['prime_index']]:>9}")
+        what = {"preregister": "pre-registration (fixed before the run)",
+                "sweep_record": f"results/i{args.i}_sweep.json window and primes",
+                None: "nothing (no record for this member)"}[chk["against"]]
+        print(f"  check against {what}: "
+              f"{'OK' if chk['ok'] else str(chk['mismatches']) + ' mismatches'}")
+        return 0 if chk["ok"] else 1
     return 0
 
 

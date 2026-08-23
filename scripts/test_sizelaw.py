@@ -515,7 +515,123 @@ def test_chain_to_last_prime_reconstructs_what_a_survivor_faced() -> None:
                "reason, not dropped and not called ordinary")
 
 
+def test_predict_uses_the_requested_member() -> None:
+    """D7(a). `predict --i N` ignored N: it imported i=8's module constants
+    (KMIN/KMAX/PRIMES/CAP) and printed i=8's curve for every member, and
+    `--check` scored that curve against i=8's pre-registration -- so the
+    README's "integrity check of the model" could pass for the wrong member.
+
+    Pinned: i=9's curve starts at i=9's first Band II prime with ~7e5 alive;
+    i=8 still reproduces its recorded pre-registration; i=9's check agrees
+    with the model over the window and primes its own run record carries.
+    """
+    import json
+    import subprocess
+
+    from bandii_kernel import CAP, PRIMES
+
+    fn = getattr(S, "predict_member", None)
+    expect(callable(fn), "sizelaw exposes predict_member(i)")
+    if not callable(fn):
+        return
+
+    # 1. i=9 is i=9
+    rows9, meta9 = fn(9)
+    expect(rows9[0]["p"] == 37024873 and 7.0e5 < rows9[0]["alive"] < 7.06e5,
+           f"predict --i 9 pass 1 is p={rows9[0]['p']} alive={rows9[0]['alive']:.6g} "
+           f"(i=9's window, not i=8's p=5401853 / 1.026e5)")
+    expect(meta9["kmin"] == 28284466 and meta9["kmax"] == 35522329,
+           f"predict --i 9 window is i=9's Band II [{meta9['kmin']}, {meta9['kmax']}]")
+    # the CLI itself, as the README advertises it
+    out = subprocess.run([sys.executable, str(ROOT / "scripts" / "sizelaw.py"),
+                          "predict", "--i", "9"], capture_output=True, text=True,
+                         timeout=120).stdout
+    first = next((ln for ln in out.splitlines() if ln.split()[:1] == ["1"]), "")
+    expect("37024873" in first and "5401853" not in out,
+           f"CLI `predict --i 9` prints i=9's first prime on pass 1 ({first.strip()!r})")
+
+    # 2. i=8 still matches its recorded pre-registration
+    rows8, meta8 = fn(8)
+    expect(meta8["primes"] == PRIMES[:CAP],
+           "predict --i 8 uses exactly the recorded i=8 Band II primes")
+    chk8 = S.check_member(8, rows8, meta8)
+    expect(chk8["ok"] and chk8["against"] == "preregister" and chk8["mismatches"] == 0,
+           f"predict --i 8 --check matches the recorded pre-registration "
+           f"({chk8['mismatches']} mismatches, against {chk8['against']!r})")
+
+    # 3. i=9's check is against its own run record, not i=8's table
+    chk9 = S.check_member(9, rows9, meta9)
+    rep = json.loads((ROOT / "results" / "i9_sweep.json").read_text(encoding="utf-8"))
+    ref = S.expected_alive(rep["k_bii"][0], rep["k_bii"][1], rep["primes_bii"])
+    same = all(abs(a["alive"] - b["alive"]) <= 1e-9 * max(1.0, b["alive"])
+               for a, b in zip(rows9, ref))
+    expect(chk9["ok"] and chk9["against"] == "sweep_record" and same,
+           f"predict --i 9 --check agrees with expected_alive over i9_sweep.json's "
+           f"k_bii/primes_bii (against {chk9['against']!r}, ok={chk9['ok']})")
+    expect(chk9.get("preregister_compared") is not True,
+           "an i that is not 8 is never scored against i=8's pre-registration")
+
+
+def test_run_does_not_call_an_untested_column_ordinary() -> None:
+    """D7(b). live_run returned (survived, None, dead) both when the column
+    reached the live-prime cap and when the walk's budget ran out inside dead
+    primes. For a Band I column under a forced-zero slab that is every walk:
+    `run --i 8 --k 2227205 --cap 5` printed run 0, lambda 1.0, escalate false,
+    reason "ordinary", kill_prime null -- for a column it never tested
+    against a single live prime. The real run is 6 live primes, kill 2701099.
+    """
+    import json
+    import subprocess
+
+    from bandii_kernel import make_fam
+
+    fam = make_fam(8)
+    k = 2227205
+    surv, kill, dead = S.live_run(fam.N, fam.K, k, cap=5)
+    exhausted = getattr(S, "EXHAUSTED", None)
+    expect(exhausted is not None and kill is exhausted and not surv,
+           f"live_run reports the exhausted budget as EXHAUSTED, not as a cap "
+           f"(kill={kill!r}, survived={surv}, dead={dead})")
+    # a genuine cap and a genuine kill are still distinguishable from it
+    fam9 = make_fam(9)
+    s11, k11, _ = S.live_run(fam9.N, fam9.K, 11, cap=20)
+    expect(k11 == 449 and len(s11) == 8, "a real kill still returns the killing prime")
+    s11c, k11c, _ = S.live_run(fam9.N, fam9.K, 11, cap=3)
+    expect(k11c is None and len(s11c) == 3, "a real cap still returns kill=None")
+
+    # the CLI must refuse, not assess
+    cmd = [sys.executable, str(ROOT / "scripts" / "sizelaw.py"), "run",
+           "--i", "8", "--k", str(k), "--cap", "5"]
+    res = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+    try:
+        rep = json.loads(res.stdout)
+    except json.JSONDecodeError:
+        rep = {}
+    expect(rep.get("reason") != "ordinary" and rep.get("escalate") is not False
+           and rep.get("tested") is False,
+           f"CLI run on the fat-cell column does not report ordinary "
+           f"(rc={res.returncode}, reason={rep.get('reason')!r}, tested={rep.get('tested')!r})")
+    expect(res.returncode != 0, "and exits non-zero, since nothing was assessed")
+
+    # walking the member's live ladder instead reaches the real run
+    res2 = subprocess.run(cmd + ["--ladder"], capture_output=True, text=True, timeout=120)
+    rep2 = json.loads(res2.stdout) if res2.stdout.strip().startswith("{") else {}
+    expect(rep2.get("tested") is True and rep2.get("run") == 5
+           and rep2.get("kill_prime") is None and rep2.get("reason") == "ordinary"
+           and rep2.get("primes", [])[:3] == [2700967, 2700979, 2700989],
+           f"--ladder --cap 5 walks the live ladder: run 5 at the cap, primes "
+           f"{rep2.get('primes')} (expected 2700967, 2700979, 2700989, ...)")
+    res3 = subprocess.run(cmd[:-2] + ["--cap", "8", "--ladder"],
+                          capture_output=True, text=True, timeout=120)
+    rep3 = json.loads(res3.stdout) if res3.stdout.strip().startswith("{") else {}
+    expect(rep3.get("run") == 6 and rep3.get("kill_prime") == 2701099,
+           f"--ladder --cap 8 reproduces the record: run 6, killed at 2701099 "
+           f"(got run={rep3.get('run')}, kill={rep3.get('kill_prime')})")
+
+
 def main() -> int:
+    test_predict_uses_the_requested_member()
+    test_run_does_not_call_an_untested_column_ordinary()
     test_cap_survivor_check_fires_on_a_lone_column_to_the_cap()
     test_cap_survivor_check_stays_ordinary_on_high_survival_runs()
     test_chain_to_last_prime_reconstructs_what_a_survivor_faced()
