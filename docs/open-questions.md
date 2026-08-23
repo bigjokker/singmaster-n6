@@ -622,7 +622,7 @@ Next target is `k = 8`, not `k = 9`: even, so Q25's reduction applies, giving
 a quartic `g` with `e1 = 84`, where Case 3 becomes a surface rather than a
 bounded conic. Full write-up in [`q26-k7-intersective.md`](q26-k7-intersective.md).
 
-### Q27. Is `(x)_8 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Siegel) 2026-08-20
+### Q27. Is `(x)_8 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Siegel) 2026-08-20 — **PROVED outright** 2026-08-23: the genus-3 curve is solved, no Siegel needed
 **No.** Q26 predicted `k=8` would be hard because "Case 3 becomes a surface
 rather than a bounded conic". **That prediction was wrong** -- Cases 3 and 5
 both stayed bounded, and the difficulty moved into Case 2.
@@ -634,9 +634,10 @@ non-square, so a positive density of `p` has both non-residues and `g` has no
 root at all -- unconditionally dead, no side condition).
 
 Two are bounded. `e1=84, e2=1974, e3=12916` are FIXED, so two roots summing to
-`s` have their product forced, and `disc = s^2-4p(s) ~ -s^2` confines `s` to
-`[10,74]`. **Case 5** gives only `{1,9,25,49}`, i.e. `c=0`; **Case 3 proper is
-EMPTY**.
+`s` have their product forced; INTEGRALITY of p(s) needs s even with
+`(s-42) | 2048` (22 values -- the 08-20 "disc >= 0 confines s to [10,74]"
+justification was wrong, caught 08-23; the enumeration was complete anyway).
+**Case 5** gives only `{1,9,25,49}`, i.e. `c=0`; **Case 3 proper is EMPTY**.
 
 That leaves **Case 2**, `g = (u-beta) x irreducible cubic` -- infinite. The
 kill needs a prime with `(beta|p) = -1` and Frobenius a 3-cycle on `q`, which
@@ -649,12 +650,25 @@ difference `(R(u)-R(beta))/(u-beta)`, so **disc(q) is a POLYNOMIAL in beta**,
 whose integral points are exactly `beta in {0,1,9,25,49}` -- the roots of `R`
 plus 0. All are perfect squares (excluded) or give `c=0`. **No dangerous beta
 exists**, so Chebotarev always applies. Direct check: 197 candidates with
-`|beta| <= 4000`, zero dangerous, all killed by `p <= 29`.
+`|beta| <= 4000`, zero dangerous, every one killed (`p <= 29` at
+`|beta| <= 1200`; the worst case out to 4000 is `beta = 3705`, killed at 43
+-- the earlier "all killed by p <= 29" claim was wrong past 1200).
 
-**Gap**: Siegel gives finiteness and Baker makes it effective, but the
-effective computation was not run (search covers `|beta| <= 20000`). Better
-than Q26's gap: the points found are exactly the geometrically forced ones,
-not merely "whatever the search turned up".
+**The gap is CLOSED (2026-08-23)** -- and the curve is SOLVED, with no
+Siegel: `P6(0) = -3^7*5^2*173`, so the squarefree part of `-B` divides
+`3*5*173` (sixteen classes `-B = delta*m^2`, `n^2 = delta*P6(-delta*m^2)`).
+`delta < 0` is compact (`P6 <= 0` only on a bounded window: the complete
+`B >= 0` list is the five degenerate points); `delta = 1` dies by a Runge
+squeeze; `{15,519,865}` die mod 7, `{5,2595}` mod 5^4; and `delta = 3, 173`
+die at 2-adic DEPTH 13 and 6 (empty mod 2^14 resp. 2^9 -- a battery capped
+at 2^7 wrongly calls them alive). Integral points of the curve: exactly the
+five degenerate ones. Case 2 closed; **(x)_8 - c is never intersective,
+unconditionally**. Independent cross-check: `(x)_8 == 0 mod 2^7` forces
+`2^7 | c`, and `v2(R(beta))` is pinned by `beta mod 8` (4 / 8 / 4 for
+`beta == 3, 5, 7`), so only `beta == 1 mod 8` could ever threaten -- and no
+curve class supplies a negative one. `scripts/k8_case2.py`,
+`results/k8_case2.json`, pinned by `scripts/test_k8_case2.py`. `k = 8`
+joins `k <= 6` as proved.
 
 Next target is **k=10, not k=9**: odd `k=9` has no reduction and seven
 partitions to grind, while `k=10` is even with a quintic `g` where the same

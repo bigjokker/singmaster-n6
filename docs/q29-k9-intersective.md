@@ -3,8 +3,9 @@
 Worked out 2026-08-20. Verified by `scripts/k9_intersective.py`; artifact
 `results/k9_intersective.json`.
 
-Same status as Q26–Q28: the case analysis is complete and every branch closes,
-but Siegel's finiteness is not backed by the effective computation.
+Same shape as Q26 and Q28: the case analysis is complete and every branch
+closes, but Siegel's finiteness is not backed by the effective computation.
+(`k=8` has since been proved outright — 2026-08-23, `scripts/k8_case2.py`.)
 
 ---
 
@@ -122,8 +123,8 @@ computation was not carried out. Searches cover `|a| ≤ 300` (A), `|a| ≤ 200`
 | `k` | status | gap |
 |---|---|---|
 | ≤6 | **proved** | — |
-| 7 | modulo effective Thue | two curves |
-| 8 | modulo effective Siegel | genus 3 |
+| 7 | 3+4 branch proved (Runge); 2+5 modulo one elliptic computation | two curves |
+| 8 | **proved** (2026-08-23: descent) | — |
 | **9** | modulo effective Siegel | three branch curves |
 | 10 | modulo one elliptic computation | genus 1 |
 

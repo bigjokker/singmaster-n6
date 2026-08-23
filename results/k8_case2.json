@@ -1,0 +1,43 @@
+{
+  "claim": "(x)_8 - c is never intersective -- PROVED; the genus-3 curve is solved",
+  "curve_integral_points": [
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      3840
+    ],
+    [
+      9,
+      20736
+    ],
+    [
+      25,
+      19200
+    ],
+    [
+      49,
+      5376
+    ]
+  ],
+  "class_certificates": {
+    "1": "empty mod 7",
+    "3": "empty mod 16384",
+    "5": "empty mod 625",
+    "15": "empty mod 7",
+    "173": "empty mod 512",
+    "519": "empty mod 7",
+    "865": "empty mod 7",
+    "2595": "empty mod 625",
+    "negative delta": "compact: P6 <= 0 only on a bounded window"
+  },
+  "mod8_family_filter": {
+    "1": "only viable residue",
+    "3": "c not integral",
+    "5": "c odd: no root mod 2",
+    "7": "c not integral"
+  },
+  "q27_proved": true
+}

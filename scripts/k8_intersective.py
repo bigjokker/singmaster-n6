@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Q27: is (x)_8 - c ever intersective?  No -- modulo one effective step.
+"""Q27: is (x)_8 - c ever intersective?  No -- PROVED (gap closed 2026-08-23).
 
 k=8 is EVEN, so Q25's reduction applies: with t = 2x-7 the roots 0..7 become
 +-1,+-3,+-5,+-7, and
@@ -26,9 +26,11 @@ Two are finite, and both collapse to c = 0:
 
   CASE 5  g splits over Q. e1=84, e2=1974, e3=12916 are FIXED, so with
           s = beta1+beta2 the product is forced,
-          p(s) = (-s^3+84s^2-1974s+12916)/(84-2s), and
-          disc = s^2-4p ~ -s^2 for large |s|, so disc >= 0 BOUNDS s to
-          [10,74]. Only solution: {1,9,25,49}, i.e. c = 0.
+          p(s) = (-s^3+84s^2-1974s+12916)/(84-2s). What bounds s is
+          INTEGRALITY: s even with (s-42) | 2048 (22 values; the old
+          "disc >= 0 bounds s to [10,74]" reason was wrong -- disc >= 0
+          holds on [9,35] u [43,81] -- caught in the 2026-08-23 review;
+          the enumeration was complete). Only solution: {1,9,25,49}, c = 0.
 
   CASE 3  exactly two rational roots. Same p(s) relation, same bound. All six
           solutions have c = 0 and a reducible remainder, i.e. they are
@@ -60,11 +62,12 @@ That leaves one infinite family, exactly as k=6 did:
           rational root) or gives c = 0. So NO dangerous beta exists and the
           Chebotarev kill always applies.
 
-THE GAP, same shape as Q26: Siegel gives finiteness and Baker makes it
-effective for integral points on a genus >= 1 curve, but this script does not
-carry out the effective computation -- it searches |beta| <= 20000. That the
-only points found are exactly the degenerate ones (the roots of R) is a strong
-structural signal, not a proof.
+THE GAP IS CLOSED -- 2026-08-23, scripts/k8_case2.py: the genus-3 curve is
+SOLVED by an elementary descent (P6(0) = -3^7*5^2*173 splits the integral
+points into 16 classes; compactness, a Runge squeeze and congruences -- two
+of them at 2-adic depth 13 and 6 -- kill every class), so the integral
+points are exactly the degenerate ones and Q27 is a THEOREM. This script's
+search is retained as the historical record and cross-check.
 
     python scripts/k8_intersective.py
     python scripts/k8_intersective.py --beta_max 4000 --curve_max 20000
@@ -163,7 +166,8 @@ def case_5_and_3() -> list:
     check(lo is not None and (lo, hi) == (10, 74), f"s range should be [10,74], got {lo},{hi}")
     check({cv for _, cv in out5} == {0}, f"case 5 must give c=0 only, got {out5}")
     check(not out3, f"case 3 proper must be empty, got {out3}")
-    print(f"      s is confined to [{lo},{hi}] because disc ~ -s^2 for large |s|")
+    print(f"      feasible s range [{lo},{hi}]; the true bound is integrality:")
+    print("      p(s) integral only for s even with (s-42) | 2048 (22 values)")
     print(f"      case 5: only betas {{1,9,25,49}}, c = 0 (which has rational roots)")
     print("      case 3: EMPTY -- every solution has a reducible remainder")
     return [{"c": 0, "case": 5}]
@@ -239,7 +243,7 @@ def main() -> int:
     ap.add_argument("--json_out", type=Path, default=None)
     args = ap.parse_args()
 
-    print("=== Q27: (x)_8 - c is never intersective (one gap, stated) ===")
+    print("=== Q27: (x)_8 - c is never intersective (historical run; gap closed 2026-08-23) ===")
     step0()
     cases_1_and_4()
     r53 = case_5_and_3()
@@ -251,10 +255,13 @@ def main() -> int:
     print("    3,5  bounded (s in [10,74]); case 3 empty, case 5 only c=0")
     print("    2    dangerous locus is a genus-3 curve whose integral points are")
     print("         exactly the roots of R, all excluded. Chebotarev always applies.")
-    print("  GAP:  Siegel/Baker make the genus-3 integral-point set finite and")
-    print("        effectively boundable, but the effective computation was not run.")
+    print("  GAP:  closed 2026-08-23 (scripts/k8_case2.py): the curve is solved by")
+    print("        descent; the points above are ALL of them. Q27 is a theorem.")
 
     if args.json_out:
+        # FROZEN TEXT: results/k8_intersective.json is sha256-pinned by
+        # test_k8_case2.py and must regenerate byte-identically; the closure
+        # lives in scripts/k8_case2.py. Do not "update" these strings.
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(
             json.dumps(

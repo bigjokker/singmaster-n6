@@ -287,8 +287,8 @@ bottom of the tree.
 | `k` | status | gap |
 |---|---|---|
 | ≤6 | **proved** | — |
-| 7 | modulo effective Thue | two curves |
-| 8 | modulo effective Siegel | genus 3 |
+| 7 | 3+4 branch proved (Runge); 2+5 modulo one elliptic computation | two curves |
+| 8 | **proved** (2026-08-23: the genus-3 curve solved by descent) | — |
 | **10** | modulo one elliptic computation (Jacobian of rank 2; needs Magma's `IntegralQuarticPoints`, not done). §3b: `(2,3)` with `c < 0` closed unconditionally; `c > 0` reduced to a no-kill locus on a genus-3 cover | **genus 1** |
 
 The ordering by difficulty is `6 < 10 < 7 < 8`, not `6 < 7 < 8 < 10`. Anyone

@@ -233,10 +233,10 @@ the elliptic-log method for general genus-1 models: Stroeker–Tzanakis,
 - `k = 6` — Q25, proved outright via the `t²` reduction.
 - `k = 7` — this note: the 3+4 branch is a theorem (Runge, §5); the 2+5
   branch modulo one elliptic integral-point computation.
-- `k = 8` — open, and now the natural target: even, so the reduction applies
-  and it becomes a **quartic** `g` with `e₁ = 1+9+25+49 = 84`. The analogue of
-  Q25's Case 3 is a surface rather than a bounded conic, which is the first
-  place the even method needs a genuinely new idea.
+- `k = 8` — Q27: **proved** (2026-08-23). The predicted "surface" never
+  materialised; the difficulty was a genus-3 curve in Case 2, since solved
+  by descent (`scripts/k8_case2.py`). (This bullet said "open" long after
+  Q27 existed — a stale line, fixed with the closure.)
 
 The pattern is now clear and worth stating: **even `k` is the easy side.** The
 odd cases need Diophantine geometry (Pell at 5, Siegel at 7) while the even
