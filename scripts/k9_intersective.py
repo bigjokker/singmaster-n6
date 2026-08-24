@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Q29: is (x)_9 - c ever intersective?  No -- modulo the usual effective step.
+"""Q29: is (x)_9 - c ever intersective?  No -- Branch A is now a THEOREM
+(scripts/k9_branchA_runge.py, Runge's method); B and C remain blocked.
 
 k=9 is ODD, so Q25's degree-halving does not apply (see Q26): with y = x-4,
 
@@ -22,13 +23,17 @@ has a cubic factor". So there are only THREE branches:
 BRANCH A. Eliminating the septic's coefficients leaves ONE condition, free of
 c, involving a only through a^2 -- the chord curve for P(y1)=P(y2). Its
 constant part factors as -(b+1)(b+4)(b+9)(b+16), the same shape as k=7's
--(w+1)(w+4)(w+9). The leading form is squarefree with 4 distinct roots, so
-there are >= 3 points at infinity and Siegel gives finiteness. Nontrivial
-integer points:
+-(w+1)(w+4)(w+9). The leading form is squarefree with 4 distinct roots --
+and (2026-08-24) it FACTORS over Q as -(A-b) times the cyclic cubic form of
+discriminant 81 (the field Q(2cos(2pi/9))), so RUNGE'S METHOD applies:
+scripts/k9_branchA_runge.py closes the branch outright.  The complete list
+of integer points with A = a^2 >= 0 gives exactly
 
-    c = +-176774400   (2,7)   fails rad(9!) = 210
+    c = +-176774400   (2,7)   fails rad(9!) = 210, dies at p = 7
     c = +-2630880     (2,7)   PASSES rad(9!) -- the first candidate anywhere
                               in this ladder to do so -- and dies at p = 13.
+
+No Siegel, no Magma: PROVED_BRANCH_A = True.
 
 BRANCH B. Here the surviving y^2 condition is QUADRATIC in the cubic's
 constant term, not linear, so the elimination needs a resultant rather than a
@@ -42,10 +47,14 @@ eliminating p1 by resultant gives a curve with TWO components:
                                invalid and which must be handled separately
     a main component of degree 14 in p2, 24 in p3
 
-The degenerate locus is empty and the main component's integer points all have
-c = 0, so 4+5 contributes nothing either.
+The degenerate locus is NOT empty -- it holds exactly six rational points,
+found by pure elimination (an earlier draft's emptiness check was vacuous:
+it tested an expression still free in p1) -- but every one has c = 0.  The
+main component's integer points found all have c = 0 too, so 4+5
+contributes nothing either.
 
-A STRUCTURAL NOTE ON 4+5, worth recording even though the branch is empty.
+A STRUCTURAL NOTE ON 4+5, worth recording even though the branch carries
+only c = 0.
 Killing a 4+5 needs Frobenius to be a derangement of BOTH factors at once. If
 the two splitting fields were independent that has density
 (9/24)(44/120) ~ 0.14 > 0, and checking the sign character across all 9
@@ -58,15 +67,19 @@ and there
 
 so the two requirements are incompatible and the kill is blocked. That is a
 SECOND obstruction mechanism, distinct from the n=3 one that produced Q27's
-genus-3 curve. It is moot here only because no 4+5 solution exists at all.
+genus-3 curve. It is moot here only because no nontrivial 4+5 value was
+found.
 
-THE GAP is the same shape as Q26 (k=8 and k=10 have since been closed
-outright — scripts/k8_case2.py; Q28 by Magma 2026-08-23): Siegel gives
-finiteness on the branch
-curves, but the effective computation was not carried out. Searches cover
-|a| <= 300 (A), |a| <= 200 (B), |p3| <= 120 (C), cross-checked by factoring
-(x)_9 - c for every multiple of 210 up to 4,200,000, which returns exactly the
-one case the curves predict.
+THE GAP, narrowed 2026-08-24: Branch A -- where every nontrivial candidate
+lives -- is closed by Runge (scripts/k9_branchA_runge.py).  What remains is
+B and C: Siegel gives finiteness on their curves, but no effective tool
+applies -- B's resultant projection is an irreducible plane curve of degree
+18 with leading form a^18 (a single repeated factor: the Runge split that
+closed A provably does not transfer), and C's main component has degree
+(14, 24).  Searches cover |a| <= 200 (B), |p3| <= 120 (C), cross-checked by
+factoring (x)_9 - c for every multiple of 210 up to 4,200,000, which
+returns exactly the one case the curves predict -- and that case is
+Branch A's, now under a theorem.
 
     python scripts/k9_intersective.py
     python scripts/k9_intersective.py --a_max 300 --p3_max 120 --brute 20000
@@ -87,6 +100,16 @@ p0, p1, p2, p3 = sp.symbols("p0 p1 p2 p3")
 BASE = sp.prod([x - i for i in range(9)])
 P = y**9 - 30 * y**7 + 273 * y**5 - 820 * y**3 + 576 * y
 RAD9 = 210  # rad(9!) = 2*3*5*7
+
+# Status (2026-08-24).  Branch A is a THEOREM -- scripts/k9_branchA_runge.py
+# closes the chord quartic by Runge (its leading form splits off the disc-81
+# cyclic cubic of Q(2cos(2pi/9))).  B and C remain blocked.
+PROVED_BRANCH_A = True    # Runge; no Siegel, no Magma
+PROVED_BRANCH_B = False   # deg-18 irreducible projection, leading form a^18:
+                          # a single repeated factor, no Runge split
+PROVED_BRANCH_C = False   # main component deg (14, 24); its degenerate locus
+                          # holds six rational points, ALL with c = 0 (proved
+                          # by elimination in branch_c below)
 
 
 def check(cond: bool, msg: str) -> None:
@@ -235,16 +258,38 @@ def branch_c(p3_max: int) -> dict:
     print(f"      degenerate locus {degen[0]} = 0  (handled separately)")
     print(f"      main component: degree {sp.Poly(big,p2).degree()} in p2, "
           f"{sp.Poly(big,p3).degree()} in p3")
-    rest = sp.expand(E3 - p0 * den)
-    ndeg = 0
-    for v3 in range(-200, 201):
-        if (3 * v3 * v3 - 30) % 2:
+    # Degenerate locus, settled ALGEBRAICALLY (2026-08-24).  The first version
+    # of this step scanned `rest.subs({p2, p3}) != 0` -- but `rest` still has
+    # p1 free, so that tested non-vanishing AS AN EXPRESSION IN p1, i.e.
+    # nothing.  The locus is in fact NOT empty: full elimination
+    # (Res_p1(E3|_deg, Res_p0(E2|_deg, E1|_deg)) has integer roots p3 in
+    # {0, +-2}) gives exactly SIX rational points -- and every one has c = 0,
+    # which is the statement that matters.
+    sub_deg = {p2: sp.Rational(3, 2) * p3**2 - 15}
+    E3d = sp.expand(E3.subs(sub_deg))
+    E2d = sp.expand(E2.subs(sub_deg))
+    E1d = sp.expand(E1.subs(sub_deg))
+    check(p0 not in E3d.free_symbols, "on the locus, p0 drops out of E3")
+    Rp0 = sp.expand(sp.resultant(sp.Poly(E2d, p0), sp.Poly(E1d, p0)))
+    Rfin = sp.expand(sp.resultant(sp.Poly(E3d, p1), sp.Poly(Rp0, p1)))
+    p3_cands = sorted({int(r) for f, _m in sp.factor_list(Rfin)[1]
+                       for r in sp.Poly(f, p3).ground_roots() if r.is_Integer})
+    check(p3_cands == [-2, 0, 2], f"degenerate p3 candidates: {p3_cands}")
+    degen_pts = []
+    for r3 in p3_cands:
+        v2 = sp.Rational(3, 2) * r3**2 - 15
+        if not v2.is_Integer:
             continue
-        v2 = (3 * v3 * v3 - 30) // 2
-        if sp.expand(rest.subs({p2: v2, p3: v3})) != 0:
-            continue
-        ndeg += 1
-    check(ndeg == 0, f"degenerate locus not empty: {ndeg}")
+        for r1 in (r for r in sp.Poly(E3d.subs(p3, r3), p1).ground_roots()
+                   if r.is_Integer):
+            g = sp.gcd(sp.Poly(E2d.subs({p3: r3, p1: r1}), p0),
+                       sp.Poly(E1d.subs({p3: r3, p1: r1}), p0))
+            for r0 in (r for r in sp.Poly(g, p0).ground_roots() if r.is_Integer):
+                cv = sp.solve(E0.subs({p3: r3, p2: v2, p1: r1, p0: r0}), c)
+                degen_pts.append((int(r3), int(v2), int(r1), int(r0), [int(v) for v in cv]))
+    check(len(degen_pts) == 6, f"six degenerate points, got {len(degen_pts)}")
+    check(all(cvs == [0] for *_, cvs in degen_pts),
+          f"every degenerate point has c = 0: {degen_pts}")
     n = nz = 0
     for v3 in range(0, p3_max + 1):
         Pp = sp.Poly(big.subs(p3, v3), p2)
@@ -275,7 +320,8 @@ def branch_c(p3_max: int) -> dict:
                 if int(sp.solve(E0.subs({p0: v0, p1: v1, p2: v2, p3: v3}), c)[0]) != 0:
                     nz += 1
     check(nz == 0, f"branch C has {nz} nontrivial points")
-    print(f"      degenerate locus EMPTY; main component {n} points, ALL with c = 0")
+    print("      degenerate locus: SIX rational points, by elimination -- ALL c = 0")
+    print(f"      main component: {n} integer points found, ALL with c = 0")
     return {"points": n, "nontrivial": nz}
 
 
@@ -308,7 +354,7 @@ def obstruction_note() -> dict:
     print("      C4's derangements avoid the identity coset of C4;")
     print("      F20's derangements lie entirely INSIDE it (they generate C5).")
     print("      Fused over C4 the two demands are incompatible -> kill blocked.")
-    print("      Moot for k=9 (branch C is empty) but a real second mechanism.")
+    print("      Moot for k=9 (branch C carries only c = 0) but a real mechanism.")
     return {"blocking_pair": "C4 x F20 fused over C4"}
 
 
@@ -334,7 +380,7 @@ def main() -> int:
     ap.add_argument("--json_out", type=Path, default=None)
     args = ap.parse_args()
 
-    print("=== Q29: (x)_9 - c is never intersective (one gap, stated) ===")
+    print("=== Q29: (x)_9 - c is never intersective (Branch A proved; B, C stated) ===")
     step0()
     ra = branch_a(args.a_max)
     rb = branch_b(args.b_max)
@@ -345,8 +391,13 @@ def main() -> int:
     print("  RESULT: the only c with f_c reducible and all factors of degree >= 2")
     print("          are c = +-2630880 and +-176774400, both (2,7). The second")
     print("          fails rad(9!); the first passes it and dies at p = 13.")
-    print("  GAP:    Siegel gives finiteness on all three branch curves; the")
-    print("          effective computation was not carried out.")
+    print("          Branch A (all shapes with a quadratic factor) is a THEOREM:")
+    print("          scripts/k9_branchA_runge.py closes it by Runge's method.")
+    print("  GAP:    Branches B and C only -- Siegel gives finiteness on their")
+    print("          curves, but no effective tool applies (B: irreducible")
+    print("          degree-18 projection, leading form a^18, no Runge split;")
+    print("          C: main component of degree (14, 24)).  Their searches")
+    print("          find only c = 0.")
 
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)

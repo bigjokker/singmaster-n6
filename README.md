@@ -53,6 +53,7 @@ the prime list did not kill it.
 | `scripts/test_k7_runge.py` | Q26: Branch B's Runge certificate (empty trap, 19 points, c = 0, +-896 only) and Branch A (genus 1, Magma rank 3 true, real half closed, F20 out, still BLOCKED) |
 | `scripts/test_k8_case2.py` | Q27 proved: the genus-3 curve's 16 descent classes all die; the five degenerate points; the mod-8 filter; the 2-adic depth-13/6 certificates |
 | `scripts/test_k10_deep.py` | Q28's wall audited with Q27's lesson: calibration (alive mod 2^7, dead mod 2^14), SURVIVE verdicts with exact valuation laws, the prune trap, candidates unharmed |
+| `scripts/test_k9_intersective.py` | Q29 Branch A **proved** by Runge: the disc-81 split, the W1 trap (trace -3^5), the complete 23-point list, both kills; branch C's six degenerate points, all c = 0 |
 
 ```text
 python scripts/test_sweeps.py
@@ -171,7 +172,8 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k8_case2.json` | \((x)_8-c\) is never intersective -- **PROVED**: the genus-3 curve is solved by descent (16 classes: compactness, Runge, congruences at 2-adic depth 13/6) |
 | `results/k10_intersective.json` | Historical (pre-Magma) \((x)_{10}-c\) search. **Proved 2026-08-23**: Magma listed the 15 \(a\)-values; rank 2 true; saturation index 1. Two \(10!\mid c\) candidates die at 11 and 13 |
 | `results/k10_deep.json` | Why Q28 needed Magma: the no-kill locus survives every deep \(p\)-adic battery (certified branch witnesses, \(v_2 = t+14\), \(v_{3,5,7} = t+1\)), so no congruence could ever have closed it |
-| `results/k9_intersective.json` | \((x)_9-c\): three branches, all closed; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
+| `results/k9_intersective.json` | Historical \((x)_9-c\) search: three branches; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
+| `results/k9_branchA.json` | Q29 Branch A **proved** by Runge (2026-08-24): the chord quartic's complete 23-point list, A_FAR = 34416, the W1 traps; every 2+7/2+2+5/2+3+4/2+2+2+3 value is \(c=0\) or dies at 7/13 |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
 | `results/ghost_census.json` | Certified non-ghosts — **stale**: 7 members, and its i=8 digest is the pre-repair table |
 | `results/bandii_sweep.json` | Historical Band II \(p>N/2\): 1,055,989 columns, died at prime 8 |
@@ -333,7 +335,7 @@ A run's jsonl is the only record of which prime killed which column, so a clean
 - [`docs/q26-k7-intersective.md`](docs/q26-k7-intersective.md) — \(k=7\), 3+4 branch closed by Runge, 2+5 modulo one elliptic integral-point step: odd \(k\) gets **no** reduction
 - [`docs/q27-k8-intersective.md`](docs/q27-k8-intersective.md) — \(k=8\), **proved** (2026-08-23): the genus-3 curve is solved by descent — its points are exactly the degenerate ones
 - [`docs/q28-k10-intersective.md`](docs/q28-k10-intersective.md) — \(k=10\) **proved** (2026-08-23, Magma): never intersective; cheaper than \(k=8\) because difficulty tracks cubic factors
-- [`docs/q29-k9-intersective.md`](docs/q29-k9-intersective.md) — \(k=9\): eight shapes collapse to three branches; a **second** obstruction mechanism
+- [`docs/q29-k9-intersective.md`](docs/q29-k9-intersective.md) — \(k=9\): **Branch A proved** (2026-08-24, Runge via the disc-81 cyclic split); a **second** obstruction mechanism; B and C stay searched-empty
 - [`docs/q11-what-is-the-claim.md`](docs/q11-what-is-the-claim.md) — what another family member buys, against what it costs
 - [`docs/interior-2022.md`](docs/interior-2022.md) — the MRSTT interior theorem, and why it does not reach i=8/9
 - [`docs/modular-spec.txt`](docs/modular-spec.txt) — Lucas/modular layer: what a certificate is, what not to rebuild

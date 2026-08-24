@@ -710,7 +710,8 @@ Next target was **k=10, not k=9**: odd `k=9` has no reduction and seven
 partitions to grind, while `k=10` is even with a quintic `g` where the same
 divided-difference trick applies — and `k=10` is now **proved** too (Q28
 below, Magma 2026-08-23). The remaining intersective leftovers are `k=9`
-(Siegel) and Q26 Branch A (a genus-1 cubic, no routine). Full write-up in
+Branches B and C (Siegel; Branch A proved by Runge 2026-08-24) and Q26
+Branch A (a genus-1 cubic, no routine). Full write-up in
 [`q27-k8-intersective.md`](q27-k8-intersective.md).
 
 ### Q28. Is `(x)_10 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no) 2026-08-20 — **PROVED** 2026-08-23 (Magma `IntegralQuarticPoints`: 15 `a`-values, rank 2 true, saturation index 1)
@@ -763,7 +764,7 @@ required and was run. Pinned by `scripts/test_k10_intersective.py`.
 `p(k/2)`; where a curve IS needed its genus is `(m-1)(m-2)/2`, m=k/2 -- so
 1,3,6,10,15 for k=6..14. Full write-up in [`q28-k10-intersective.md`](q28-k10-intersective.md).
 
-### Q29. Is `(x)_9 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Siegel) 2026-08-20
+### Q29. Is `(x)_9 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo effective Siegel) 2026-08-20 — **Branch A PROVED by Runge** 2026-08-24; B and C remain
 **No.** Odd `k`, so no degree reduction -- the centred `(x)_9` is ODD in `y`,
 which buys only `f_c(-y) = -f_{-c}(y)` (restrict to `c >= 0`).
 
@@ -772,18 +773,31 @@ shape containing a 2 is "has a quadratic factor", one containing a 3 but no 2
 is "has a cubic factor".
 
 - **A (quadratic factor)** -- the chord curve for `P(y1)=P(y2)`, free of `c`,
-  involving `a` only via `a^2`. Constant part factors as
-  `-(b+1)(b+4)(b+9)(b+16)`, echoing k=7's `-(w+1)(w+4)(w+9)`. Leading form
-  squarefree, 4 points at infinity, Siegel applies. Nontrivial:
-  `c = +-176774400` (fails rad, dies p=7) and **`c = +-2630880 = 2^5*3^4*5*7*29`,
-  which PASSES rad(9!)** -- the first candidate anywhere in this ladder to do
-  so -- and dies at `p=13`.
+  involving `a` only via `a^2`: in `A = a^2` a smooth plane QUARTIC (genus 3).
+  Constant part factors as `-(b+1)(b+4)(b+9)(b+16)`, echoing k=7's
+  `-(w+1)(w+4)(w+9)`. **CLOSED 2026-08-24 by Runge's method**
+  (`k9_branchA_runge.py`): the leading form factors over Q as `-(A-b)` times
+  the cyclic cubic form of disc 81 -- the field `Q(2cos(2pi/9))`, exactly as
+  `Q(2cos(2pi/7))` closed Q26 Branch B. Along the rational channel the
+  integer `b - A` is trapped in `(-10, -9)`; along the three conjugate
+  channels a degree-4 integer polynomial `W1` is trapped near limits with
+  trace `-243 = -3^5` at distances `>= 0.17` from Z; a cell-wise domination
+  argument covers everything at `A >= 34416` and a CRT sweep settles the
+  rest. THEOREM: exactly 23 integer points, all `A <= 49`; the `A = a^2`
+  ones give `c = 0`, `c = +-176774400` (fails rad, dies p=7) and
+  **`c = +-2630880 = 2^5*3^4*5*7*29`, which PASSES rad(9!)** -- the first
+  candidate anywhere in this ladder to do so -- and dies at `p=13`. Every
+  shape of 9 containing a 2 (2+7, 2+2+5, 2+3+4, 2+2+2+3) is now a theorem.
+  No Siegel, no Magma. Artifact `results/k9_branchA.json`.
 - **B (cubic, no quadratic)** -- the y^2 condition is QUADRATIC in the cubic's
   constant term, so this needs a resultant (degree 18 x 9). All 42 integer
   points have `c=0`.
 - **C (quartic, no quad/cubic)** -- resultant splits into a DEGENERATE locus
-  `(2p2-3p3^2+30)^4` (empty; this is the trap that cost me `c=+-896` in Q26)
-  and a main component of degree 14 x 24 whose 65 points all have `c=0`.
+  `(2p2-3p3^2+30)^4` (this is the trap that cost me `c=+-896` in Q26) and a
+  main component of degree 14 x 24 whose 65 points found all have `c=0`.
+  Corrected 2026-08-24: the degenerate locus is NOT empty (the old emptiness
+  check was vacuous -- its expression still had `p1` free); full elimination
+  shows it holds exactly SIX rational points, all with `c = 0`.
 
 **A second obstruction mechanism, recorded though moot here.** Killing a 4+5
 needs Frobenius to be a derangement of BOTH factors. The sign character blocks
@@ -799,11 +813,16 @@ generic one.**
 Cross-checked by factoring `(x)_9 - c` for every multiple of 210 up to
 4,200,000: exactly one reducible-all-parts>=2 case, as predicted.
 
-**Gap**: Siegel finiteness on all three branch curves, effective computation
-not run. Full write-up in [`q29-k9-intersective.md`](q29-k9-intersective.md).
+**Gap, narrowed 2026-08-24**: Branch A is a theorem (Runge). B and C remain:
+Siegel finiteness, no effective tool -- B's resultant projection is
+irreducible with leading form `a^18` (single repeated factor: no Runge
+split), C's main component has degree (14, 24). Pinned by
+`scripts/test_k9_intersective.py`. Full write-up in
+[`q29-k9-intersective.md`](q29-k9-intersective.md).
 
-**Ladder by gap severity: 6 < 10 < 7 < 9 < 8** -- still nothing to do with the
-size of `k`.
+**Ladder by originally-posed gap severity: 6 < 10 < 7 < 9 < 8** -- still
+nothing to do with the size of `k`. (k=9's REMAINING gap, after Branch A
+closed, is two searched-empty branches -- smaller than k=7's live cubic.)
 
 ---
 

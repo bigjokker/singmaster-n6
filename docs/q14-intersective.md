@@ -194,7 +194,8 @@ deliver, obtained per column rather than in general.
 been proved never intersective — Q25 (the sextic is a cubic in `t²`), Q27
 (2026-08-23, the genus-3 curve solved by descent) and Q28 (2026-08-23,
 Magma's `IntegralQuarticPoints`). `k = 7` is proved on Branch B (Runge) and
-blocked on Branch A's genus-1 cubic; `k = 9` is blocked on effective Siegel.
+blocked on Branch A's genus-1 cubic; `k = 9` is proved on Branch A (Runge,
+2026-08-24) and blocked on Branches B and C (effective Siegel).
 So the sentence below now applies to `k = 7`, `k = 9`, and every `k ≥ 11`.
 
 For those `k` it is not proved that `(x)_k − c` is never intersective. Any
