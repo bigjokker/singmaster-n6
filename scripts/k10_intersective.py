@@ -50,11 +50,12 @@ The five relevant factorisation types of g:
              rad(10!)|c exist, c = 1395418752000 and 2235340800, and both die
              (p = 11 and p = 13).
 
-THE GAP is a single genus-1 (elliptic) integral-point computation for the
-(2,3) branch. That is the most computable kind of gap there is -- strictly
-better than Q26's Thue equations or Q27's genus-3 curve.
+THE GAP WAS a single genus-1 (elliptic) integral-point computation for the
+(2,3) branch -- the most computable kind of gap there is, strictly better
+than Q26's Thue equations or Q27's genus-3 curve.  It was closed on
+2026-08-23 by Magma's IntegralQuarticPoints; see step [5].
 
-THE GAP, MADE PRECISE (2026-08-23, step [5]).  The quartic has rational
+THE GAP, MADE PRECISE AND CLOSED (2026-08-23, step [5]).  The quartic has rational
 points, so it is an elliptic curve over Q; its Jacobian is
 
     E: Y^2 = X^3 - 792 X + 9801      (classical I, J invariants, scaled by 48)
@@ -283,8 +284,10 @@ def case_2_3(a_max: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Step [5]: the (2,3) gap, made precise.  Nothing here is a proof that the
-# integral-point list is complete; it is everything short of that proof.
+# Step [5]: the (2,3) gap, made precise and closed.  The computations below
+# are everything short of the completeness proof; the proof itself is Magma's
+# 2026-08-23 run, transcribed in the MAGMA_* constants and checked here
+# against the |a| <= 10^7 search.
 # ---------------------------------------------------------------------------
 
 QUARTIC = (5, 1320, 126456, 5102240, 72824400)  # y^2 = q0 a^4 + ... + q4
@@ -477,7 +480,7 @@ def jacobian() -> dict:
 
 
 def step5(points_max: int) -> dict:
-    print("  [5] the (2,3) gap, made precise: Jacobian, rank, complete small-point list")
+    print("  [5] the (2,3) gap, closed: Jacobian, rank, and the certified point list")
     jac = jacobian()
     print(f"      Jacobian E: Y^2 = X^3 + ({jac['a4']}) X + {jac['a6']}   (I, J invariants, scaled by {jac['scale']})")
     print(f"      E(Q)_tors = Z/{jac['torsion']} = <({TWO_TORSION_X}, 0)>")
@@ -535,6 +538,10 @@ def main() -> int:
     if args.json_out:
         # The artifact records steps [0]-[4] only; step [5] is pinned by
         # scripts/test_k10_intersective.py and must not change these bytes.
+        # The "modulo one elliptic computation" claim below is therefore
+        # DELIBERATELY historical: it is the pre-Magma sentence, kept so the
+        # committed json stays sha-identical (test_k10_deep.py pins the hash).
+        # The proof lives in the docs and the MAGMA_* constants, not here.
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         args.json_out.write_text(
             json.dumps(

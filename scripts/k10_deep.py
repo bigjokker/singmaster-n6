@@ -2,14 +2,15 @@
 """Q28's wall, audited with Q27's battery-depth lesson: it is REAL, not shallow.
 
 Q27's genus-3 curve fell because two descent classes that looked alive mod 2^7
-were dead at 2-adic depth 13 and 6 (scripts/k8_case2.py).  This lab applies
-the same lesson to Q28's remaining wall -- the no-kill locus of the (2,3)
-branch (docs/q28-k10-intersective.md section 3b): over Z,
+were dead at 2-adic depth 13 and 6 (scripts/k8_case2.py).  This lab applied
+the same lesson to what was then Q28's remaining wall -- the no-kill locus of
+the (2,3) branch (docs/q28-k10-intersective.md section 3b): over Z,
 
     R(t^2) - 1024c = (t^2+mu t+nu)(t^2-mu t+nu)(t^3+al t^2+be t+ga)(t^3-al t^2+be t-ga)
 
-with (mu^2-4nu)*disc(m) a square, whose unproved missing statement is "no
-integer point with c != 0".  Verdict, in one line: THE WALL STANDS -- the
+with (mu^2-4nu)*disc(m) a square, whose then-missing statement was "no
+integer point with c != 0" (since proved -- by Magma's complete list, not by
+any congruence; see below).  Verdict, in one line: THE WALL STANDS -- the
 locus is p-adically alive at EVERY depth at p = 2, 3, 5, 7 (spot-certified
 at 11, 13, 31 as well), with certified analytic branch witnesses, so no
 congruence supported on these primes can close it, and the section-3

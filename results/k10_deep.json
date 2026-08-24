@@ -147,5 +147,5 @@
     ]
   },
   "prune_trap": "pruned tree fakes a death at a = -10 + 2^12 (depth 2^19); exact branch is alive there with v2(cnum) = 26",
-  "verdict": "SURVIVE at 2, 3, 5, 7 (spot: 11, 13, 31); PROVED_23_POSITIVE unchanged (False)"
+  "verdict": "SURVIVE at 2, 3, 5, 7 (spot: 11, 13, 31); p-adic wall stands; Magma closed the list 2026-08-23"
 }

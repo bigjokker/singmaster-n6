@@ -60,8 +60,9 @@ so the two requirements are incompatible and the kill is blocked. That is a
 SECOND obstruction mechanism, distinct from the n=3 one that produced Q27's
 genus-3 curve. It is moot here only because no 4+5 solution exists at all.
 
-THE GAP is the same shape as Q26/Q28 (k=8 has since been closed outright —
-scripts/k8_case2.py): Siegel gives finiteness on the branch
+THE GAP is the same shape as Q26 (k=8 and k=10 have since been closed
+outright — scripts/k8_case2.py; Q28 by Magma 2026-08-23): Siegel gives
+finiteness on the branch
 curves, but the effective computation was not carried out. Searches cover
 |a| <= 300 (A), |a| <= 200 (B), |p3| <= 120 (C), cross-checked by factoring
 (x)_9 - c for every multiple of 210 up to 4,200,000, which returns exactly the

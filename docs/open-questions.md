@@ -670,9 +670,11 @@ curve class supplies a negative one. `scripts/k8_case2.py`,
 `results/k8_case2.json`, pinned by `scripts/test_k8_case2.py`. `k = 8`
 joins `k <= 6` as proved.
 
-Next target is **k=10, not k=9**: odd `k=9` has no reduction and seven
+Next target was **k=10, not k=9**: odd `k=9` has no reduction and seven
 partitions to grind, while `k=10` is even with a quintic `g` where the same
-divided-difference trick applies. Full write-up in
+divided-difference trick applies — and `k=10` is now **proved** too (Q28
+below, Magma 2026-08-23). The remaining intersective leftovers are `k=9`
+(Siegel) and Q26 Branch A (a genus-1 cubic, no routine). Full write-up in
 [`q27-k8-intersective.md`](q27-k8-intersective.md).
 
 ### Q28. Is `(x)_10 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no) 2026-08-20 — **PROVED** 2026-08-23 (Magma `IntegralQuarticPoints`: 15 `a`-values, rank 2 true, saturation index 1)

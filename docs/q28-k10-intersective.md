@@ -8,7 +8,8 @@ battery showed that locus is not a shallow-modulus illusion (§3c). Magma's
 index 1 — so there is no extra \(c\) with \(10!\mid c\). Verified by
 `scripts/k10_intersective.py` and `scripts/k10_chebotarev.py`; historical
 artifact `results/k10_intersective.json` (pre-Magma claim); pinned by
-`scripts/test_k10_intersective.py`.
+`scripts/test_k10_intersective.py`, `scripts/test_k10_chebotarev.py` and
+`scripts/test_k10_deep.py`.
 
 **The headline is not the result, it is the cost.** `k=10` is *cheaper* than
 `k=8`. Difficulty in this family is **not monotone in `k`** — it is governed
@@ -96,12 +97,13 @@ survive, and both die:
 
 ---
 
-## 3. The gap — made precise (2026-08-23)
+## 3. The gap — made precise, then closed (2026-08-23)
 
-**One elliptic integral-point computation**, for the (2,3) branch, and it is
-**still open**: not proved here. This section records everything short of that
-computation, so that whoever has the tool can finish it in one call — and
-says exactly which tool, because it is not the one a Sage user would reach for.
+**One elliptic integral-point computation**, for the (2,3) branch. This
+section records everything short of that computation — reduction, curve,
+Jacobian, rank — and then the Magma session that finished it the same day.
+It also says exactly which tool, because it is not the one a Sage user
+would reach for.
 
 **The curve is an elliptic curve over Q.** The quartic has rational points
 (`a = −250, −730`, and the ten `c = 0` points), so it is an elliptic curve,
@@ -188,10 +190,27 @@ true
 ```
 
 The saturated generators span the **same** group as Magma's `Generators`
-(index 1): \((132) = (33/4)-2(0:-99)\), \((22)=(33/4)-(0:-99)+T\), and the
-reverse. Rank 2 was already proved here by 2-isogeny descent; Magma agreed
-unconditionally. Sage `E.integral_points()` on the Weierstrass model is
-**not** a substitute (denominators).
+(index 1). Writing \(P=(33/4:495/8)\), \(Q=(0:-99)\), \(T=(-33:0)\), the
+four relations hold **exactly** in the chord–tangent convention (verified
+here in exact rational arithmetic, `test_k10_intersective.py`):
+
+$$(132:-1485) = 2Q-P,\qquad (22:-55) = Q-P+T,$$
+$$P = (132:-1485)-2(22:-55),\qquad Q = (132:-1485)-(22:-55)+T.$$
+
+The change of basis is \(\bigl(\begin{smallmatrix}-1&2\\-1&1\end{smallmatrix}\bigr)\),
+determinant \(1\): the two sets span the same subgroup mod torsion — index
+1, no saturation gain. (Sign matters: `P − 2Q` is `(132:+1485)`, the
+*negative* of Magma's generator; the relations above are the ones that hold
+as written.) Rank 2 was already proved here by 2-isogeny descent; Magma
+agreed unconditionally. Sage `E.integral_points()` on the Weierstrass model
+is **not** a substitute (denominators).
+
+Independently of Magma, the recorded set `<T, P, Q>` has **odd** index in
+`E(Q)`: the 2-descent map is injective on `E(Q)/2E(Q)` and the images of
+`T`, `P`, `Q` generate all eight classes. So a hypothetical saturation
+failure could only be at an odd prime — that residue of trust, plus the
+elliptic-logarithm bound itself, is exactly what Magma supplies and what
+this machine cannot check.
 
 **Therefore the (2,3) list is complete.** The two \(10!\mid c\) candidates
 still die at \(p=11\) and \(p=13\). Combined with \(c<0\) closed in §3b,

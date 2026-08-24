@@ -28,7 +28,9 @@ Pins:
      2-adic kill is claimed for them;
   9. WALL_STANDS is True (p-adics do not close the locus). Magma, not this
      battery, set PROVED_23_POSITIVE. results/k10_intersective.json is
-     byte-identical (sha256-pinned, historical "modulo" claim).
+     byte-identical (sha256-pinned, historical "modulo" claim), and
+     results/k10_deep.json's verdict is pinned in FULL -- a prefix-only pin
+     once let the artifact go stale against its own generator.
 
 Fails before scripts/k10_deep.py exists.  Runs in ~5 s.
 
@@ -197,7 +199,12 @@ def test_candidates_and_status() -> None:
     expect(newp.exists(), "results/k10_deep.json exists")
     if newp.exists() and kd is not None:
         art2 = json.loads(newp.read_text(encoding="utf-8"))
-        expect(art2["verdict"].startswith("SURVIVE"), "artifact records SURVIVE")
+        expect(art2["verdict"] == ("SURVIVE at 2, 3, 5, 7 (spot: 11, 13, 31); "
+                                   "p-adic wall stands; Magma closed the list 2026-08-23"),
+               "artifact verdict is the FULL current string (a prefix pin let a "
+               "stale 'PROVED_23_POSITIVE unchanged (False)' tail survive once)")
+        expect("False" not in art2["verdict"],
+               "artifact verdict does not contradict the repo's proof state")
         expect(art2["witness_laws"]["2"] == "v_2(cnum) = t + 14", "the 2-adic law recorded")
         expect(art2["witness_laws"]["11"] == "v_11(cnum) = t + 0", "the spot-law recorded")
         expect(art2["tree_alive"] == {str(p): {"depth": d, "raw_tuples": n, "v_resolved": f}

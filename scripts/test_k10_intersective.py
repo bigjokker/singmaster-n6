@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression tests for Q28's (2,3) branch: what is established, and what is not.
+"""Regression tests for Q28's (2,3) branch: the facts the proof rests on.
 
 docs/q28-k10-intersective.md reduces the (2,3) factorisation of
 g(u) = R(u) - 1024c to integral points on the genus-1 quartic
@@ -21,7 +21,11 @@ independently of scripts/k10_intersective.py where that is cheap:
      a root mod every smaller prime;
   5. Magma (2026-08-23) certified the list: PROVED is True, MAGMA_A_VALUES
      is exactly those 15 a's, Rank 2 true; the committed json is still the
-     historical "modulo" artifact (sha-pinned elsewhere).
+     historical "modulo" artifact (sha-pinned elsewhere);
+  6. the saturation claim, verified here in exact rational arithmetic (the
+     q28 doc's section 3 cites this test): Magma's Generators and its
+     Saturation output span the same group -- the change of basis has
+     determinant 1, so the recorded index 1 is real, not asserted.
 
 Fails on the pre-step-[5] script (no jacobian / integral_points / PROVED).
 Runs in a few seconds; touches nothing under results/.
@@ -33,6 +37,7 @@ from __future__ import annotations
 
 import json
 import sys
+from fractions import Fraction
 from pathlib import Path
 
 import sympy as sp
@@ -141,6 +146,73 @@ def test_two_kills_regenerate() -> None:
                f"(x)_10 - {cv} has a root mod every prime below {kp}")
 
 
+def _ec_add(P, Q):
+    """exact chord-tangent addition on E: Y^2 = X^3 - 792X + 9801 over Q."""
+    if P is None:
+        return Q
+    if Q is None:
+        return P
+    (x1, y1), (x2, y2) = P, Q
+    if x1 == x2 and y1 == -y2:
+        return None
+    if P == Q:
+        if y1 == 0:
+            return None
+        lam = (3 * x1 * x1 - 792) / (2 * y1)
+    else:
+        lam = (y2 - y1) / (x2 - x1)
+    x3 = lam * lam - x1 - x2
+    return (x3, lam * (x1 - x3) - y1)
+
+
+def _ec_neg(P):
+    return None if P is None else (P[0], -P[1])
+
+
+def _ec_comb(pts, coeffs):
+    """sum of coeffs[i] * pts[i], exact."""
+    acc = None
+    for pt, n in zip(pts, coeffs):
+        if n == 0:
+            continue
+        base = pt if n > 0 else _ec_neg(pt)
+        for _ in range(abs(n)):
+            acc = _ec_add(acc, base)
+    return acc
+
+
+def test_saturation_index_one() -> None:
+    """The doc's §3 saturation claim, verified exactly (it cites this test).
+
+    Magma's Generators G1 = (132:-1485), G2 = (22:-55) and the Saturation
+    output T = (-33:0), P = (33/4:495/8), Q = (0:-99) span the SAME group:
+    the change of basis is in GL_2(Z) (determinant 1), so saturation gained
+    nothing -- index 1, exactly as recorded.
+    """
+    F = Fraction
+    T = (F(-33), F(0))
+    P = (F(33, 4), F(495, 8))
+    Q = (F(0), F(-99))
+    G1 = (F(132), F(-1485))
+    G2 = (F(22), F(-55))
+    for nm, pt in (("T", T), ("P", P), ("Q", Q), ("G1", G1), ("G2", G2)):
+        x, y = pt
+        expect(y * y == x**3 - 792 * x + 9801, f"{nm} lies on E exactly")
+    expect(_ec_add(T, T) is None, "T = (-33:0) is 2-torsion")
+    expect(k10.MAGMA_SATURATION == ["(-33 : 0 : 1)", "(33/4 : 495/8 : 1)", "(0 : -99 : 1)"],
+           "MAGMA_SATURATION is the recorded Saturation output")
+    # the four relations exactly as printed in docs/q28-k10-intersective.md
+    expect(_ec_comb([Q, P], [2, -1]) == G1, "(132:-1485) = 2Q - P, exactly")
+    expect(_ec_add(_ec_comb([Q, P], [1, -1]), T) == G2, "(22:-55) = Q - P + T, exactly")
+    expect(_ec_comb([G1, G2], [1, -2]) == P, "P = G1 - 2*G2, exactly (the reverse)")
+    expect(_ec_add(_ec_comb([G1, G2], [1, -1]), T) == Q, "Q = G1 - G2 + T, exactly")
+    # sign discipline: the un-negated combination is NOT Magma's generator
+    expect(_ec_comb([P, Q], [1, -2]) == (F(132), F(1485)),
+           "P - 2Q is (132:+1485) -- the doc's sign caveat is the true one")
+    # change of basis [[-1,2],[-1,1]] : (P,Q) -> (G1,G2) has determinant 1
+    expect((-1) * 1 - 2 * (-1) == 1, "change-of-basis determinant 1: same group, index 1")
+
+
 def test_status_is_proved_by_magma() -> None:
     expect(getattr(k10, "PROVED", None) is True, "PROVED is True: Magma listed the 15 a-values")
     expect(k10.MAGMA_A_VALUES == {
@@ -164,6 +236,7 @@ def main() -> int:
     test_integral_points_complete_to_1e7()
     test_jacobian_rank_two()
     test_two_kills_regenerate()
+    test_saturation_index_one()
     test_status_is_proved_by_magma()
     print("\n=== K10 INTERSECTIVE TESTS ===")
     for line in ok:

@@ -170,6 +170,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k8_intersective.json` | \((x)_8-c\): five cases, all closed; the exceptional locus is a genus-3 curve with only degenerate points. Historical: see `k8_case2.json` |
 | `results/k8_case2.json` | \((x)_8-c\) is never intersective -- **PROVED**: the genus-3 curve is solved by descent (16 classes: compactness, Runge, congruences at 2-adic depth 13/6) |
 | `results/k10_intersective.json` | Historical (pre-Magma) \((x)_{10}-c\) search. **Proved 2026-08-23**: Magma listed the 15 \(a\)-values; rank 2 true; saturation index 1. Two \(10!\mid c\) candidates die at 11 and 13 |
+| `results/k10_deep.json` | Why Q28 needed Magma: the no-kill locus survives every deep \(p\)-adic battery (certified branch witnesses, \(v_2 = t+14\), \(v_{3,5,7} = t+1\)), so no congruence could ever have closed it |
 | `results/k9_intersective.json` | \((x)_9-c\): three branches, all closed; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
 | `results/ghost_census.json` | Certified non-ghosts — **stale**: 7 members, and its i=8 digest is the pre-repair table |

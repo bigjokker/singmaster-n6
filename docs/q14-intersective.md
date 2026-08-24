@@ -10,8 +10,15 @@ scripts are `intersective_search.py` and `termination_certificate.py`.
 | column `k` survives prime `p` | `(x)_k − k!m` has a root mod `p` |
 | column `k` represents `m` | `(x)_k − k!m` has an integer root |
 
-A polynomial is **intersective** if it has a root modulo every prime but no
-rational root. So an intersective `(x)_k − k!m` is exactly a column that
+A polynomial is **intersective** if it has a root modulo every positive
+integer `m` — equivalently, modulo every prime power — but no rational root.
+(A weaker "root mod every prime" variant appears in the literature; where the
+distinction matters this project uses the standard prime-power definition,
+and says so. It matters in exactly one place: `k! | c` is forced by a root
+mod `k!`, whereas primes alone give only `rad(k!) | c`. Every search here
+sieves on the weaker `rad(k!) | c`, so the candidate lists — and the
+never-intersective results for `k ≤ 10` — hold under either reading.)
+So an intersective `(x)_k − k!m` is exactly a column that
 survives every prime without representing `m` — a census that never
 terminates. It is the only logical gap between the method and a guarantee
 that it always finishes.
@@ -183,7 +190,14 @@ deliver, obtained per column rather than in general.
 
 ## 7. What remains open, stated precisely
 
-For `k ≥ 6` it is not proved that `(x)_k − c` is never intersective. Any
+**Status since this section was written.** `k = 6`, `8` and `10` have all
+been proved never intersective — Q25 (the sextic is a cubic in `t²`), Q27
+(2026-08-23, the genus-3 curve solved by descent) and Q28 (2026-08-23,
+Magma's `IntegralQuarticPoints`). `k = 7` is proved on Branch B (Runge) and
+blocked on Branch A's genus-1 cubic; `k = 9` is blocked on effective Siegel.
+So the sentence below now applies to `k = 7`, `k = 9`, and every `k ≥ 11`.
+
+For those `k` it is not proved that `(x)_k − c` is never intersective. Any
 counterexample must satisfy, simultaneously:
 
 1. `rad(k!) | c`;
@@ -192,9 +206,11 @@ counterexample must satisfy, simultaneously:
    stabilisers on the roots;
 4. for even `k`, an odd square-relation among the `β_i` (§4).
 
-None was found below `10⁹`. The natural next step, if anyone wants the general
-theorem, is `k = 6` by the same route as `k = 5`: enumerate the `2+4`, `3+3`
-and `2+2+2` splits, reduce each to a Diophantine condition, and check the
-finitely many survivors. `k = 5` took one Pell equation; `k = 6` will take
-three curves, and the even-`k` obstruction of §4 should kill the `2+2+2` case
-outright.
+None was found below `10⁹`. The route the later questions took, if anyone
+wants the general theorem, is the one `k = 5` took: enumerate the splits,
+reduce each to a Diophantine condition, and check the finitely many
+survivors. That is how `k = 6` fell (Q25 — the even-`k` obstruction of §4
+does kill its `2+2+2` case outright) and, with real curves attached, `k = 8`
+and `k = 10`. Difficulty tracks whether the cofactor has an irreducible
+**cubic** factor, not the size of `k`: the settled ordering is
+`6 < 10 < 7 < 9 < 8`.

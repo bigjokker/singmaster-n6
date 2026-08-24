@@ -12,7 +12,9 @@ below. The original text said "modulo an effective Thue computation"; §5
 explains why that framing was wrong on both branches, in opposite
 directions: Branch B needed no solver at all and is now **closed**
 unconditionally by Runge's method, while Branch A was never a Thue equation
-— it is a smooth genus-1 cubic, the same wall as Q28's quartic.
+— it is a smooth genus-1 cubic, the wall Q28's quartic *was*. That one fell
+to Magma's `IntegralQuarticPoints` (2026-08-23); no analogous routine exists
+for a cubic model, so Branch A is now the harder of the two.
 
 ---
 
@@ -190,7 +192,9 @@ gives finiteness of the *integral* points of `Φ`; certifying that list needs
 the elliptic-logarithm method on a **cubic model** (Stroeker–Tzanakis), and
 no installed tool provides it — Magma's `IntegralPoints` takes Weierstrass
 models, and the birational map does not preserve integrality. **Branch A
-stays blocked there**, the exact analogue of Q28's rank-2 quartic.
+stays blocked there** — the analogue of Q28's rank-2 quartic, which Magma
+has since solved (2026-08-23). The quartic case had a routine; this one has
+none, which is why Q28 closed and Branch A did not.
 
 **Chebotarev narrows what the missing list is for** (`scripts/k7_branchA.py`
 §2). A 2+5 value is killed at `p` iff the quadratic is inert and the quintic

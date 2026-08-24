@@ -3,9 +3,11 @@
 Worked out 2026-08-20. Verified by `scripts/k9_intersective.py`; artifact
 `results/k9_intersective.json`.
 
-Same shape as Q26 and Q28: the case analysis is complete and every branch
-closes, but Siegel's finiteness is not backed by the effective computation.
-(`k=8` has since been proved outright — 2026-08-23, `scripts/k8_case2.py`.)
+Same shape as Q26: the case analysis is complete and every branch closes,
+but Siegel's finiteness is not backed by the effective computation. (`k=8`
+and `k=10` have both since been proved outright — 2026-08-23:
+`scripts/k8_case2.py` by descent, and Q28 by Magma's
+`IntegralQuarticPoints`.)
 
 ---
 
