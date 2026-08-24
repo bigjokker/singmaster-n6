@@ -900,3 +900,49 @@ The point of a fiber bound would be `|I*| ≥ g / max M`. Measured:
 **The fiber route is 2.5× worse than the bound you already have**, because `max M` is a worst case over `p` values while the involution bound is exact. It cannot improve `|I|` under any sharpening short of knowing the full fiber distribution — which is #9 again.
 
 So #4 isn't "low value, come back later." It's **closed**: the exact parts (`min(k,g)`, the parity theorem, the below-threshold determination) are worth two lines in the writeup next to the involution result, and the bound it was supposed to produce is strictly dominated. I'd strike it from the board rather than defer it.
+
+## Fat-cell lab, 2026-08-24: YES — the size law holds where the room is thin
+
+The PF4.2 named question: in the fat-cell / Band II regime, does the model
+still match the recorded runs, and would the escalation trigger have stayed
+silent — or is Lambda overestimated in the dangerous direction, masking an
+anomaly? Answer: **YES, it holds; the trigger stays silent; nothing leaves
+the Q23 band.** Commands: `test_sizelaw.py`,
+`sizelaw.py run --i 8 --k 2227205 --ladder`,
+`sizelaw.py run --i 9 --k 28575561 --ladder`, `sizelaw.py predict --i 9
+--check`.
+
+* **i=8 k=2227205** (the fat-cell record): ladder-reconstructed chain of 6
+  survived primes 2700967..2701091, uniform g/p = 0.1754, kill at 2701099
+  (matches the recorded chain the suite already pins). Lambda = 1.73e-5;
+  one-off expected 0.052 over 3000 peers, Poisson tail 0.051 — ordinary,
+  escalate = false.
+* **i=9 Band II** (`predict --i 9 --check` vs the MEASURED refresher
+  table): every pass inside Poisson noise — 703,000 obs vs 702,981 pred
+  (band [701300, 704700]), 1,946 vs 1,987 (band [1900, 2075]), 47 vs 60.2
+  (band [45, 76]; 1.7σ marginal, ≤1.3σ conditional on the preceding pass),
+  death at pass 9 inside the pre-registered 9–10. Even-g 0.657→1.000 vs
+  0.658→…; mean k walks down toward K. Match, not miss.
+* **i=9 k=28575561** (the last Band II survivor): the ladder independently
+  reproduces the run of 8 through EXACTLY the eight recorded pass primes
+  and the death-pass kill 37025017. Lambda = 3.00e-6; over the honest
+  regime multiplier (7,237,864 Band II columns) the expected count of such
+  runs is 21.7 — an 8-run was a near certainty. Ordinary.
+* **Q23 band**: intact. Nothing in the fat-cell / Band II material moved
+  the 1.00014x model/exact figure or consumed the 21x headroom; the four
+  measured image sizes still pin to 0.15%. The measured cascade sits
+  slightly BELOW the model at passes 5–8 (i.e. if the model errs here it
+  errs by predicting MORE survivors — the spurious-escalation side, the
+  safe one), and the involution theorem still caps any overestimate.
+
+One artifact worth knowing, found and pinned: `run`'s DEFAULT
+`--peers 3000` under-counts the Band II regime by ~2400x, so the one-off
+assessment of k=28575561 flags escalate at a 1.1x margin (expected 0.0090
+< 0.01). That is the SAFE direction (a spurious flag, not a masked
+anomaly), and the round-by-round E_r trigger the sweep actually uses does
+not fire (E_8 ~ 1.2, observed 1). Pinned both ways in
+`test_sizelaw.py::test_i9_bandII_last_survivor_chain`. When assessing a
+fat-cell column one-off, pass the regime's column count as `--peers`.
+
+Verdict: **YES. Ordinary, as predicted; the lab does not change a
+belief.** Fat cells are not a hidden Q1.

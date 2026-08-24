@@ -91,8 +91,16 @@ PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
      is 219 MB). The gate is running out of questions whose
      answer would CHANGE WHAT YOU BELIEVE. Worth a session:
      the four i=9 cap columns (already ordinary under D4);
-     fat cells vs the size law; ghosts (ghost_census.json is
-     stale — regenerating it is a named question). Not worth
+     fat cells vs the size law (DONE 2026-08-24: YES, ordinary
+     -- i=8 k=2227205 chain and i=9 Band II both inside the
+     pre-registered curves, death pass 9, Q23 band intact;
+     last-survivor chain k=28575561 pinned in test_sizelaw.py;
+     note in size-law-notes.txt; caveat: `run` defaults to
+     --peers 3000, pass the regime count for fat cells);
+     ghosts (DONE 2026-08-24, commit 3145f96:
+     ghost_census.json regenerated -- 8 members, 41,590,228,
+     i=8 digest 596dbf47, i=9 present; live-pinned by
+     test_ghost_census.py). Not worth
      a session: re-walking i9_sweep.jsonl for "anomalies" the
      ledger already called ordinary.
   3. BREADTH, cheaper than i=10 and aimed where a new result
@@ -115,50 +123,32 @@ PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
      for the tool to become 47x cheaper.
 
 INTERSECTIVE leftover (PF4.3), 2026-08-24. Ladder:
-  k<=6 proved; k=8 Q27 proved; k=10 Q28 proved Magma 15 a-values
-  rank 2 true. k=7 Q26 Branch B proved Runge. k=7 Branch A and
-  k=9 Q29 are the two open degrees.
+  k<=6, 8, 10 proved outright. k=7 Branch B proved Runge.
+  k=7 Branch A: Magma Rank 3 true; real half closed; F20 out;
+  still BLOCKED on Stroeker-Tzanakis (A2, PARKED).
+  k=9 Branch A PROVED Runge 2026-08-24 (ae60ac9): chord quartic
+  genus 3, leading form -(A-b)*K3 (disc 81), 23 points all
+  A<=49, both candidates die at 13 and 7. k=9 B and C remain
+  BLOCKED: B is an irreducible deg-18 curve with leading form
+  a^18 (no Runge split); C's main component is deg (14,24);
+  C's degenerate locus is six rational points, all c=0, by
+  algebra (the old emptiness check was vacuous).
 
-  Q26 Branch A NOW (order is the point; do not skip):
-    A0. MAGMA RANK — DONE 2026-08-24. User paste at
-        http://magma.maths.usyd.edu.au/calc/ :
+  PARKED, not next:
+    A2. Stroeker-Tzanakis on Q26 Branch A's cubic. Rank 3,
+        lattice dim 5, bound ~10^20. Not a session.
+    Q29 B/C. Named walls, not afternoon jobs. Do not send
+        Claude at a deg-18 Siegel curve next.
 
-          E := EllipticCurve([-1764, 28224]);
-          E;
-          TorsionSubgroup(E);
-          Rank(E);
-
-        stdout: curve over Q; Abelian Group of order 1;
-        **3 true**. Rank = 3 unconditionally. Does NOT close
-        Branch A.
-    A1. FOLD AND COMMIT — Magma 3 true folded; overclaims
-        fixed: 8 integral / 10 finite non-integral / 3 poles
-        among 21 points, all |A|<=95; no |a|<=3162 sweep in
-        the repo. PROVED_BRANCH_A stays False.
-        results/k7_intersective.json byte-identical.
-    A2. PARKED: Stroeker-Tzanakis on the cubic. Rank 3 makes
-        the reduction lattice 5-dimensional; David's bound
-        ~10^20-10^23; two LLL rounds; silent sign-error
-        risk. A focused day, adversarial test against a
-        curve whose points are already known. Not the next
-        session. Magma has no IntegralCubicPoints.
-        SIntegralPoints needs a finite S, which is circular
-        (denominators of sigma are powers of A).
-        Do not call |a|<=400 or thue a proof.
-
-  After A1 (done once committed), pick ONE (do not start two):
-    B.  Q29 k=9 Siegel. Next odd degree. Seven partitions,
-        no t^2 reduction. Harder than Branch A in the
-        "no Magma routine" sense too. One Claude item, same
-        playground rules.
-    C.  Named lab (PF4.2). i=9 cap columns / fat cells /
-        ghosts. Cheap command, written outcome. No Magma.
+  After ae60ac9, pick ONE (do not start two):
+    C.  Named lab (PF4.2). See below. Cheap command, written
+        yes/no, outcome done/declined/blocked. No Magma.
+        This is the original item-2 after the family writeup.
     D.  nearby or collide job (PF4.3). User-run, named
-        command, no cap. Claude does not start it. Grok
-        does not start it. A hit is a new collision.
+        command, no cap. A hit is a new collision.
 
-  Do not start: i=10; Q27/Q28 reopen; Branch B Runge
-  "improvement"; mixing the dirty k9 files into A1.
+  Do not start: i=10; Q27/Q28 reopen; Q26 A2; Q29 B/C as
+  the next Claude item.
 
 Do not start i=10. Do not build m_9. Do not fire Q1.
 Do not start a job unless the user says to run it.

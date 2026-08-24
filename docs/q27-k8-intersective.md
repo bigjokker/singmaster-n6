@@ -207,7 +207,8 @@ with `k`.
 **For `k=9`** (odd, no reduction, degree 9) the branch count makes the Q26
 approach painful. **`k=10` is now proved** (Q28, Magma 2026-08-23): even,
 quintic `g`, no cubic-cofactor curve, (2,3) list complete. Remaining
-intersective leftover is `k=9` (Siegel) and Q26 Branch A (genus-1 cubic).
+intersective leftover is `k=9` Branches B and C (Siegel; Branch A closed
+by Runge 2026-08-24) and Q26 Branch A (genus-1 cubic, Magma rank 3 true).
 
 As with Q25 and Q26, none of this changes the census: `c = k!m` has 3.1
 million digits, and termination is certified per column by Q14 §6.

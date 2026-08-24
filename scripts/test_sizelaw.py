@@ -175,6 +175,39 @@ def test_run_length_is_not_the_criterion() -> None:
     )
 
 
+def test_i9_bandII_last_survivor_chain() -> None:
+    """The fat-cell lab pin (2026-08-24): i=9 Band II's last survivor.
+
+    k = 28575561 (refresher: alive through pass 8, dead pass 9) rebuilt on
+    the live ladder: run 8 through EXACTLY the eight recorded Band II pass
+    primes, killed at the recorded death-pass prime 37025017.  Lambda ~
+    3.0e-6; with the honest regime multiplier (7,237,864 Band II columns)
+    the expected count of such runs is ~21.7 -- an 8-run was a near
+    certainty, ordinary.  Pinned in BOTH directions: the one-off default
+    peers=3000 sits below the 0.01 threshold (it flags, the SAFE spurious
+    side -- a documented artifact of under-counting the regime by ~2400x),
+    while the regime count is ordinary by three orders of magnitude.
+    """
+    from bandii_kernel import make_fam
+
+    fam9 = make_fam(9)
+    surv, kill, _ = S.live_ladder(fam9, 28575561, cap=20)
+    expect(len(surv) == 8 and kill == 37025017,
+           f"i=9 k=28575561: run {len(surv)}, killed at {kill} (death pass 9)")
+    expect(list(surv) == [37024873, 37024879, 37024903, 37024931,
+                          37024951, 37024957, 37024973, 37024991],
+           "the eight survived primes are exactly the recorded Band II pass primes")
+    lam = S.run_lambda(28575561, surv)
+    expect(2.9e-6 < lam < 3.1e-6, f"Lambda = {lam:.3e} (model, ~3.0e-6)")
+    n_bii = 35522329 - 28284466 + 1
+    expect(n_bii == 7237864, "Band II column count matches the refresher")
+    expect(n_bii * lam > 20, f"regime-honest expected count {n_bii*lam:.1f} >= 20: "
+                             "an 8-run among the fat cells was a near certainty")
+    expect(3000 * lam < 0.01,
+           "the one-off default peers=3000 sits below threshold (flags on the "
+           "SAFE spurious side; the regime multiplier is the honest one)")
+
+
 def test_fat_cell_chain_matches_the_record() -> None:
     """docs/band-I.md: record k=2227205, kill 2701099. Rebuild it."""
     from bandii_kernel import D, cells, live_intervals
@@ -646,6 +679,7 @@ def main() -> int:
     test_poisson_tail()
     test_trigger_fires()
     test_run_length_is_not_the_criterion()
+    test_i9_bandII_last_survivor_chain()
     test_fat_cell_chain_matches_the_record()
     test_round_model_tracks_a_real_sweep()
     print("\n=== SIZE LAW TESTS ===")
