@@ -568,7 +568,7 @@ Operationally this changes nothing -- our `c = k!m` has 3.1M digits and the
 census still relies on Q14 section 6's per-column termination certificate.
 Full write-up in [`q25-k6-intersective.md`](q25-k6-intersective.md).
 
-### Q26. Is `(x)_7 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo one elliptic computation) 2026-08-20 — Branch B CLOSED by Runge, Branch A corrected (genus 1, never Thue) 2026-08-23
+### Q26. Is `(x)_7 - c` ever intersective? *(research · **EXTRA**)* — ANSWERED (no, modulo one elliptic computation) 2026-08-20 — Branch B CLOSED by Runge 2026-08-23 — Branch A: real half CLOSED, Thue/Desboves/F20 excluded, Magma Rank 3 true; complex half still BLOCKED 2026-08-24
 **No counterexample exists, and only finitely many can.** Weaker than Q25 and
 labelled so: Q25 is a proof, this is a proof modulo one elliptic
 integral-point computation not carried out (Branch A; the 3+4 branch is now
@@ -617,6 +617,42 @@ subfield -- witnessed by (x^2+x-1)(x^5-2) having a root mod every prime
 tested (a group-theory witness, not an (x)_7 - c) -- the k=7 instance of
 Q27/Q28's even-derangement trap. Pinned by
 `scripts/test_k7_runge.py`.
+
+**Branch A re-attacked 2026-08-24; still BLOCKED, but the wall is mapped
+and half the branch is now a theorem.** Four things changed. (i) "Not a
+Thue equation" is now PROVED, and the old justification was invalid --
+smoothness proves nothing, since N(x,y) = m z^3 is a smooth cubic too. The
+right test is that the Hessian of the homogenised Phi vanish identically at
+infinity; here it is 392(b-2A)(2b-A)^2, so no infinite point is an
+inflection and no substitution produces a Thue form. Desboves is out too
+(psi_3 of E irreducible: no rational 3-isogeny). (ii) THEOREM: the REAL
+half closes -- a^2-4b > 0 forces |a| <= 6, |b| <= 9 (a real chord of P7
+cannot escape P7's largest local maximum, under 96), and that box holds
+exactly the 21 chord points, all with c = 0. So the c=0 trap that makes
+congruence arguments vacuous lives entirely in the real region, and every
+survivor has a COMPLEX quadratic factor. (iii) THEOREM: 7! | c removes F20
+from the no-kill door -- |c| >= 5040 leaves f_c one real root, which the
+complex quadratic cannot hold, so disc(quintic) > 0 and its quadratic
+subfield is real, while the door needs the imaginary Q(sqrt(a^2-4b)). Only
+D5 survives, and D5 < A5 adds "disc(quintic) is a square" as a new
+necessary condition. (iv) Why the shortcut fails, concretely: the explicit
+map sigma sends the genuine integral point (A,b) = (4,13) -- carrying
+c = +-17472 -- to (1345/4, 48959/8), on E but NOT integral, so
+IntegralPoints(E) returns a demonstrably wrong list (of 21 known points,
+all |A| <= 95: 8 integral image, 10 finite non-integral, 3 poles). The
+obstruction is Galois: the three points at infinity are one C_3-orbit, so
+no Q-rational function of degree 1 or 2 has poles only there, and no
+Q-rational Weierstrass or quartic model has the same integral points. A
+model CONTAINING them exists by rescaling, but choosing the scale needs
+the answer -- the block is circularity, not impossibility, and it is
+arithmetic rather than geometric: over K = Q(2cos 2pi/7) the orbit splits
+and Phi becomes an integral quartic over Z[theta], exactly
+IntegralQuarticPoints' shape, but Magma has no number-field version.
+21 integral points of Phi are known, all |A| <= 95, |c| in
+{0, 17472, 459648}, nothing new; a larger sweep is not in the repo.
+Magma Rank(E) 2026-08-24 printed "3 true" (torsion order 1). The curve
+actually needed, Psi: Phi(a^2,b)=0, has genus 4, so Faltings bounds even
+the RATIONAL solutions -- stronger than Siegel, equally ineffective.
 
 Next target is `k = 8`, not `k = 9`: even, so Q25's reduction applies, giving
 a quartic `g` with `e1 = 84`, where Case 3 becomes a surface rather than a

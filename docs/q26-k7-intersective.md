@@ -176,25 +176,121 @@ its final inequality mixed a 4-term Newton anchor with a 5-term series tail
 and was caught in adversarial review — the committed chain uses one anchor
 throughout. Artifact: `results/k7_runge.json`.
 
-**Branch A was never a Thue equation.** `Φ(A,b) = 0` is a *smooth* plane
-cubic — no affine singular point, three smooth points at infinity — hence
-**genus 1**: `thue` solves `F(x,y) = m` for homogeneous `F` and simply does
-not apply. Via the pencil of lines through `(0,−1)` the Jacobian is
+**Branch A was never a Thue equation — and here is the actual proof.** The
+2026-08-23 text argued "`Φ` is a *smooth* plane cubic, hence genus 1, hence
+`thue` does not apply." **That inference is invalid**: a Thue curve
+`N(x,y) = m z³` is itself a smooth plane cubic of genus 1, so smoothness
+excludes nothing. The correct test is projective. A cubic is affinely
+equivalent over `Q` to a binary-form equation `N(x,y) = m` **only if** the
+Hessian of its homogenisation vanishes identically on the line at infinity
+(equivalently: all three infinite points are inflections *and* their tangents
+are concurrent). For `Φ`,
+
+```text
+Hessian(Φ)|_{z=0} = 392·(b − 2A)·(2b − A)²
+```
+
+which is not identically zero and is not even divisible by the leading form
+`b³ − 6Ab² + 5A²b − A³` — the roots `b = 2A`, `b = A/2` are not roots of
+`θ³−6θ²+5θ−1` (its values there are `−7` and `1/8`). So **no** point at
+infinity is an inflection, and no change of variables over `Q` can turn `Φ`
+into a Thue equation. (Affine: a projective change would move the line at
+infinity and would not preserve `Φ(Z)`.) PARI's `thue` is excluded by
+theorem, not by inspection. (A genuine Thue cubic is carried as the control in
+`test_k7_runge.py`: for `x³+2y³=7` the Hessian *does* vanish identically at
+infinity.) The same pass also excludes the other special-form escape:
+`ψ₃` of the Jacobian is irreducible over `Q`, so `E` has no rational
+3-isogeny, `Φ` is not `Q`-equivalent to a Desboves cubic, and Magma's
+`SIntegralDesbovesPoints` cannot apply either.
+
+Via the pencil of lines through `(0,−1)` the Jacobian is
 
 ```text
 E:  Y² = X³ − 1764·X + 28224  =  X³ − 42²·X + 168²
 ```
 
-with **trivial torsion** (gcd of `#E(F_p)` is 1) and visible integer points
+with **trivial torsion** (gcd of `#E(F_p)` is 1; Magma `TorsionSubgroup`
+2026-08-24: abelian group of order 1) and visible integer points
 — `(0,168)`, `(21,21)`, `(28,28)` — each therefore of **infinite order**:
-rank ≥ 1, `E(Q)` is infinite, and there is no rank-0 shortcut. Siegel still
-gives finiteness of the *integral* points of `Φ`; certifying that list needs
-the elliptic-logarithm method on a **cubic model** (Stroeker–Tzanakis), and
-no installed tool provides it — Magma's `IntegralPoints` takes Weierstrass
-models, and the birational map does not preserve integrality. **Branch A
-stays blocked there** — the analogue of Q28's rank-2 quartic, which Magma
-has since solved (2026-08-23). The quartic case had a routine; this one has
-none, which is why Q28 closed and Branch A did not.
+rank ≥ 1, `E(Q)` is infinite, and there is no rank-0 shortcut. Magma
+`Rank(E)` the same day printed **`3 true`**, so rank = 3 unconditionally —
+which matters, because the size of a Stroeker–Tzanakis reduction lattice is
+`rank + 2`.
+
+```text
+> E := EllipticCurve([-1764, 28224]);
+> E;
+Elliptic Curve defined by y^2 = x^3 - 1764*x + 28224 over Rational Field
+> TorsionSubgroup(E);
+Abelian Group of order 1
+> Rank(E);
+3 true
+```
+
+**Why the obvious shortcut is wrong, concretely.** Write the birational map
+out. Projecting from `(0,−1)` and reducing gives `σ : Φ → E`,
+
+```text
+X = N_X(A,b)/A²,   Y = N_Y(A,b)/A³,   σ⁻¹(O) = (A,b) = (0,−9)
+```
+
+(the identity `Y² = X³ − 1764X + 28224` holds modulo `Φ`; both are pinned).
+`σ⁻¹(O)` is an **affine** rational point, not one of the points at infinity —
+it has to be, since the infinite points are irrational. So `X∘σ` has a pole
+on the affine curve and the map does not preserve integrality. The failure is
+not theoretical: the genuine integral point `(A,b) = (4,13)`, which carries
+the real Branch-A value `c = ±17472`, maps to
+
+```text
+σ(4,13) = (1345/4, 48959/8)  ∈ E(Q),  NOT an integral point of E
+```
+
+Of the 21 known integral points of `Φ` (all with `|A| ≤ 95`; listed in
+`scripts/k7_branchA.py` as `PHI_INTEGRAL_POINTS`), **8** have integral image
+on `E`, **10** have finite non-integral image, and **3** are poles of `σ`
+(`A = 0`). So `IntegralPoints(E)` returns a demonstrably **wrong** list —
+the k=7 instance of exactly the trap that `Sage`'s `E.integral_points()`
+would have been on Q28.
+
+**The obstruction, stated properly.** The three points at infinity of `Φ` are
+a single Galois orbit: the leading form is irreducible with discriminant `49`,
+so `C₃` acts simply transitively. Hence every Galois-stable effective divisor
+supported there has degree divisible by 3, and **no `Q`-rational function of
+degree 1 or 2 has poles only at infinity**. A Weierstrass model needs a
+degree-2 function (`x`, pole divisor `2·O`) and a quartic model needs one too
+(`T`); neither exists over `Q`. Therefore no `Q`-rational Weierstrass or
+quartic model has the *same* integral points as `Φ`, and `IntegralPoints`,
+`SIntegralPoints` and `IntegralQuarticPoints` cannot be handed this problem
+on any such model.
+
+Two honest caveats, both established while checking the above. First, a model
+whose integral points merely *contain* `Φ`'s always exists — rescale
+`(X,Y) → (u²X, u³Y)` to clear denominators — so the barrier is not
+impossibility but **circularity**: choosing `u`, or choosing `S` for
+`SIntegralPoints(E,S)`, requires the denominators of the very points one is
+trying to find. Second, the obstruction is about the **ground field**, not the
+curve. Over `K = Q(θ)`, `θ³−6θ²+5θ−1 = 0`, the orbit splits, `κ = b − θA`
+becomes a degree-2 function, and `Φ` becomes a genuinely **integral quartic
+over `O_K = Z[θ]`**:
+
+```text
+s² = (−3θ²+12θ+16)κ⁴ + (−56θ²+252θ+168)κ³ + (−294θ²+1470θ+588)κ²
+     + (−432θ²+3100θ+652)κ + (385θ²+1246θ+385),   s = 2α(κ)A + β(κ)
+```
+
+with leading coefficient the square `(−6θ²+33θ−14)²`, and `κ, s ∈ Z[θ]` at
+every known integral point of `Φ`. That is precisely
+`IntegralQuarticPoints`' input shape — but over `O_K`, and Magma has no
+number-field version. (`K` is the same cyclic cubic field of conductor 7 that
+Branch B's `K3` produced: `θ = 1/(2+t)`, `t = 2cos(2π/7)`. Both branches of
+`k=7` live over it.)
+
+Siegel gives finiteness of the integral points of `Φ`; certifying the list
+needs the elliptic-logarithm method on a **cubic model** (Stroeker–Tzanakis),
+and no installed or online tool provides it. **Branch A stays blocked
+there** — the analogue of Q28's rank-2 quartic, which Magma solved on
+2026-08-23. The quartic case had a routine; this one has none, which is why
+Q28 closed and Branch A did not.
 
 **Chebotarev narrows what the missing list is for** (`scripts/k7_branchA.py`
 §2). A 2+5 value is killed at `p` iff the quadratic is inert and the quintic
@@ -217,16 +313,66 @@ need its own no-kill configuration among two quadratics and a cubic, not
 analysed here — but every `2+2+3` value lies on the Branch-A curve too, so
 the enumeration below covers it.
 
-The honest statement now: **the 3+4 branch is a theorem; the 2+5 branch has
-no counterexample below the search bound, only finitely many can exist
-anywhere, and any counterexample with irreducible quintic would need a
-`D₅/F₂₀` quintic with matched subfield *and* `7! | c`.** The remaining
-certificate is the integral-point list of one rank-≥1 elliptic cubic —
-the elliptic-log method for general genus-1 models: Stroeker–Tzanakis,
+**Two new theorems (2026-08-24) that shrink what is left.**
+
+*The real half of Branch A is closed, elementarily.* If `a² − 4b > 0` the two
+roots `y₁ ≠ y₂` are real, so `c` is a **real chord** of
+`P(y) = y(y²−1)(y²−4)(y²−9)`. `P`'s six critical values are
+`±95.8419…, ±23.1490…, ±12.3588…`, all under `96` in absolute value, and `P`
+is strictly monotone beyond the outermost critical point. So a chord value
+satisfies `|c| ≤ 95.85`, both endpoints lie in `[−Y₀, Y₀]` with
+`Y₀ = 3.1042…` (the root of `P = 96`), and therefore
+
+```text
+|a| = |y₁+y₂| ≤ 2Y₀ < 7   and   |b| = |y₁y₂| ≤ Y₀² < 10.
+```
+
+Enumerating that finite box on `Φ` returns **exactly the 21 chord points,
+every one with `c = 0`**. So the whole `c = 0` locus — the obstruction that
+makes any congruence or descent argument vacuous, exactly as in Q28 — lives
+in the real region, and the real region is now finished by hand. **Every
+surviving Branch-A point has `a² − 4b < 0`**: the quadratic factor is complex.
+
+*`7! | c` removes `F₂₀` from the no-kill door.* An intersective `c` needs
+`7! | c`, so `|c| ≥ 5040`, which exceeds every critical value of `P`; hence
+`f_c` has exactly **one** real root. By the previous theorem the quadratic
+factor is complex, so the **quintic** carries that single real root — two
+conjugate pairs, so complex conjugation acts as a `(2,2)`-element, which is
+*even*, so `disc(quintic) > 0` and `Q(√disc)` is **real**. But `F₂₀`'s unique
+quadratic subfield *is* `Q(√disc)` (`F₂₀ ∩ A₅ = D₅`, index 2), while the door
+demands it equal `Q(√(a²−4b))`, which is now **imaginary**. Contradiction:
+**`F₂₀` is impossible**, and only `D₅` survives. Since `D₅ ⊂ A₅`, that adds a
+new necessary condition — `disc(quintic)` must be a perfect **square** — which
+both recorded candidates fail (they are `S₅`, as above). The
+group-theoretic trichotomy itself is unchanged; what changed is that the
+arithmetic of `7! | c` closes one of its two doors.
+
+The honest statement now: **the 3+4 branch is a theorem; on the 2+5 branch
+the real half is a theorem too, and what remains is the complex-quadratic
+half, where no counterexample exists among the 21 known integral points of
+`Φ` (all `|A| ≤ 95`), only finitely many can exist anywhere, and any
+counterexample would need a `D₅` quintic with matched imaginary subfield,
+square discriminant, *and* `7! | c`.** The remaining certificate is the
+integral-point list of one rank-3 elliptic cubic — the elliptic-log method
+for general genus-1 models: Stroeker–Tzanakis,
 *Computing all integer solutions of a genus 1 equation*, Math. Comp. 72
-(2003), 1917–1933. (Magma's only non-Weierstrass cubic routine,
-`SIntegralDesbovesPoints`, takes special Desboves-form cubics only, which
-`Φ` is not.)
+(2003), 1917–1933. Nothing available implements it: Magma's `IntegralPoints`
+and `SIntegralPoints` take Weierstrass models, `IntegralQuarticPoints` takes
+`y² = quartic` over `Z`, and `SIntegralDesbovesPoints` takes Desboves cubics —
+and `Φ` is provably none of the three. Searching is not a substitute: 21
+integral points of `Φ` are known, **all with `|A| ≤ 95`**, the 14 with `A` a
+square giving `|c| ∈ {0, 17472, 459648}` — nothing new. A larger sweep is
+not in this repository.
+
+One more piece of geometry worth recording: the curve actually needed is not
+`Φ` but its double cover `Ψ : Φ(a², b) = 0`, since `A` must be a perfect
+square. `A` has three simple zeros (`b = −1, −4, −9`) and three simple poles
+(the points at infinity) on `Φ`, so `Ψ → Φ` is ramified at all six and
+Riemann–Hurwitz gives **genus 4**. Faltings therefore bounds the *rational*
+Branch-A solutions, not merely the integral ones — strictly stronger than
+Siegel, and equally ineffective. `Ψ` is bielliptic over a positive-rank
+elliptic quotient, which is exactly the configuration in which elliptic-curve
+Chabauty does **not** apply.
 
 ---
 
@@ -236,7 +382,8 @@ the elliptic-log method for general genus-1 models: Stroeker–Tzanakis,
 - `k = 5` — Q14, one Pell equation.
 - `k = 6` — Q25, proved outright via the `t²` reduction.
 - `k = 7` — this note: the 3+4 branch is a theorem (Runge, §5); the 2+5
-  branch modulo one elliptic integral-point computation.
+  real half is a theorem too; the complex half is rank 3 (Magma `3 true`)
+  and still needs Stroeker–Tzanakis on the cubic.
 - `k = 8` — Q27: **proved** (2026-08-23). The predicted "surface" never
   materialised; the difficulty was a genus-3 curve in Case 2, since solved
   by descent (`scripts/k8_case2.py`). (This bullet said "open" long after

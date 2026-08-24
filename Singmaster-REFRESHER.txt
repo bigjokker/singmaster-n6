@@ -81,12 +81,10 @@ PATH FORWARD 3 (closed in this clone, 2026-08-23):
   4. writeup i=3..9 — became PATH FORWARD 4 item 1
 
 PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
-  1. WRITEUP i=3..9. Pattern: docs/i8-N6.md. Say i=8 and i=9
+  1. WRITEUP i=3..9. DONE (docs/family-N6.md). i=8 and i=9
      are coverage-complete and UNBOUND (i=8: engine fill k=2
      and repair 1021 3517->1051; i=9: 83 engine fills, four
-     Lucas columns). This is what lets a stranger check the
-     claim. Do it BEFORE any lab. Until it exists, crumb
-     sessions rediscover k=1021 and the four cap columns.
+     Lucas columns). Do not rediscover k=1021.
   2. LAB = named questions with a yes/no, a cheap command,
      a written outcome (done / declined / blocked). Not
      browsing jsonl. You will not run out of data (i=9 jsonl
@@ -101,13 +99,10 @@ PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
      could live (docs/q11-what-is-the-claim.md): nearby at
      larger k and (d,e); collide range (D5 frontier now abuts
      the 2017 bound -- the skipped decade is no longer skipped,
-     just never yet scanned as a job); intersective gaps
-     (Q26 Branch B CLOSED by Runge, Branch A elliptic;
-     Q27 PROVED; Q28 PROVED Magma 2026-08-23; Q29 Siegel).
-     Effectiveness is bought by covering more kinds of ground,
-     not another family member. A hit on nearby/collide is a
-     new collision. i=10 is another instance of a pattern
-     the size law already predicts.
+     just never yet scanned as a job); intersective leftovers
+     (below). A hit on nearby/collide is a new collision.
+     i=10 is another instance of a pattern the size law
+     already predicts.
   4. i=10 stays PARKED. Re-open only if (a) the size law
      fails (i=9's ledger is ordinary — (a) did not fire),
      (b) cost drops more than an order of magnitude (the
@@ -118,6 +113,52 @@ PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
      paper-about-the-family choice (Q11 §6: legitimate, but
      say so). Do not wait until data "runs out". Do not wait
      for the tool to become 47x cheaper.
+
+INTERSECTIVE leftover (PF4.3), 2026-08-24. Ladder:
+  k<=6 proved; k=8 Q27 proved; k=10 Q28 proved Magma 15 a-values
+  rank 2 true. k=7 Q26 Branch B proved Runge. k=7 Branch A and
+  k=9 Q29 are the two open degrees.
+
+  Q26 Branch A NOW (order is the point; do not skip):
+    A0. MAGMA RANK — DONE 2026-08-24. User paste at
+        http://magma.maths.usyd.edu.au/calc/ :
+
+          E := EllipticCurve([-1764, 28224]);
+          E;
+          TorsionSubgroup(E);
+          Rank(E);
+
+        stdout: curve over Q; Abelian Group of order 1;
+        **3 true**. Rank = 3 unconditionally. Does NOT close
+        Branch A.
+    A1. FOLD AND COMMIT — Magma 3 true folded; overclaims
+        fixed: 8 integral / 10 finite non-integral / 3 poles
+        among 21 points, all |A|<=95; no |a|<=3162 sweep in
+        the repo. PROVED_BRANCH_A stays False.
+        results/k7_intersective.json byte-identical.
+    A2. PARKED: Stroeker-Tzanakis on the cubic. Rank 3 makes
+        the reduction lattice 5-dimensional; David's bound
+        ~10^20-10^23; two LLL rounds; silent sign-error
+        risk. A focused day, adversarial test against a
+        curve whose points are already known. Not the next
+        session. Magma has no IntegralCubicPoints.
+        SIntegralPoints needs a finite S, which is circular
+        (denominators of sigma are powers of A).
+        Do not call |a|<=400 or thue a proof.
+
+  After A1 (done once committed), pick ONE (do not start two):
+    B.  Q29 k=9 Siegel. Next odd degree. Seven partitions,
+        no t^2 reduction. Harder than Branch A in the
+        "no Magma routine" sense too. One Claude item, same
+        playground rules.
+    C.  Named lab (PF4.2). i=9 cap columns / fat cells /
+        ghosts. Cheap command, written outcome. No Magma.
+    D.  nearby or collide job (PF4.3). User-run, named
+        command, no cap. Claude does not start it. Grok
+        does not start it. A hit is a new collision.
+
+  Do not start: i=10; Q27/Q28 reopen; Branch B Runge
+  "improvement"; mixing the dirty k9 files into A1.
 
 Do not start i=10. Do not build m_9. Do not fire Q1.
 Do not start a job unless the user says to run it.
