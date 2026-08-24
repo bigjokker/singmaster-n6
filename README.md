@@ -54,6 +54,7 @@ the prime list did not kill it.
 | `scripts/test_k8_case2.py` | Q27 proved: the genus-3 curve's 16 descent classes all die; the five degenerate points; the mod-8 filter; the 2-adic depth-13/6 certificates |
 | `scripts/test_k10_deep.py` | Q28's wall audited with Q27's lesson: calibration (alive mod 2^7, dead mod 2^14), SURVIVE verdicts with exact valuation laws, the prune trap, candidates unharmed |
 | `scripts/test_k9_intersective.py` | Q29 Branch A **proved** by Runge: the disc-81 split, the W1 trap (trace -3^5), the complete 23-point list, both kills; branch C's six degenerate points, all c = 0 |
+| `scripts/test_ghost_census.py` | `results/ghost_census.json` cannot go stale silently: every member's count and sha256 compared live against the witness npz on disk; caveats and ghosts_found = 0 pinned |
 
 ```text
 python scripts/test_sweeps.py
@@ -137,11 +138,15 @@ falling-factorial local–global question: each recorded \((k,p)\) certifies tha
 "ghost". The output carries its own caveats, worth reading before quoting the
 count.
 
-**`results/ghost_census.json` is stale and has not been regenerated.** It
-lists seven members and 6,067,902 values, so it predates i=9; worse, its i=8
-entry names digest `b4c02030`, the table as it stood *before* the k=1021
-repair — the one that held the false 1021 → 3517 row. So its count is not a
-statement about the current i=8 table and should not be quoted as one.
+**`results/ghost_census.json` was regenerated 2026-08-24** from the current
+witness tables: eight members (i=2..9), **41,590,228 certified non-ghosts**
+over \(k = 2..35{,}522{,}329\), with the i=8 entry naming the post-repair
+digest `596dbf47…` and i=9 present (`e375de14…`, 35,522,326 rows). It is now
+a true statement about the tables on disk and is pinned live against them by
+`scripts/test_ghost_census.py`, so it cannot go stale silently again. (An
+earlier committed copy listed seven members and the pre-repair i=8 digest
+`b4c02030` — that version's count was not quotable; this one is, caveats and
+all.)
 
 ## Results worth keeping
 
@@ -175,7 +180,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k9_intersective.json` | Historical \((x)_9-c\) search: three branches; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
 | `results/k9_branchA.json` | Q29 Branch A **proved** by Runge (2026-08-24): the chord quartic's complete 23-point list, A_FAR = 34416, the W1 traps; every 2+7/2+2+5/2+3+4/2+2+2+3 value is \(c=0\) or dies at 7/13 |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
-| `results/ghost_census.json` | Certified non-ghosts — **stale**: 7 members, and its i=8 digest is the pre-repair table |
+| `results/ghost_census.json` | Certified non-ghosts, regenerated 2026-08-24: 8 members (i=2..9), 41,590,228 values over \(k\le 35{,}522{,}329\); digests match the tables on disk (live-pinned by `test_ghost_census.py`) |
 | `results/bandii_sweep.json` | Historical Band II \(p>N/2\): 1,055,989 columns, died at prime 8 |
 | `results/zjump.json` | Historical Band I remnant: 3,215,816 columns, 0 anomalies |
 | `results/walk_369.json` | 369 triples walked past prime 3: max run 6, counts match the size law |

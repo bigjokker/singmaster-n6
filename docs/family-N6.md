@@ -525,12 +525,14 @@ weaken the others, which stand on their own certificates.
   62-digit values, one decade above the first value the classifier calls
   past. The scan start was corrected on 2026-08-23; the artifacts were not
   re-run.)
-* **Not `results/coverage_ledger.json`, and not `results/ghost_census.json`.**
-  Both are stale. The ledger json predates the coverage/binding split, and
-  its \(i=8\) row still asserts a certificate digest that the current
-  \(i=8\) record does not contain; the ghost census covers seven members
-  and its \(i=8\) entry names a digest that is not the current table's. Run
-  `coverage_ledger.py`; do not quote either file.
+* **Not `results/coverage_ledger.json`.** Still stale: the ledger json
+  predates the coverage/binding split, and its \(i=8\) row still asserts a
+  certificate digest that the current \(i=8\) record does not contain. Run
+  `coverage_ledger.py`; do not quote that file. (`results/ghost_census.json`
+  was in the same boat until 2026-08-24; it has since been regenerated from
+  the current tables — eight members, digests matching this section's table,
+  live-pinned by `scripts/test_ghost_census.py` — and IS now citable, with
+  its own caveats.)
 * **Not reproducible from a clone alone.** Every `results/i*_sweep.jsonl` is
   gitignored, and those checkpoints are the only record of which prime
   killed which column. The witness tables are committed and can be

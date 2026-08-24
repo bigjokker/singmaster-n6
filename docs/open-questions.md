@@ -248,11 +248,13 @@ below the threshold" — which is tighter at the bottom (the document recommends
 outcome, and does it cost or save time?
 
 ### Q9. Make the ghost census a first-class output. *(difficulty: low-medium · **HARD**)* — DONE 2026-08-20
-`scripts/ghost_census.py` reads the witness tables and reports the census with its claim stated exactly: for each recorded (k,p), c = k! C(N,K) is outside (x)_k(F_p), hence outside the intersection over all primes, hence a certified NON-ghost. **6,067,902 values over k = 2..5,182,637**, re-run after Q4 rebuilt i=8's table
-(2026-08-23: `results/ghost_census.json` has NOT been re-run since, so it
-covers seven members and its i=8 entry names digest `b4c02030` — the table as
-it stood *before* the k=1021 repair. Do not quote its count for the current
-i=8 table or for i=9.) (it read 884,236 over k = 41..756,136 before that). Verified exactly on a spot-check (k=201, p=211, c a 582-digit number).
+`scripts/ghost_census.py` reads the witness tables and reports the census with its claim stated exactly: for each recorded (k,p), c = k! C(N,K) is outside (x)_k(F_p), hence outside the intersection over all primes, hence a certified NON-ghost. **41,590,228 values over k = 2..35,522,329** (regenerated 2026-08-24: eight
+members i=2..9, i=8 at the post-repair digest `596dbf47…`, i=9 present at
+`e375de14…` with 35,522,326 rows and n_unresolved = 0; live-pinned against
+the npz tables by `scripts/test_ghost_census.py`). Earlier readings, for the
+record: 6,067,902 over k = 2..5,182,637 with the pre-repair i=8 digest, and
+884,236 over k = 41..756,136 before Q4 rebuilt i=8's table. Verified exactly
+on a spot-check (k=201, p=211, c a 582-digit number).
 
 The output carries its own caveats, because the honest reading is narrower than 'largest test in existence': this is not a targeted ghost hunt (these are the c the Singmaster search happens to produce, not ghost-like candidates), each column stops at its FIRST killing prime so the census records that c fails somewhere rather than how nearly it passed, and 'ghosts found: 0' is the only possible answer -- a surviving column would be an unresolved anomaly, since ghosthood needs failure at every prime.
 
