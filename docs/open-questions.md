@@ -719,7 +719,11 @@ needs the one real root >= 0); c > 0 killed off the locus, which forces
 b = nu^2 and lives on a GENUS-3 double cover of the curve. Searches to
 b <= 10^12 find nothing on it beyond c = 0. The remaining statement is "the
 no-kill locus has no integer point with c != 0" -- still implied by the
-Magma call. The routine that
+Magma call. Audited with Q27's battery-depth lesson (2026-08-23,
+`k10_deep.py`): the locus SURVIVES every deep p-adic battery -- certified
+branch witnesses with v_p(1024c) = t + const sweeping every depth at
+p = 2, 3, 5, 7, spot-checked at 11, 13, 31 -- so no congruence at these
+primes can close it; the wall is real, not a shallow-modulus illusion. The routine that
 proves the list complete is Magma's
 `IntegralQuarticPoints([5,1320,126456,5102240,72824400], [-250,74880])`
 (Tzanakis 1996); Sage's `integral_points` is Weierstrass-only and PARI has

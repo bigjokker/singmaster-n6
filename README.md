@@ -52,6 +52,7 @@ the prime list did not kill it.
 | `scripts/test_k10_chebotarev.py` | Q28's Chebotarev pass: the kill trichotomy, the no-kill shape's reality, c<0 closed, the locus on its genus-3 cover, still BLOCKED |
 | `scripts/test_k7_runge.py` | Q26: Branch B's Runge certificate (empty trap, 19 points, c = 0, +-896 only) and Branch A's corrected geometry (genus 1, rank >= 1, the D5/F20 trap) |
 | `scripts/test_k8_case2.py` | Q27 proved: the genus-3 curve's 16 descent classes all die; the five degenerate points; the mod-8 filter; the 2-adic depth-13/6 certificates |
+| `scripts/test_k10_deep.py` | Q28's wall audited with Q27's lesson: calibration (alive mod 2^7, dead mod 2^14), SURVIVE verdicts with exact valuation laws, the prune trap, candidates unharmed |
 
 ```text
 python scripts/test_sweeps.py

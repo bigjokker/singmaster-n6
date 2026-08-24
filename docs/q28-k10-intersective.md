@@ -275,12 +275,70 @@ must have `315 | p₀`, `p₀` odd, and `p₀ ≡ ±945 (mod 2¹⁷)`.
 **Outcome: Q28 stays BLOCKED.** The missing statement narrows to *"the
 no-kill locus has no integer point with `c ≠ 0`"* — implied by the §3 Magma
 call, since deep points are integral points of the rank-2 quartic with `b` a
-perfect square. One correction to the flag that prompted this section (the
-previous commit's report): a shared quadratic subfield alone does **not**
-block the kill — case 2's character argument survives it. The block needs
-the full `(2,2,3,3)` factorisation, whose coincidence condition is, by the
+perfect square.
+
+One correction to the flag that prompted this section (the previous
+commit's report): a shared quadratic subfield alone does **not** block the
+kill — case 2's character argument survives it. The block needs the full
+`(2,2,3,3)` factorisation, whose coincidence condition is, by the
 identities above, that same shared-subfield condition resurfacing at the
 bottom of the tree.
+
+### 3c. The battery-depth audit (2026-08-23, after Q27): the wall is REAL
+
+Q27's genus-3 curve fell because two classes that looked alive mod `2⁷` were
+dead at 2-adic depth 13 and 6. The obvious follow-up: is this locus's
+"everywhere locally solvable" the same illusion? **No** — audited in
+`scripts/k10_deep.py`, artifact `results/k10_deep.json`, pinned by
+`scripts/test_k10_deep.py`:
+
+- **The Q27 shape is absent.** `μ² = 2ν − a` exactly, so the coincidence is
+  `−(a+2ν)·disc(m)` = square, and the system needs only `(a, ν, γ, α, β)`.
+  On the `b = ν²` cover, `b·(s−b) = q_C(a)` makes `b` the square *itself*,
+  not a cofactor of a `y²`-product: no valuation-evenness is forced anywhere,
+  and no δ-classes with uniform valuations arise (finite kernel
+  `Res(s, q_C) = 3¹⁰·11²·748871`, for the record).
+- **The 10!-filtered locus survives every deep battery**: lift-trees alive at
+  `2¹⁰, 3⁹, 5⁶, 7⁵` — 6,881,280 / 6,181,920 / 3,322,500 / 603,680 raw
+  tuples (mirror-closed sets, not orbit counts; re-derive with
+  `k10_deep.py --deep`), of which 0 / 5,724,000 / 3,309,220 / 597,520 have
+  `v_p(1024c)` resolved finite in the 10!-window — genuinely
+  `c ≠ 0`-compatible. (The `p = 2` zero is structural: the filter forces
+  `1024c ≡ 0 mod 2^k` for every depth `k ≤ 18`, so 2-adic resolution needs
+  the witnesses below, not the tree.) And,
+  decisively, **exact p-adic branch witnesses**: through the degenerate point
+  `(a,ν,γ,α,β) = (−130,−63,−15,−9,23)`, the offset `a = −130 + p^t` carries a
+  certified `Z_p`-solution of the full system (the two side squares — `μ`'s
+  square `2ν − a` and the coincidence — certified decisively, not just
+  square-class-consistent) with
+
+  ```text
+  v₂(1024c) = t + 14,   v₃ = v₅ = v₇ = t + 1    (precision 2⁵⁶/3³²/5²⁶/7²²)
+  v₁₁ = v₁₃ = v₃₁ = t                           (spot-checks past the 10!-primes)
+  ```
+
+  — the valuation *sweeps upward* with `t`: at each of these primes `p` and
+  every modulus `p^k`, the locus carries `Z_p`-points with `v_p(1024c)`
+  finite, 10!-compatible, and taking every value `≥ const_p`. **So no
+  congruence supported on these primes can force `c = 0`** — a congruence
+  closure of the wall would have to live at some untested prime and force
+  `c = 0` there, and at every prime beyond the 10!-primes where the branch
+  construction was pointed (11, 13, 31) it produced the same finite law
+  `v_p = t`. The structural difference from Q27: those
+  classes were free-parameter families with *m-uniform* valuations (secretly
+  empty); this locus is a p-adic *curve through the 160 genuine `c = 0`
+  integer tuples* (over the ten `c = 0` points of §3b), and `c` vanishes
+  analytically there.
+- **A methodological warning the audit itself produced**: a lift-tree with an
+  aggressive branch-neighborhood prune reported the fiber at `a = −10 + 2¹²`
+  dead at depth `2¹⁹` — while the exact branch carries a certified point
+  with `v₂(1024c) = 26` at that very offset. Deep batteries can *fake* kills
+  as well as miss them; only exact valuation laws or unpruned certificates
+  settle a class. (Q27's kills were exact valuation laws — they stand.)
+
+So the §3 statement is final as far as congruences go: the wall needs the
+elliptic machinery, not a deeper modulus. The recorded candidates remain off
+the locus (`D_q·D_k` nonsquare) and still die at 11 and 13.
 
 ## 4. Ladder, corrected
 

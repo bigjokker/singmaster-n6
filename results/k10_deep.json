@@ -1,0 +1,151 @@
+{
+  "claim": "Q28's no-kill locus survives deep p-adic batteries: the wall is real",
+  "calibration": "Q27 delta=3: alive mod 2^7, dead mod 2^14 (v2 = 13)",
+  "tree_alive": {
+    "2": {
+      "depth": 10,
+      "raw_tuples": 6881280,
+      "v_resolved": 0
+    },
+    "3": {
+      "depth": 9,
+      "raw_tuples": 6181920,
+      "v_resolved": 5724000
+    },
+    "5": {
+      "depth": 6,
+      "raw_tuples": 3322500,
+      "v_resolved": 3309220
+    },
+    "7": {
+      "depth": 5,
+      "raw_tuples": 603680,
+      "v_resolved": 597520
+    }
+  },
+  "tree_note": "raw 5-tuple counts (mirror-closed sets, not orbits); reproduce with: python scripts/k10_deep.py --deep",
+  "witness_base": [
+    -130,
+    -63,
+    -15,
+    -9,
+    23
+  ],
+  "witness_laws": {
+    "2": "v_2(cnum) = t + 14",
+    "3": "v_3(cnum) = t + 1",
+    "5": "v_5(cnum) = t + 1",
+    "7": "v_7(cnum) = t + 1",
+    "11": "v_11(cnum) = t + 0",
+    "13": "v_13(cnum) = t + 0",
+    "31": "v_31(cnum) = t + 0"
+  },
+  "witnesses": {
+    "2": [
+      [
+        14,
+        28,
+        56
+      ],
+      [
+        18,
+        32,
+        56
+      ],
+      [
+        22,
+        36,
+        56
+      ]
+    ],
+    "3": [
+      [
+        6,
+        7,
+        32
+      ],
+      [
+        8,
+        9,
+        32
+      ],
+      [
+        10,
+        11,
+        32
+      ]
+    ],
+    "5": [
+      [
+        4,
+        5,
+        26
+      ],
+      [
+        6,
+        7,
+        26
+      ],
+      [
+        8,
+        9,
+        26
+      ]
+    ],
+    "7": [
+      [
+        3,
+        4,
+        22
+      ],
+      [
+        5,
+        6,
+        22
+      ],
+      [
+        7,
+        8,
+        22
+      ]
+    ],
+    "11": [
+      [
+        2,
+        2,
+        12
+      ],
+      [
+        4,
+        4,
+        12
+      ]
+    ],
+    "13": [
+      [
+        2,
+        2,
+        10
+      ],
+      [
+        4,
+        4,
+        10
+      ]
+    ],
+    "31": [
+      [
+        1,
+        1,
+        8
+      ],
+      [
+        3,
+        3,
+        8
+      ]
+    ]
+  },
+  "prune_trap": "pruned tree fakes a death at a = -10 + 2^12 (depth 2^19); exact branch is alive there with v2(cnum) = 26",
+  "verdict": "SURVIVE at 2, 3, 5, 7 (spot: 11, 13, 31); PROVED_23_POSITIVE unchanged (False)"
+}
