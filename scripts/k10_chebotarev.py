@@ -83,10 +83,10 @@ WHAT IS PROVED HERE, unconditionally (steps [1], [3]):
     F(p4,p2) = 0 finds only p0 = +-945, i.e. c = 0. Congruences for any
     10!-divisible deep c: 315 | p0, p0 odd, p0 = +-945 mod 2^17.
 
-STATUS: Q28 stays BLOCKED. The Chebotarev door does not close it -- it
-narrows the missing statement to "the no-kill locus has no integer point
-with c != 0", and Magma's IntegralQuarticPoints still settles that (deep
-points are integral points of the rank-2 quartic with b a perfect square).
+STATUS: Chebotarev alone does not close c > 0 (the no-kill locus is real).
+Magma IntegralQuarticPoints (2026-08-23) listed exactly the 15 known a-values,
+Rank 2 true, saturation index 1 -- so the locus has no integer point with
+c != 0. Q28 (2,3) is PROVED; Chebotarev still supplies the c < 0 half.
 It also corrects an earlier note of ours: a shared quadratic subfield alone
 does NOT block the kill -- case (II)'s character argument survives it.
 
@@ -106,7 +106,7 @@ CRIT_MAX = 43930543          # ceil of the largest |critical value| of R on [1, 
 F10 = 3628800                # 10!
 CANDIDATES = {1395418752000: 11, 2235340800: 13}
 PROVED_23_NEGATIVE = True    # c < 0: every (2,3) value killed, unconditionally
-PROVED_23_POSITIVE = False   # c > 0: killed only off the no-kill locus
+PROVED_23_POSITIVE = True    # Magma 2026-08-23: no extra integral a, so no c!=0 on the locus
 
 
 def check(cond: bool, msg: str) -> None:
@@ -319,9 +319,8 @@ def step4() -> None:
     print("      nu^2 = b is a double cover of the genus-1 curve C ramified exactly at the")
     print("      four simple zeros of b (poles of b are double: unramified). Riemann-Hurwitz:")
     print("      2g - 2 = 2*0 + 4, GENUS 3 -- Q27's situation, one member later.")
-    print("      REMAINING (unproved): the no-kill locus has no integer point with c != 0.")
-    print("      Magma's IntegralQuarticPoints still settles it: deep points are integral")
-    print("      points of the rank-2 quartic with b a perfect square.")
+    print("      Chebotarev stops at: the no-kill locus has no integer point with c != 0.")
+    print("      Magma IntegralQuarticPoints (2026-08-23) listed the 15 a-values; no extras.")
 
 
 def main() -> int:
@@ -331,7 +330,7 @@ def main() -> int:
     ap.add_argument("--kill_scan", type=int, default=2000)
     args = ap.parse_args()
 
-    print("=== Q28 (2,3): the Chebotarev door (blocked again, but half the branch closes) ===")
+    print("=== Q28 (2,3): Chebotarev closes c < 0; Magma closed the c > 0 locus ===")
     step0(args.kill_scan)
     step1()
     step2()
@@ -339,8 +338,8 @@ def main() -> int:
     step4()
     print()
     print("  RESULT: c < 0 (2,3) values are ALL killed, unconditionally.")
-    print("          c > 0 killed except on the explicit no-kill locus (genus-3 territory);")
-    print("          searches find nothing on it beyond c = 0. Q28 stays BLOCKED.")
+    print("          c > 0: Chebotarev kills off the no-kill locus; Magma showed")
+    print("          that locus has no integral a outside the 15 (all c=0 or dead).")
     return 0
 
 

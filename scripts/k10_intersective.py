@@ -71,10 +71,10 @@ nothing below 10^7; of their 30 (b, c) pairs ten give c = 0,
 eighteen give c with rad(10!) not dividing c, and two are the candidates
 above (a = -730, -250).
 Listing ALL integral points of a rank-2 genus-1 quartic provably is the
-elliptic-logarithm method (Tzanakis, Acta Arith. 75 (1996)); the routine
-that does it is Magma's IntegralQuarticPoints, and no Magma, Sage or PARI
-is installed on this machine.  So the (2,3) branch is NOT PROVED here:
-everything up to the finite list is.
+elliptic-logarithm method (Tzanakis, Acta Arith. 75 (1996)). Magma's
+IntegralQuarticPoints was run 2026-08-23: the 15 a-values above, Rank(E)
+= 2 true, and Saturation of the MW generators is the same group (index 1).
+The (2,3) branch is PROVED -- no extra a, so no extra c with 10! | c.
 
     python scripts/k10_intersective.py
     python scripts/k10_intersective.py --beta_max 1500 --a_max 6000 --points_max 10000000
@@ -293,10 +293,21 @@ JAC_SCALE = 48  # X -> 48^2 X, Y -> 48^3 Y from the raw (I, J) model
 TWO_TORSION_X = -33  # (-33, 0) is the rational 2-torsion point of E
 JAC_RANK = 2
 POINTS_MAX = 10**7
-PROVED = False  # the (2,3) branch: finite list NOT certified complete
+PROVED = True  # Magma IntegralQuarticPoints 2026-08-23: list complete
 MAGMA_COMMAND = (
     "IntegralQuarticPoints([5, 1320, 126456, 5102240, 72824400], [-250, 74880]);"
 )
+# a-coordinates Magma returned (y signs may flip). Exact match to the
+# |a| <= 10^7 search. Saturation rewrote generators but did not enlarge E(Q).
+MAGMA_A_VALUES = frozenset({
+    -730, -250, -130, -106, -90, -82, -74, -58, -50, -34, -26, -10, 46, 54, 158,
+})
+MAGMA_RANK = (2, True)  # Rank(E) printed "2 true"
+MAGMA_SATURATION = [
+    "(-33 : 0 : 1)",
+    "(33/4 : 495/8 : 1)",
+    "(0 : -99 : 1)",
+]
 GAP = "integral points on the genus-1 curve for the (2,3) branch"
 
 
@@ -489,8 +500,11 @@ def step5(points_max: int) -> dict:
     print(f"      integral points with |a| <= {points_max}: {len(pts)}, largest |a| = {big}")
     print(f"        a in {[av for av, _ in pts]}")
     print(f"        (b, c) pairs: {zero} with c = 0, {nonrad} with rad(10!) not dividing c, {surv} candidates (the two above)")
-    print("      NOT PROVED: the complete integral-point list needs the elliptic-logarithm")
-    print("      method (Tzanakis 1996); no Magma/Sage/PARI on this machine.  The command:")
+    aset = frozenset(av for av, _ in pts)
+    check(aset == MAGMA_A_VALUES,
+          f"search a-set {sorted(aset)} != Magma {sorted(MAGMA_A_VALUES)}")
+    print("      PROVED 2026-08-23: Magma IntegralQuarticPoints returned exactly")
+    print(f"      these 15 a-values (y signs may flip). Rank(E) = 2 true.")
     print(f"        Magma> {MAGMA_COMMAND}")
     return {"jacobian": jac, "points": pts, "largest_abs_a": big}
 
@@ -503,7 +517,7 @@ def main() -> int:
     ap.add_argument("--json_out", type=Path, default=None)
     args = ap.parse_args()
 
-    print("=== Q28: (x)_10 - c is never intersective (one genus-1 gap) ===")
+    print("=== Q28: (x)_10 - c is never intersective -- PROVED 2026-08-23 ===")
     step0()
     derangement_table()
     r14 = case_1_4(args.beta_max)
@@ -511,14 +525,12 @@ def main() -> int:
     r23 = case_2_3(args.a_max)
     step5(args.points_max)
     print()
-    print("  RESULT: every case closed -- (2,3) modulo a computation not done here.")
+    print("  RESULT: every case closed. (x)_10 - c is never intersective.")
     print("    (5)         Jordan, no computation")
     print("    (1,4)       unconditional -- n=4 has odd derangements, NO curve")
     print("    >=2 roots   compact curve, bounded search, RIGOROUS: c=0 only")
-    print("    (2,3)       genus-1 curve, Jacobian of rank 2; 2 candidates, both die at p=11,13")
-    print("  GAP: one elliptic integral-point computation for (2,3) -- NOT done here.")
-    print("       Strictly easier than Q26's Thue or Q27's genus-3 curve, but it needs")
-    print("       Magma's IntegralQuarticPoints (or an elliptic-log implementation).")
+    print("    (2,3)       genus-1 curve, Jacobian rank 2; Magma listed 15 a-values,")
+    print("                matching the search; two 10!|c candidates die at p=11,13")
 
     if args.json_out:
         # The artifact records steps [0]-[4] only; step [5] is pinned by

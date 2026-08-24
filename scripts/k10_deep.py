@@ -13,8 +13,9 @@ integer point with c != 0".  Verdict, in one line: THE WALL STANDS -- the
 locus is p-adically alive at EVERY depth at p = 2, 3, 5, 7 (spot-certified
 at 11, 13, 31 as well), with certified analytic branch witnesses, so no
 congruence supported on these primes can close it, and the section-3
-elliptic machinery (Magma's IntegralQuarticPoints) remains the missing
-tool.  PROVED_23_POSITIVE stays False.
+elliptic machinery (Magma's IntegralQuarticPoints) was required -- p-adics
+do not close it. Magma ran 2026-08-23 and listed exactly the 15 a-values;
+PROVED_23_POSITIVE is True for that reason, not because this battery died.
 
 WHY THE LESSON DOES NOT TRANSFER (the structural finding).  Q27's classes
 were 0-dimensional families n^2 = delta*P6(-delta*m^2) over a FREE integer
@@ -105,7 +106,7 @@ DEEP_RECORD = {2: (10, 6881280, 0), 3: (9, 6181920, 5724000),
 WITNESS_LAW = {2: 14, 3: 1, 5: 1, 7: 1,  # v_p(cnum) = t + const on the branch
                11: 0, 13: 0, 31: 0}      # spot-checks outside the 10!-window
 WITNESS_BASE = (-130, -63, -15, -9, 23)
-WALL_STANDS = True                       # PROVED_23_POSITIVE stays False
+WALL_STANDS = True                       # p-adics do not close the locus; Magma did
 P6_Q27 = [1, -126, 5271, -82564, 570591, -5779998, -9458775]
 
 
@@ -616,8 +617,8 @@ def main() -> int:
     print("          classes (uniform valuations, secretly empty), this locus is")
     print("          a p-adic curve THROUGH the 160 c = 0 points, and v_p(c)")
     print("          sweeps upward along it: no congruence at these primes can")
-    print("          close it.  The wall stands; the section-3 Magma call remains")
-    print("          the missing tool.  PROVED_23_POSITIVE stays False.")
+    print("          close it.  The p-adic wall stands; Magma (2026-08-23) listed")
+    print("          the 15 a-values and closed the integral-point gap.")
 
     if args.json_out:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
@@ -635,7 +636,7 @@ def main() -> int:
             "prune_trap": "pruned tree fakes a death at a = -10 + 2^12 (depth 2^19); "
                           "exact branch is alive there with v2(cnum) = 26",
             "verdict": "SURVIVE at 2, 3, 5, 7 (spot: 11, 13, 31); "
-                       "PROVED_23_POSITIVE unchanged (False)",
+                       "p-adic wall stands; Magma closed the list 2026-08-23",
         }, indent=2), encoding="utf-8")
         print(f"  wrote {args.json_out}")
     return 0

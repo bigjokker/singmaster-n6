@@ -26,9 +26,9 @@ Pins:
   8. the recorded candidates c = 1395418752000 and 2235340800 are OFF the
      locus (D_q*D_k nonsquare) and still die at 11 and 13 -- no false
      2-adic kill is claimed for them;
-  9. WALL_STANDS is True and k10_chebotarev.PROVED_23_POSITIVE is still
-     False: nothing claims the (2,3) c > 0 branch closed;
-     results/k10_intersective.json is byte-identical (sha256-pinned).
+  9. WALL_STANDS is True (p-adics do not close the locus). Magma, not this
+     battery, set PROVED_23_POSITIVE. results/k10_intersective.json is
+     byte-identical (sha256-pinned, historical "modulo" claim).
 
 Fails before scripts/k10_deep.py exists.  Runs in ~5 s.
 
@@ -170,8 +170,8 @@ def test_prune_trap() -> None:
 def test_candidates_and_status() -> None:
     if kd is not None:
         expect(kd.WALL_STANDS is True, "the verdict: the wall stands")
-    expect(kc.PROVED_23_POSITIVE is False,
-           "k10_chebotarev.PROVED_23_POSITIVE unchanged: nothing claims closure")
+    expect(kc.PROVED_23_POSITIVE is True,
+           "PROVED_23_POSITIVE True because Magma listed the 15 a-values, not this battery")
     raw = (ROOT / "results" / "k10_intersective.json").read_bytes()
     expect(hashlib.sha256(raw).hexdigest() == K10_ARTIFACT_SHA,
            "results/k10_intersective.json byte-identical (sha256-pinned)")

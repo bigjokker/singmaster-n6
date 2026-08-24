@@ -19,9 +19,9 @@ independently of scripts/k10_intersective.py where that is cheap:
   4. the two candidates still die, checked directly on (x)_10 - c mod p:
      c = 1395418752000 at p = 11 and c = 2235340800 at p = 13, each with
      a root mod every smaller prime;
-  5. the script does NOT claim the list complete: PROVED is False, the
-     artifact's gap string is unchanged, and the named Magma call carries a
-     point that really lies on the curve.
+  5. Magma (2026-08-23) certified the list: PROVED is True, MAGMA_A_VALUES
+     is exactly those 15 a's, Rank 2 true; the committed json is still the
+     historical "modulo" artifact (sha-pinned elsewhere).
 
 Fails on the pre-step-[5] script (no jacobian / integral_points / PROVED).
 Runs in a few seconds; touches nothing under results/.
@@ -141,11 +141,15 @@ def test_two_kills_regenerate() -> None:
                f"(x)_10 - {cv} has a root mod every prime below {kp}")
 
 
-def test_status_is_not_proved() -> None:
-    expect(getattr(k10, "PROVED", None) is False, "PROVED is False: the list is not certified complete")
+def test_status_is_proved_by_magma() -> None:
+    expect(getattr(k10, "PROVED", None) is True, "PROVED is True: Magma listed the 15 a-values")
+    expect(k10.MAGMA_A_VALUES == {
+        -730, -250, -130, -106, -90, -82, -74, -58, -50, -34, -26, -10, 46, 54, 158,
+    }, "MAGMA_A_VALUES is the exact 15 a-set")
+    expect(k10.MAGMA_RANK == (2, True), "Magma Rank(E) was 2 true")
     art = json.loads((ROOT / "results" / "k10_intersective.json").read_text(encoding="utf-8"))
-    expect(art["gap"] == getattr(k10, "GAP", None), "artifact gap string unchanged")
-    expect("modulo" in art["claim"], "artifact claim still says 'modulo'")
+    expect(art["gap"] == getattr(k10, "GAP", None), "historical artifact gap string unchanged")
+    expect("modulo" in art["claim"], "committed json is the pre-Magma artifact (claim still 'modulo')")
     expect(art["case_2_3"]["candidates"] == [{"a": -730, "c": 1395418752000, "kill_prime": 11},
                                              {"a": -250, "c": 2235340800, "kill_prime": 13}],
            "artifact's two candidates and kills")
@@ -160,7 +164,7 @@ def main() -> int:
     test_integral_points_complete_to_1e7()
     test_jacobian_rank_two()
     test_two_kills_regenerate()
-    test_status_is_not_proved()
+    test_status_is_proved_by_magma()
     print("\n=== K10 INTERSECTIVE TESTS ===")
     for line in ok:
         print("  OK   ", line)

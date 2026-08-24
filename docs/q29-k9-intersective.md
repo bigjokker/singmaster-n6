@@ -126,7 +126,7 @@ computation was not carried out. Searches cover `|a| ≤ 300` (A), `|a| ≤ 200`
 | 7 | 3+4 branch proved (Runge); 2+5 modulo one elliptic computation | two curves |
 | 8 | **proved** (2026-08-23: descent) | — |
 | **9** | modulo effective Siegel | three branch curves |
-| 10 | modulo one elliptic computation | genus 1 |
+| 10 | **proved** (Magma 2026-08-23: 15 \(a\)-values) | — |
 
 Difficulty ordering is `6 < 10 < 7 < 9 < 8` by gap severity, which continues to
 have nothing to do with the size of `k`. What actually drives cost is (i) odd

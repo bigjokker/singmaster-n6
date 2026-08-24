@@ -48,8 +48,8 @@ the prime list did not kill it.
 | `scripts/test_work_census.py` | the exact scan-work census and its gates |
 | `scripts/test_rp_cost.py` | the r(p)-vs-scan split of a Z-jump job on the *no-`r_expected`* fallback path |
 | `scripts/test_collide.py` | the collide frontier abuts the 2017 bound (first 61 / 101-digit value, not one decade up) |
-| `scripts/test_k10_intersective.py` | Q28's (2,3) branch: the curve, its 15 small integral points, the rank-2 Jacobian, the two kills, and that nothing claims the list complete |
-| `scripts/test_k10_chebotarev.py` | Q28's Chebotarev pass: the kill trichotomy, the no-kill shape's reality, c<0 closed, the locus on its genus-3 cover, still BLOCKED |
+| `scripts/test_k10_intersective.py` | Q28 **proved**: 15 Magma \(a\)-values, rank 2 true, two kills at 11 and 13 |
+| `scripts/test_k10_chebotarev.py` | Q28 Chebotarev: \(c<0\) closed; \(c>0\) locus real; Magma closed the list |
 | `scripts/test_k7_runge.py` | Q26: Branch B's Runge certificate (empty trap, 19 points, c = 0, +-896 only) and Branch A's corrected geometry (genus 1, rank >= 1, the D5/F20 trap) |
 | `scripts/test_k8_case2.py` | Q27 proved: the genus-3 curve's 16 descent classes all die; the five degenerate points; the mod-8 filter; the 2-adic depth-13/6 certificates |
 | `scripts/test_k10_deep.py` | Q28's wall audited with Q27's lesson: calibration (alive mod 2^7, dead mod 2^14), SURVIVE verdicts with exact valuation laws, the prune trap, candidates unharmed |
@@ -169,7 +169,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k7_runge.json` | \((x)_7-c\), 3+4 branch CLOSED by Runge: all 19 quintic-curve points have \(A\le36\); complete list \(c\in\{0,\pm896\}\). The 2+5 branch is a rank-\(\ge1\) genus-1 cubic (never a Thue equation), still blocked |
 | `results/k8_intersective.json` | \((x)_8-c\): five cases, all closed; the exceptional locus is a genus-3 curve with only degenerate points. Historical: see `k8_case2.json` |
 | `results/k8_case2.json` | \((x)_8-c\) is never intersective -- **PROVED**: the genus-3 curve is solved by descent (16 classes: compactness, Runge, congruences at 2-adic depth 13/6) |
-| `results/k10_intersective.json` | \((x)_{10}-c\): four cases closed, the (2,3) case reduced to one Magma `IntegralQuarticPoints` call (Jacobian of rank 2; not run). Difficulty is not monotone in \(k\) |
+| `results/k10_intersective.json` | Historical (pre-Magma) \((x)_{10}-c\) search. **Proved 2026-08-23**: Magma listed the 15 \(a\)-values; rank 2 true; saturation index 1. Two \(10!\mid c\) candidates die at 11 and 13 |
 | `results/k9_intersective.json` | \((x)_9-c\): three branches, all closed; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
 | `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
 | `results/ghost_census.json` | Certified non-ghosts — **stale**: 7 members, and its i=8 digest is the pre-repair table |
@@ -331,7 +331,7 @@ A run's jsonl is the only record of which prime killed which column, so a clean
 - [`docs/q25-k6-intersective.md`](docs/q25-k6-intersective.md) — \(k=6\) settled too: for even \(k\) the sextic is a **cubic** in \(t^2\)
 - [`docs/q26-k7-intersective.md`](docs/q26-k7-intersective.md) — \(k=7\), 3+4 branch closed by Runge, 2+5 modulo one elliptic integral-point step: odd \(k\) gets **no** reduction
 - [`docs/q27-k8-intersective.md`](docs/q27-k8-intersective.md) — \(k=8\), **proved** (2026-08-23): the genus-3 curve is solved by descent — its points are exactly the degenerate ones
-- [`docs/q28-k10-intersective.md`](docs/q28-k10-intersective.md) — \(k=10\) is **cheaper than \(k=8\)**: difficulty tracks cubic factors, not \(k\)
+- [`docs/q28-k10-intersective.md`](docs/q28-k10-intersective.md) — \(k=10\) **proved** (2026-08-23, Magma): never intersective; cheaper than \(k=8\) because difficulty tracks cubic factors
 - [`docs/q29-k9-intersective.md`](docs/q29-k9-intersective.md) — \(k=9\): eight shapes collapse to three branches; a **second** obstruction mechanism
 - [`docs/q11-what-is-the-claim.md`](docs/q11-what-is-the-claim.md) — what another family member buys, against what it costs
 - [`docs/interior-2022.md`](docs/interior-2022.md) — the MRSTT interior theorem, and why it does not reach i=8/9

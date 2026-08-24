@@ -204,12 +204,10 @@ Diophantine geometry. But `k=8` shows the even side is not free — the
 *discriminant of the cofactor* is where the difficulty hides, and it grows
 with `k`.
 
-**For `k=9`** (odd, no reduction, degree 9 with partitions `2+7`, `3+6`,
-`4+5`, `2+2+5`, `2+3+4`, `3+3+3`, `2+2+2+3`) the branch count alone makes the
-Q26 approach painful. The better next target is `k=10`: even, `g` is a
-**quintic**, and the Case-2 analogue would be a divided difference again, so
-the same "disc is a polynomial in β" trick applies. Whether its exceptional
-curve stays as clean as genus 3 is the question worth asking.
+**For `k=9`** (odd, no reduction, degree 9) the branch count makes the Q26
+approach painful. **`k=10` is now proved** (Q28, Magma 2026-08-23): even,
+quintic `g`, no cubic-cofactor curve, (2,3) list complete. Remaining
+intersective leftover is `k=9` (Siegel) and Q26 Branch A (genus-1 cubic).
 
 As with Q25 and Q26, none of this changes the census: `c = k!m` has 3.1
 million digits, and termination is certified per column by Q14 §6.

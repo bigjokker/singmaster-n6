@@ -15,8 +15,9 @@ scripts/k10_chebotarev.py, each recomputed here independently where cheap:
   3. the no-kill locus is the plane curve F(p4, p2) = 0 with p4 odd,
      c = (p0^2 - 945^2)/1024, and (for 10! | c) 315 | p0 and
      p0 = +-945 mod 2^17; small sweeps find only c = 0 on it;
-  4. nothing claims Q28 proved: PROVED stays False in k10_intersective,
-     PROVED_23_POSITIVE is False here, and the artifact is untouched.
+  4. Chebotarev still does not kill the locus by itself; Magma did.
+     PROVED and PROVED_23_POSITIVE are True; the committed json is the
+     historical pre-Magma artifact.
 
 Fails before scripts/k10_chebotarev.py exists. Runs in a few seconds.
 
@@ -157,13 +158,13 @@ def test_genus_three_cover() -> None:
     expect(int(2 * 1 - 2) * 2 + 4 == 2 * 3 - 2, "Riemann-Hurwitz: 2g-2 = 2*0 + 4 -> genus 3")
 
 
-def test_status_still_blocked() -> None:
+def test_status_proved_by_magma_not_chebotarev() -> None:
     if kc is not None:
-        expect(kc.PROVED_23_POSITIVE is False, "c > 0 side NOT claimed proved")
-    expect(k10.PROVED is False, "k10_intersective.PROVED still False")
+        expect(kc.PROVED_23_POSITIVE is True, "c > 0 closed by Magma's 15 a-values")
+    expect(k10.PROVED is True, "k10_intersective.PROVED True after Magma")
     art = json.loads((ROOT / "results" / "k10_intersective.json").read_text(encoding="utf-8"))
     expect("modulo" in art["claim"] and art["gap"] == k10.GAP,
-           "artifact untouched: claim still 'modulo', gap string unchanged")
+           "committed json is still the pre-Magma artifact")
 
 
 def main() -> int:
@@ -171,7 +172,7 @@ def main() -> int:
     test_c_negative_closes()
     test_no_kill_locus_curve()
     test_genus_three_cover()
-    test_status_still_blocked()
+    test_status_proved_by_magma_not_chebotarev()
     print("\n=== K10 CHEBOTAREV TESTS ===")
     for line in ok:
         print("  OK   ", line)
