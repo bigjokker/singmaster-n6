@@ -26,7 +26,7 @@ now says so rather than printing COMPLETE — see **Coverage** below.
 | `intersect` | Exact extra-rep on a Fibonacci member (builds \(m\)) |
 | `modular` | Lucas / image obstruction: prove a column cannot represent \(m_i\) **without** building \(m\) |
 | `nearby` | \(C(n,k)=C(n-d,k+e)\) for unsettled \((d,e)\) — exhaustive, not sampled |
-| `collide` | Finite \(m\)-slice of \(C(n,k)=C(m,l)\). The past-2017 start now abuts the bound (first 61-digit value; 101 for \(l\ge10\)); the recorded `results/collide_*.json` were run from one decade higher (62 / 102 digits) and do **not** cover that first decade |
+| `collide` | Finite \(m\)-slice of \(C(n,k)=C(m,l)\). The past-2017 start abuts the bound (61-digit values; 101 for \(l\ge10\)). That first decade is now scanned for every unsettled pair except \(l=10\) (`results/collide_gapdecade_*.json`, 152 pairs, `hits=0`); \(l=10\) and \((3,5)\)/\((4,5)\) remain. Older `results/collide_*.json` still start one decade higher |
 | `sanity` | Catalog, classifier, Lucas, image, 3003 tripwire |
 
 ```text

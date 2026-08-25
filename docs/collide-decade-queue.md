@@ -1,15 +1,21 @@
-# The skipped collide decade: the command queue (prepared 2026-08-24, not run)
+# The skipped collide decade: the command queue (prepared 2026-08-24)
 
-**How to run it (Grok, 2026-08-24):** do not paste the PowerShell loop.
-Ranges are computed from the engine in `scripts/collide_gapdecade.py`.
+**Status 2026-08-25.** Tonight pack (`l=20..13`, 127 pairs, ~17 min) and
+day pack (`l=12,7,11,6`, 25 pairs, ~6.0 h) both finished: **152 json,
+0 hits, 0 discoveries**, every `m_range` matching the engine gap
+`[collide_frontier_m(l), old-start−1]`, digits 61 (`l<10`) / 101
+(`l>=10`). Artifacts: `results/collide_gapdecade_k*_l*.json`.
+
+Remaining: **l=10** (8 pairs, ~20 h at 8 workers). No bat; the finished
+tonight/day wrappers were removed.
 
 ```text
-scripts\run-collide-gapdecade-tonight.bat    l=20..13   ~15-25 min at 8 workers
-scripts\run-collide-gapdecade-day.bat        l=12,7,11,6  ~7 h at 8 workers
-python scripts\collide_gapdecade.py --pack l10 --workers 8    later overnight
+python scripts\collide_gapdecade.py --pack l10 --workers 8
 ```
 
-Resume by rerunning the same bat (existing json are skipped). Do not start a second copy.
+Existing json are skipped. Do not start a second copy. Do not paste the
+PowerShell loop below — ranges are computed live in
+`scripts/collide_gapdecade.py`.
 
 **The hole (D5):** every recorded `results/collide_*.json` starts at the
 *second* past-2017 value decade — 62-digit values for `l < 10`, 102-digit for

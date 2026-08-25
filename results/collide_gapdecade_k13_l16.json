@@ -1,0 +1,87 @@
+{
+  "program": "singmaster_intersect",
+  "version": 1,
+  "seconds": 3.557,
+  "cmd": "collide",
+  "known_complete_through": {
+    "rows": 1000000,
+    "value_digits": 60,
+    "value_digits_l_ge_10": 100,
+    "settled_kl": [
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        8
+      ]
+    ],
+    "settled_nearby": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "sanity": null,
+  "hits": [],
+  "discoveries": [],
+  "certificates": [
+    {
+      "search": "collide",
+      "k": 13,
+      "l": 16,
+      "m_range": [
+        12093138,
+        13964936
+      ],
+      "value_digits": [
+        101,
+        101
+      ],
+      "hits": 0,
+      "seconds": 3.557,
+      "past_2017_only": false,
+      "settled_pair": false,
+      "result": "no C(n,13)=C(m,16) for m in [12093138,13964936] (values 101..101 digits)"
+    }
+  ],
+  "modular_reports": []
+}
