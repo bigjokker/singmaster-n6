@@ -121,6 +121,14 @@ PATH FORWARD 4 (playground, 2026-08-23). Order is the point.
      paper-about-the-family choice (Q11 §6: legitimate, but
      say so). Do not wait until data "runs out". Do not wait
      for the tool to become 47x cheaper.
+     Sub-sqrt(N) is NOT a reason (Q31, answered 2026-08-25):
+     cells() starts at sqrt(N)+1, so the ~22.5k columns with
+     k < sqrt(N) at i=10 are still certified, just at a fatter
+     p. Not a coverage hole. If i=10 is reopened, treat
+     sub-sqrt(N) as a cheap shared-ladder pre-pass over those
+     ~22.5k (small g there) instead of mopping leftovers --
+     a scheduling choice. The leftover count is the number to
+     watch and it is pre-registrable from the size law.
 
 INTERSECTIVE leftover (PF4.3), 2026-08-24. Ladder:
   k<=6, 8, 10 proved outright. k=7 Branch B proved Runge.

@@ -906,7 +906,7 @@ before i=10 rather than discovering it during a multi-day run.
 columns land outside every span. A case where they land INSIDE a sparse span is
 the one to add -- today it must raise; after this change it must repair.
 
-### Q31. How often does the sub-sqrt(N) blind spot bite, and does it scale with i? *(difficulty: low · **HARD**)* -- OPEN, added 2026-08-25
+### Q31. How often does the sub-sqrt(N) blind spot bite, and does it scale with i? *(difficulty: low · **HARD**)* -- ANSWERED 2026-08-25: not growing, and the question as first posed measured the instrument
 `cells()` never scans p <= sqrt(N) -- structurally, not by accident: the
 Band II / Z-jump machinery starts at the first prime above sqrt(N) (8606 at
 i=9). The four i=9 Lucas fills (k = 87, 399, 553, 1281) are the evidence
@@ -917,17 +917,69 @@ theorem put the killer there (k=87 had only a 57.6% chance to die at its
 first live prime; "had to die below sqrt(N)" is NO -- effective Chebotarev
 at that bound needs disc((x)_k - k!m) with m at 21M digits, Q17, blocked).
 
-THE QUESTION: across all eight members, how many columns have their
-recorded kill prime <= sqrt(N_i)? A read over the witness tables already
-on disk -- minutes, no new mathematics. The decision it feeds: if the
-count is a handful per member and flat in i, the Lucas-fill patch is fine
-forever and this closes. If it GROWS with i, then i=10 needs the
-sub-sqrt(N) band handled by design (a small full-Lucas pre-pass below
-sqrt(N)) rather than by post-hoc cleanup -- a concrete input to the
-parked i=10 decision, cheaper to learn now than mid-run.
+**THE QUESTION AS FIRST POSED MEASURED THE INSTRUMENT, NOT THE
+PHENOMENON, and that is the reusable lesson.** "How many columns have a
+recorded kill prime <= sqrt(N)?" cannot grow with i, because `cells()`
+starts at sqrt(N)+1 and the Z-jump is therefore *forbidden* from ever
+recording a sub-sqrt(N) prime. The count can only ever be the engine-fill
+prefix plus provenance exceptions -- an artefact of what the pipeline is
+allowed to write down. Measured anyway, for the record:
 
-Deliverable: the per-member count table, the verdict (flat / growing),
-and if growing, one sentence in the i=10 stanza of the refresher. Do not
-re-open Q17; location-certificates are known-blocked. Existence
-certificates for the four fills are Q14-section-6 material and already
-cheap (termination_certificate.py).
+| i | sqrt(N) | extra columns | recorded p <= sqrt(N) | which |
+|---|---|---|---|---|
+| 2 | 10 | 46 | 0 | sqrt(N) below the typical first p |
+| 3 | 26 | 339 | 15 | k = 2..18 |
+| 4 | 69 | 2,344 | 39 | k = 2..42 |
+| 5 | 183 | 16,091 | 134 | k = 2..138 |
+| 6 | 479 | 110,315 | 199 | exactly k = 2..200 |
+| 7 | 1,255 | 756,133 | 199 | exactly k = 2..200 |
+| 8 | 3,286 | 5,182,634 | 2 | k=2 fill + k=1021 repair (p=1051) |
+| 9 | 8,605 | 35,522,326 | 83 | 79 engine fills (k=2..80) + 4 leftovers |
+
+i=6/7's 199 is `K_EXACT = 200`. i=9's 83 is 79 fills **plus the four
+Lucas leftovers, which sit BEYOND the fill prefix** -- that is why the
+k-range of the sub-sqrt(N) set runs to 1281 rather than stopping at 80.
+i=8's 2 are the two provenance exceptions, not a population.
+
+**THE QUANTITY THAT DOES GROW is the blind spot**: columns with
+k < sqrt(N), whose natural first-live prime could sit below sqrt(N), but
+whose recorded p is above it because the sweep skipped that range.
+
+| i | k < sqrt(N) | of those, recorded p > sqrt(N) | fraction |
+|---|---|---|---|
+| 5 | 181 | 47 | 0.26 |
+| 6 | 477 | 278 | 0.58 |
+| 7 | 1,253 | 1,054 | 0.84 |
+| 8 | 3,284 | 3,282 | 0.999 |
+| 9 | 8,603 | 8,520 | 0.990 |
+
+Member-to-member growth 5.91x, 3.79x, 3.11x, **2.60x** -- converging on
+phi^2 = 2.618, and that is derived rather than fitted: the fraction tends
+to 1 as the fixed fill prefix becomes negligible, so the band tends to the
+whole k < sqrt(N) population, and sqrt(N) ~ phi^(2i) since N ~ phi^(4i).
+At i=10, sqrt(N) ~ 22,529, so ~22.5k such columns.
+
+**They are still certified**, at a p > sqrt(N). Coverage is not the hole.
+What the blind spot actually costs is *leftovers*: small k that survive
+the cap of fat primes just above sqrt(N) and then need a Lucas fill.
+Empirically i=8 left 1 and i=9 left 4 -- and those two are NOT the same
+object. i=9's four are honest cap survivors; i=8's k=1021 was a
+dropped-and-repaired record (false p=3517, then 1051) that lands in the
+same `off_ladder` bucket only because that bucket answers *where the
+recorded killer sat*, not *did this column survive the cap*. Category
+membership was never going to separate those. On the process the observed
+series is 0, 0, 4.
+
+**DECISION: the Lucas-fill patch is fine for this pipeline. Do not reopen
+i=10 on 83 vs 2.** Handling sub-sqrt(N) by design -- a shared-ladder
+pre-pass over the ~22.5k columns, cheap because g is small there -- is a
+SCHEDULING choice, not a fix for a coverage failure, and Q11's cost
+argument still parks i=10 regardless. The number to watch is the leftover
+count, not the sub-sqrt(N) census; it is pre-registrable from the size law
+and is done separately (shared-ladder `expected_alive`, since every
+k < sqrt(N) starts at the same first live prime above sqrt(N) and they
+therefore share a Band-II-shaped prime list).
+
+Do not re-open Q17; location-certificates are known-blocked. Existence
+certificates for the four fills are Q14 section 6 material and cheap
+(`termination_certificate.py`); they give existence, never location.
