@@ -208,6 +208,77 @@ def test_i9_bandII_last_survivor_chain() -> None:
            "SAFE spurious side; the regime multiplier is the honest one)")
 
 
+def test_leftover_preregistration() -> None:
+    """The i=10 leftover pre-registration (2026-08-25), re-derived not echoed.
+
+    `cells()` starts at sqrt(N)+1, so every k < sqrt(N) shares one ladder --
+    a Band-II-shaped population, which is what expected_alive models.  The
+    UNCONDITIONAL window curve is the forecasting instrument; the escalation
+    ledger's E_r is CONDITIONAL on the observed entering set and is therefore
+    undefined for an unrun member.  Pinned here:
+
+      * the window curve at each realised cap: 0.079 / 0.289 / 1.954 / 5.486
+        for i = 7, 8, 9, 10, recomputed from expected_alive on the shared
+        ladder rather than read from the artifact;
+      * the i=9 calibration -- observed 4 against a window 1.954 is ordinary
+        (P(X>=4) ~ 0.135), and the miss is EXTRA COLUMNS STANDING, not a bad
+        next-prime law: the window wanted 3.345 entering round 12 and 7 came,
+        while last-step survival matched (0.571 observed, 0.584 predicted);
+      * the ledger's 4.08 reproduced as what it actually is -- 7 arrived times
+        0.584 -- a conditional one-step check, not a rival forecast;
+      * mean k walking down (960 predicted, 580 observed);
+      * i=8's k=1021 is OFF the leftover process (a dropped-and-repaired
+        record, not a cap survivor), so i=8 is a zero against a small E and
+        calibrates nothing;
+      * i=10 as a BAND, 5..11 -- no per-round drift rate is fitted, because
+        one miss is not a rate.
+    """
+    import leftover_prereg as LP
+
+    want = {7: (9, 0.5150), 8: (14, 0.2893), 9: (12, 1.9541), 10: (12, 5.4859)}
+    curves = {}
+    for i, (cap, e) in want.items():
+        w = LP.window_curve(i)
+        curves[i] = {r["pass"]: r["alive"] for r in w["curve"]}
+        expect(abs(curves[i][cap] - e) < 5e-4,
+               f"i={i}: window E at pass {cap} = {curves[i][cap]:.4f} (want {e})")
+        expect(w["ladder_start"] > w["sqrt_N"],
+               f"i={i}: the shared ladder starts above sqrt(N)")
+
+    pe, pa = curves[9][11], curves[9][12]
+    oe, oa = 7, 4
+    expect(abs(pa / pe - 0.5841) < 5e-4,
+           f"i=9 last-step survival predicted {pa/pe:.4f}")
+    expect(abs(oa / oe - 0.5714) < 5e-4, "i=9 last-step survival observed 0.5714")
+    expect(abs((oa / oe) / (pa / pe) - 1.0) < 0.03,
+           "the NEXT-PRIME law is right: last-step survival matches within 3%")
+    expect(abs(oe / pe - oa / pa) < 0.10,
+           f"the miss is extra columns standing: entering off by {oe/pe:.2f}x, "
+           f"surviving by {oa/pa:.2f}x -- the same factor")
+    tail = LP.poisson_upper_tail(pa, oa)
+    expect(0.12 < tail < 0.15,
+           f"i=9: observed 4 against E={pa:.3f} is ordinary (P(X>=4)={tail:.3f})")
+    expect(abs(oe * (pa / pe) - 4.09) < 0.02,
+           "the ledger's 4.08 IS 7 arrived x 0.584 -- conditional, not a forecast")
+    expect(LP.OBSERVED[8]["leftovers"] == 0,
+           "i=8 is a zero on the leftover process (k=1021 was a repair)")
+    expect(LP.OBSERVED[9]["columns"] == [87, 399, 553, 1281],
+           "i=9's four leftovers are the recorded Lucas fills")
+
+    art = ROOT / "results" / "leftover_prereg.json"
+    if art.exists():
+        import json
+        a = json.loads(art.read_text(encoding="utf-8"))
+        expect(a["i10_prediction"]["band"] == [5, 11],
+               "i=10 is pre-registered as a BAND 5..11, not a point")
+        expect(abs(a["i10_prediction"]["window_E_at_12"] - 5.4859) < 5e-4,
+               "artifact's i=10 window value matches a live recompute")
+        expect(any("No per-round drift rate is fitted" in c for c in a["caveats"]),
+               "the artifact refuses to fit a per-round drift rate from one miss")
+        expect(any("not reproducible from a clone" in c for c in a["caveats"]),
+               "the artifact flags the i=9 observed counts as jsonl-transcribed")
+
+
 def test_fat_cell_chain_matches_the_record() -> None:
     """docs/band-I.md: record k=2227205, kill 2701099. Rebuild it."""
     from bandii_kernel import D, cells, live_intervals
@@ -680,6 +751,7 @@ def main() -> int:
     test_trigger_fires()
     test_run_length_is_not_the_criterion()
     test_i9_bandII_last_survivor_chain()
+    test_leftover_preregistration()
     test_fat_cell_chain_matches_the_record()
     test_round_model_tracks_a_real_sweep()
     print("\n=== SIZE LAW TESTS ===")

@@ -1,0 +1,564 @@
+{
+  "search": "leftover_prereg",
+  "claim": "E[off_ladder leftovers] per member from the shared sub-sqrt(N) ladder, pre-registered before i=10 is run.",
+  "policy": {
+    "CAP_Z": 12,
+    "CAP_Z_SMALL_K": 15,
+    "SMALL_K": 1000
+  },
+  "instrument": "unconditional sizelaw.expected_alive over [k_lo_z, sqrt(N)-1] on the shared ladder above sqrt(N)",
+  "members": [
+    {
+      "i": 7,
+      "sqrt_N": 1255,
+      "window": [
+        201,
+        1254
+      ],
+      "n_columns": 1054,
+      "ladder_start": 1259,
+      "ladder": [
+        1259,
+        1283,
+        1289,
+        1291,
+        1297,
+        1303,
+        1307,
+        1327,
+        1399,
+        1409,
+        1423,
+        1433,
+        1447,
+        1453,
+        1471
+      ],
+      "E_at_12": 0.0791,
+      "E_at_15": 0.0129,
+      "mean_k_at_12": 310.0,
+      "curve": [
+        {
+          "pass": 1,
+          "p": 1259,
+          "alive": 269.4016,
+          "mean_k": 573.0
+        },
+        {
+          "pass": 2,
+          "p": 1283,
+          "alive": 94.2822,
+          "mean_k": 497.0
+        },
+        {
+          "pass": 3,
+          "p": 1289,
+          "alive": 38.083,
+          "mean_k": 449.0
+        },
+        {
+          "pass": 4,
+          "p": 1291,
+          "alive": 16.7939,
+          "mean_k": 415.0
+        },
+        {
+          "pass": 5,
+          "p": 1297,
+          "alive": 7.8558,
+          "mean_k": 390.0
+        },
+        {
+          "pass": 6,
+          "p": 1303,
+          "alive": 3.8248,
+          "mean_k": 371.0
+        },
+        {
+          "pass": 7,
+          "p": 1307,
+          "alive": 1.9141,
+          "mean_k": 355.0
+        },
+        {
+          "pass": 8,
+          "p": 1327,
+          "alive": 0.9801,
+          "mean_k": 343.0
+        },
+        {
+          "pass": 9,
+          "p": 1399,
+          "alive": 0.515,
+          "mean_k": 333.0
+        },
+        {
+          "pass": 10,
+          "p": 1409,
+          "alive": 0.2735,
+          "mean_k": 324.0
+        },
+        {
+          "pass": 11,
+          "p": 1423,
+          "alive": 0.1466,
+          "mean_k": 317.0
+        },
+        {
+          "pass": 12,
+          "p": 1433,
+          "alive": 0.0791,
+          "mean_k": 310.0
+        },
+        {
+          "pass": 13,
+          "p": 1447,
+          "alive": 0.043,
+          "mean_k": 304.0
+        },
+        {
+          "pass": 14,
+          "p": 1453,
+          "alive": 0.0234,
+          "mean_k": 299.0
+        },
+        {
+          "pass": 15,
+          "p": 1471,
+          "alive": 0.0129,
+          "mean_k": 295.0
+        }
+      ],
+      "realised_rounds": 9,
+      "E_at_realised": 0.515,
+      "observed": {
+        "leftovers": 0,
+        "note": "Z-jump died at round 9; the cap was never reached"
+      },
+      "poisson_upper_tail": 1.0
+    },
+    {
+      "i": 8,
+      "sqrt_N": 3286,
+      "window": [
+        3,
+        3285
+      ],
+      "n_columns": 3283,
+      "ladder_start": 3301,
+      "ladder": [
+        3301,
+        3307,
+        3343,
+        3371,
+        3373,
+        3389,
+        3391,
+        3413,
+        3461,
+        3463,
+        3491,
+        3499,
+        3517,
+        3527,
+        3529
+      ],
+      "E_at_12": 0.8228,
+      "E_at_15": 0.1726,
+      "mean_k_at_12": 350.0,
+      "curve": [
+        {
+          "pass": 1,
+          "p": 3301,
+          "alive": 958.6048,
+          "mean_k": 1173.0
+        },
+        {
+          "pass": 2,
+          "p": 3307,
+          "alive": 373.7858,
+          "mean_k": 932.0
+        },
+        {
+          "pass": 3,
+          "p": 3343,
+          "alive": 168.305,
+          "mean_k": 786.0
+        },
+        {
+          "pass": 4,
+          "p": 3371,
+          "alive": 82.5914,
+          "mean_k": 684.0
+        },
+        {
+          "pass": 5,
+          "p": 3373,
+          "alive": 42.8267,
+          "mean_k": 608.0
+        },
+        {
+          "pass": 6,
+          "p": 3389,
+          "alive": 23.0805,
+          "mean_k": 548.0
+        },
+        {
+          "pass": 7,
+          "p": 3391,
+          "alive": 12.7723,
+          "mean_k": 499.0
+        },
+        {
+          "pass": 8,
+          "p": 3413,
+          "alive": 7.2093,
+          "mean_k": 459.0
+        },
+        {
+          "pass": 9,
+          "p": 3461,
+          "alive": 4.1326,
+          "mean_k": 425.0
+        },
+        {
+          "pass": 10,
+          "p": 3463,
+          "alive": 2.3937,
+          "mean_k": 397.0
+        },
+        {
+          "pass": 11,
+          "p": 3491,
+          "alive": 1.3988,
+          "mean_k": 372.0
+        },
+        {
+          "pass": 12,
+          "p": 3499,
+          "alive": 0.8228,
+          "mean_k": 350.0
+        },
+        {
+          "pass": 13,
+          "p": 3517,
+          "alive": 0.4868,
+          "mean_k": 331.0
+        },
+        {
+          "pass": 14,
+          "p": 3527,
+          "alive": 0.2893,
+          "mean_k": 313.0
+        },
+        {
+          "pass": 15,
+          "p": 3529,
+          "alive": 0.1726,
+          "mean_k": 298.0
+        }
+      ],
+      "realised_rounds": 14,
+      "E_at_realised": 0.2893,
+      "observed": {
+        "leftovers": 0,
+        "note": "k=1021 is a dropped-and-repaired record (false p=3517, then 1051), NOT a cap survivor; it lands in off_ladder only because that bucket answers 'where did the recorded killer sit'. On the leftover process i=8 observed 0."
+      },
+      "poisson_upper_tail": 1.0
+    },
+    {
+      "i": 9,
+      "sqrt_N": 8605,
+      "window": [
+        81,
+        8604
+      ],
+      "n_columns": 8524,
+      "ladder_start": 8623,
+      "ladder": [
+        8623,
+        8641,
+        8647,
+        8669,
+        8689,
+        8707,
+        8713,
+        8719,
+        8737,
+        8747,
+        8753,
+        8779,
+        8803,
+        8819,
+        8821
+      ],
+      "E_at_12": 1.9541,
+      "E_at_15": 0.4017,
+      "mean_k_at_12": 960.0,
+      "curve": [
+        {
+          "pass": 1,
+          "p": 8623,
+          "alive": 2464.624,
+          "mean_k": 3109.0
+        },
+        {
+          "pass": 2,
+          "p": 8641,
+          "alive": 955.2422,
+          "mean_k": 2486.0
+        },
+        {
+          "pass": 3,
+          "p": 8647,
+          "alive": 426.2603,
+          "mean_k": 2100.0
+        },
+        {
+          "pass": 4,
+          "p": 8669,
+          "alive": 207.3976,
+          "mean_k": 1832.0
+        },
+        {
+          "pass": 5,
+          "p": 8689,
+          "alive": 106.809,
+          "mean_k": 1633.0
+        },
+        {
+          "pass": 6,
+          "p": 8707,
+          "alive": 57.1771,
+          "mean_k": 1477.0
+        },
+        {
+          "pass": 7,
+          "p": 8713,
+          "alive": 31.4429,
+          "mean_k": 1351.0
+        },
+        {
+          "pass": 8,
+          "p": 8719,
+          "alive": 17.6292,
+          "mean_k": 1246.0
+        },
+        {
+          "pass": 9,
+          "p": 8737,
+          "alive": 10.0285,
+          "mean_k": 1158.0
+        },
+        {
+          "pass": 10,
+          "p": 8747,
+          "alive": 5.7675,
+          "mean_k": 1083.0
+        },
+        {
+          "pass": 11,
+          "p": 8753,
+          "alive": 3.3453,
+          "mean_k": 1017.0
+        },
+        {
+          "pass": 12,
+          "p": 8779,
+          "alive": 1.9541,
+          "mean_k": 960.0
+        },
+        {
+          "pass": 13,
+          "p": 8803,
+          "alive": 1.1481,
+          "mean_k": 910.0
+        },
+        {
+          "pass": 14,
+          "p": 8819,
+          "alive": 0.6778,
+          "mean_k": 865.0
+        },
+        {
+          "pass": 15,
+          "p": 8821,
+          "alive": 0.4017,
+          "mean_k": 825.0
+        }
+      ],
+      "realised_rounds": 12,
+      "E_at_realised": 1.9541,
+      "observed": {
+        "leftovers": 4,
+        "entering_round_12": 7,
+        "mean_k": 580,
+        "columns": [
+          87,
+          399,
+          553,
+          1281
+        ],
+        "note": "honest cap survivors; transcribed from the i9 jsonl readout"
+      },
+      "poisson_upper_tail": 0.1347
+    },
+    {
+      "i": 10,
+      "sqrt_N": 22528,
+      "window": [
+        3,
+        22527
+      ],
+      "n_columns": 22525,
+      "ladder_start": 22531,
+      "ladder": [
+        22531,
+        22549,
+        22571,
+        22573,
+        22613,
+        22621,
+        22637,
+        22679,
+        22697,
+        22699,
+        22709,
+        22727,
+        22751,
+        22783,
+        22807
+      ],
+      "E_at_12": 5.4859,
+      "E_at_15": 1.1442,
+      "mean_k_at_12": 2320.0,
+      "curve": [
+        {
+          "pass": 1,
+          "p": 22531,
+          "alive": 6544.3828,
+          "mean_k": 7991.0
+        },
+        {
+          "pass": 2,
+          "p": 22549,
+          "alive": 2550.6703,
+          "mean_k": 6347.0
+        },
+        {
+          "pass": 3,
+          "p": 22571,
+          "alive": 1144.6951,
+          "mean_k": 5330.0
+        },
+        {
+          "pass": 4,
+          "p": 22573,
+          "alive": 559.6861,
+          "mean_k": 4623.0
+        },
+        {
+          "pass": 5,
+          "p": 22613,
+          "alive": 289.6577,
+          "mean_k": 4097.0
+        },
+        {
+          "pass": 6,
+          "p": 22621,
+          "alive": 155.7957,
+          "mean_k": 3685.0
+        },
+        {
+          "pass": 7,
+          "p": 22637,
+          "alive": 86.0951,
+          "mean_k": 3351.0
+        },
+        {
+          "pass": 8,
+          "p": 22679,
+          "alive": 48.5196,
+          "mean_k": 3075.0
+        },
+        {
+          "pass": 9,
+          "p": 22697,
+          "alive": 27.7396,
+          "mean_k": 2843.0
+        },
+        {
+          "pass": 10,
+          "p": 22699,
+          "alive": 16.0327,
+          "mean_k": 2643.0
+        },
+        {
+          "pass": 11,
+          "p": 22709,
+          "alive": 9.346,
+          "mean_k": 2471.0
+        },
+        {
+          "pass": 12,
+          "p": 22727,
+          "alive": 5.4859,
+          "mean_k": 2320.0
+        },
+        {
+          "pass": 13,
+          "p": 22751,
+          "alive": 3.2385,
+          "mean_k": 2187.0
+        },
+        {
+          "pass": 14,
+          "p": 22783,
+          "alive": 1.921,
+          "mean_k": 2068.0
+        },
+        {
+          "pass": 15,
+          "p": 22807,
+          "alive": 1.1442,
+          "mean_k": 1963.0
+        }
+      ],
+      "realised_rounds": null,
+      "E_at_realised": null,
+      "observed": null
+    }
+  ],
+  "calibration_i9": {
+    "member": 9,
+    "window_entering_round_12": 3.3453,
+    "observed_entering_round_12": 7,
+    "window_alive_after_12": 1.9541,
+    "observed_alive_after_12": 4,
+    "count_factor": 2.047,
+    "last_step_survival_predicted": 0.5841,
+    "last_step_survival_observed": 0.5714,
+    "poisson_upper_tail": 0.1347,
+    "ledger_conditional_check": {
+      "value": 4.089,
+      "observed": 4,
+      "what_it_is": "the escalation ledger's E_r: the 7 columns that ACTUALLY arrived times the size law's next-prime survival. A conditional one-step check that the next-prime law is right -- NOT a rival forecast, and undefined at i=10 where nothing has arrived."
+    },
+    "reading": "The next-prime law is right (0.571 observed vs 0.584 predicted). The miss is entirely extra columns still standing: the window wanted 3.345 entering and got 7, wanted 1.954 surviving and got 4 -- the same ~2.05x at both steps. With n=1 a high draw and a compounding underestimate cannot be told apart; no per-round drift rate is fitted."
+  },
+  "i10_prediction": {
+    "window_E_at_12": 5.4859,
+    "band": [
+      5,
+      11
+    ],
+    "basis": "5.49 trusting the window as-is; ~11 applying the single i=9 factor once as a worst case. n=1, so a band.",
+    "consequence": "Lucas-fill, not a 22.5k pre-pass. Decision unchanged across the whole band."
+  },
+  "caveats": [
+    "i=9's per-round observed counts are transcribed from results/i9_sweep.jsonl (219 MB, gitignored; its json has no escalation block) and are not reproducible from a clone.",
+    "i=8's k=1021 is a dropped-and-repaired record, not a cap survivor; on the leftover process i=8 observed 0 against a small E, which does not calibrate anything.",
+    "One informative member (i=9). No per-round drift rate is fitted; 2.05^(1/11) is a description of one miss, not a measured rate.",
+    "i=10's window low end assumes k_lo_z = 3 (the i=8 convention); no i=10 run exists."
+  ]
+}
