@@ -176,6 +176,15 @@ never builds `m`.
 - **`i=9`'s four long-run columns — `k = 11, 29, 40, 45` — all certified**
   (`q = 631, 433, 563, 1549`). These are exactly the columns whose runs of
   8, 7, 4 and 5 would have fired the old run-length trigger.
+- **Family-wide, 2026-08-25: all 29 columns `k ≤ 30` of EVERY member
+  i=2..9 — 232/232 certified**, ~5 s total, artifacts
+  `results/termination_i{2..9}.json` (i=8's committed file reproduced
+  content-identically first). Irreducibility failed nowhere: i=7 is not
+  special, and the census's hardest-to-kill end is now covered by
+  existence proofs across the whole family. Every certificate is
+  re-verified independently of the generator by
+  `scripts/test_termination.py` (sympy primality, `lucas_mod_pure` for
+  `r`, GF(`q`) factorisation for irreducibility).
 
 Cost is `O(k² log q)` per prime with about `k` primes needed (the density of
 irreducible reductions is ~`1/k`), so it is practical to a few hundred — which

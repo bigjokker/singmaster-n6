@@ -55,6 +55,7 @@ the prime list did not kill it.
 | `scripts/test_k10_deep.py` | Q28's wall audited with Q27's lesson: calibration (alive mod 2^7, dead mod 2^14), SURVIVE verdicts with exact valuation laws, the prune trap, candidates unharmed |
 | `scripts/test_k9_intersective.py` | Q29 Branch A **proved** by Runge: the disc-81 split, the W1 trap (trace -3^5), the complete 23-point list, both kills; branch C's six degenerate points, all c = 0 |
 | `scripts/test_ghost_census.py` | `results/ghost_census.json` cannot go stale silently: every member's count and sha256 compared live against the witness npz on disk; caveats and ghosts_found = 0 pinned |
+| `scripts/test_termination.py` | all 232 termination certificates (k<=30, i=2..9) re-verified independently: prime q, Lucas r by a different route, GF(q) irreducibility via sympy |
 
 ```text
 python scripts/test_sweeps.py
@@ -131,10 +132,14 @@ different language, and the factorial route shares the sweep's identity.
 `scripts/termination_certificate.py` proves a column *must* die: if
 \((x)_k - k!m\) is irreducible over \(\mathbf{Q}\), Jordan gives a derangement
 and Chebotarev a killing prime of density \(\ge 1/k\). Irreducibility has a
-one-prime certificate, computed by Lucas without ever building \(m\). All 29
-columns \(k\le 30\) of i=8 and all four of i=9's long-run columns are
-certified — upgrading them from *a killing prime was found* to *a killing prime
-had to exist*.
+one-prime certificate, computed by Lucas without ever building \(m\).
+**Family-wide since 2026-08-25**: all 29 columns \(k\le 30\) of **every**
+member i=2..9 are certified — 232/232, in seconds — plus i=9's four long-run
+columns; each is upgraded from *a killing prime was found* to *a killing
+prime had to exist*. Artifacts `results/termination_i{2..9}.json`; every
+certificate is re-verified independently (sympy primality, Lucas \(r\) via a
+different code path, GF(\(q\)) irreducibility) by
+`scripts/test_termination.py`.
 
 `scripts/ghost_census.py` reads the witness tables as a test of the
 falling-factorial local–global question: each recorded \((k,p)\) certifies that
@@ -183,7 +188,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 | `results/k10_deep.json` | Why Q28 needed Magma: the no-kill locus survives every deep \(p\)-adic battery (certified branch witnesses, \(v_2 = t+14\), \(v_{3,5,7} = t+1\)), so no congruence could ever have closed it |
 | `results/k9_intersective.json` | Historical \((x)_9-c\) search: three branches; \(c=\pm2630880\) is the first to pass \(\mathrm{rad}(k!)\) and dies at \(p=13\) |
 | `results/k9_branchA.json` | Q29 Branch A **proved** by Runge (2026-08-24): the chord quartic's complete 23-point list, A_FAR = 34416, the W1 traps; every 2+7/2+2+5/2+3+4/2+2+2+3 value is \(c=0\) or dies at 7/13 |
-| `results/termination_i8.json` | 29 i=8 columns with a proof that a killing prime must exist |
+| `results/termination_i{2..9}.json` | 232 columns (\(k\le30\), every member) with a proof that a killing prime **must** exist — irreducible mod one prime, Jordan + Chebotarev. Live-pinned by `test_termination.py` |
 | `results/ghost_census.json` | Certified non-ghosts, regenerated 2026-08-24: 8 members (i=2..9), 41,590,228 values over \(k\le 35{,}522{,}329\); digests match the tables on disk (live-pinned by `test_ghost_census.py`) |
 | `results/bandii_sweep.json` | Historical Band II \(p>N/2\): 1,055,989 columns, died at prime 8 |
 | `results/zjump.json` | Historical Band I remnant: 3,215,816 columns, 0 anomalies |

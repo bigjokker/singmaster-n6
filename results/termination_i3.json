@@ -1,0 +1,300 @@
+{
+  "search": "termination_certificate",
+  "i": 3,
+  "N": 714,
+  "K": 272,
+  "n_certified": 29,
+  "n_columns": 29,
+  "rows": [
+    {
+      "k": 2,
+      "certified": true,
+      "q": 11,
+      "r": 8,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 3,
+      "seconds": 0.0,
+      "conclusion": "(x)_2 - 2!m is irreducible mod 11, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/2)."
+    },
+    {
+      "k": 3,
+      "certified": true,
+      "q": 11,
+      "r": 8,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 2,
+      "seconds": 0.0,
+      "conclusion": "(x)_3 - 3!m is irreducible mod 11, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/3)."
+    },
+    {
+      "k": 4,
+      "certified": true,
+      "q": 11,
+      "r": 8,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 2,
+      "seconds": 0.0,
+      "conclusion": "(x)_4 - 4!m is irreducible mod 11, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/4)."
+    },
+    {
+      "k": 5,
+      "certified": true,
+      "q": 11,
+      "r": 8,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 1,
+      "seconds": 0.0,
+      "conclusion": "(x)_5 - 5!m is irreducible mod 11, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/5)."
+    },
+    {
+      "k": 6,
+      "certified": true,
+      "q": 83,
+      "r": 75,
+      "live_primes_tried": 9,
+      "dead_primes_skipped": 11,
+      "seconds": 0.001,
+      "conclusion": "(x)_6 - 6!m is irreducible mod 83, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/6)."
+    },
+    {
+      "k": 7,
+      "certified": true,
+      "q": 29,
+      "r": 23,
+      "live_primes_tried": 3,
+      "dead_primes_skipped": 3,
+      "seconds": 0.0,
+      "conclusion": "(x)_7 - 7!m is irreducible mod 29, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/7)."
+    },
+    {
+      "k": 8,
+      "certified": true,
+      "q": 83,
+      "r": 75,
+      "live_primes_tried": 9,
+      "dead_primes_skipped": 10,
+      "seconds": 0.001,
+      "conclusion": "(x)_8 - 8!m is irreducible mod 83, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/8)."
+    },
+    {
+      "k": 9,
+      "certified": true,
+      "q": 29,
+      "r": 23,
+      "live_primes_tried": 3,
+      "dead_primes_skipped": 3,
+      "seconds": 0.001,
+      "conclusion": "(x)_9 - 9!m is irreducible mod 29, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/9)."
+    },
+    {
+      "k": 10,
+      "certified": true,
+      "q": 107,
+      "r": 13,
+      "live_primes_tried": 11,
+      "dead_primes_skipped": 13,
+      "seconds": 0.002,
+      "conclusion": "(x)_10 - 10!m is irreducible mod 107, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/10)."
+    },
+    {
+      "k": 11,
+      "certified": true,
+      "q": 53,
+      "r": 9,
+      "live_primes_tried": 4,
+      "dead_primes_skipped": 7,
+      "seconds": 0.001,
+      "conclusion": "(x)_11 - 11!m is irreducible mod 53, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/11)."
+    },
+    {
+      "k": 12,
+      "certified": true,
+      "q": 109,
+      "r": 2,
+      "live_primes_tried": 11,
+      "dead_primes_skipped": 13,
+      "seconds": 0.004,
+      "conclusion": "(x)_12 - 12!m is irreducible mod 109, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/12)."
+    },
+    {
+      "k": 13,
+      "certified": true,
+      "q": 761,
+      "r": 720,
+      "live_primes_tried": 49,
+      "dead_primes_skipped": 80,
+      "seconds": 0.018,
+      "conclusion": "(x)_13 - 13!m is irreducible mod 761, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/13)."
+    },
+    {
+      "k": 14,
+      "certified": true,
+      "q": 29,
+      "r": 23,
+      "live_primes_tried": 2,
+      "dead_primes_skipped": 2,
+      "seconds": 0.001,
+      "conclusion": "(x)_14 - 14!m is irreducible mod 29, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/14)."
+    },
+    {
+      "k": 15,
+      "certified": true,
+      "q": 19,
+      "r": 6,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 1,
+      "seconds": 0.001,
+      "conclusion": "(x)_15 - 15!m is irreducible mod 19, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/15)."
+    },
+    {
+      "k": 16,
+      "certified": true,
+      "q": 409,
+      "r": 41,
+      "live_primes_tried": 36,
+      "dead_primes_skipped": 38,
+      "seconds": 0.031,
+      "conclusion": "(x)_16 - 16!m is irreducible mod 409, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/16)."
+    },
+    {
+      "k": 17,
+      "certified": true,
+      "q": 29,
+      "r": 23,
+      "live_primes_tried": 2,
+      "dead_primes_skipped": 1,
+      "seconds": 0.002,
+      "conclusion": "(x)_17 - 17!m is irreducible mod 29, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/17)."
+    },
+    {
+      "k": 18,
+      "certified": true,
+      "q": 19,
+      "r": 6,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 0,
+      "seconds": 0.0,
+      "conclusion": "(x)_18 - 18!m is irreducible mod 19, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/18)."
+    },
+    {
+      "k": 19,
+      "certified": true,
+      "q": 53,
+      "r": 9,
+      "live_primes_tried": 3,
+      "dead_primes_skipped": 5,
+      "seconds": 0.004,
+      "conclusion": "(x)_19 - 19!m is irreducible mod 53, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/19)."
+    },
+    {
+      "k": 20,
+      "certified": true,
+      "q": 251,
+      "r": 166,
+      "live_primes_tried": 22,
+      "dead_primes_skipped": 24,
+      "seconds": 0.037,
+      "conclusion": "(x)_20 - 20!m is irreducible mod 251, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/20)."
+    },
+    {
+      "k": 21,
+      "certified": true,
+      "q": 379,
+      "r": 346,
+      "live_primes_tried": 30,
+      "dead_primes_skipped": 37,
+      "seconds": 0.04,
+      "conclusion": "(x)_21 - 21!m is irreducible mod 379, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/21)."
+    },
+    {
+      "k": 22,
+      "certified": true,
+      "q": 61,
+      "r": 14,
+      "live_primes_tried": 4,
+      "dead_primes_skipped": 6,
+      "seconds": 0.013,
+      "conclusion": "(x)_22 - 22!m is irreducible mod 61, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/22)."
+    },
+    {
+      "k": 23,
+      "certified": true,
+      "q": 43,
+      "r": 32,
+      "live_primes_tried": 2,
+      "dead_primes_skipped": 3,
+      "seconds": 0.007,
+      "conclusion": "(x)_23 - 23!m is irreducible mod 43, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/23)."
+    },
+    {
+      "k": 24,
+      "certified": true,
+      "q": 83,
+      "r": 75,
+      "live_primes_tried": 7,
+      "dead_primes_skipped": 7,
+      "seconds": 0.013,
+      "conclusion": "(x)_24 - 24!m is irreducible mod 83, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/24)."
+    },
+    {
+      "k": 25,
+      "certified": true,
+      "q": 379,
+      "r": 346,
+      "live_primes_tried": 30,
+      "dead_primes_skipped": 36,
+      "seconds": 0.043,
+      "conclusion": "(x)_25 - 25!m is irreducible mod 379, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/25)."
+    },
+    {
+      "k": 26,
+      "certified": true,
+      "q": 359,
+      "r": 334,
+      "live_primes_tried": 27,
+      "dead_primes_skipped": 36,
+      "seconds": 0.06,
+      "conclusion": "(x)_26 - 26!m is irreducible mod 359, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/26)."
+    },
+    {
+      "k": 27,
+      "certified": true,
+      "q": 827,
+      "r": 410,
+      "live_primes_tried": 57,
+      "dead_primes_skipped": 78,
+      "seconds": 0.137,
+      "conclusion": "(x)_27 - 27!m is irreducible mod 827, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/27)."
+    },
+    {
+      "k": 28,
+      "certified": true,
+      "q": 383,
+      "r": 144,
+      "live_primes_tried": 31,
+      "dead_primes_skipped": 36,
+      "seconds": 0.089,
+      "conclusion": "(x)_28 - 28!m is irreducible mod 383, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/28)."
+    },
+    {
+      "k": 29,
+      "certified": true,
+      "q": 43,
+      "r": 32,
+      "live_primes_tried": 1,
+      "dead_primes_skipped": 3,
+      "seconds": 0.012,
+      "conclusion": "(x)_29 - 29!m is irreducible mod 43, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/29)."
+    },
+    {
+      "k": 30,
+      "certified": true,
+      "q": 853,
+      "r": 678,
+      "live_primes_tried": 59,
+      "dead_primes_skipped": 78,
+      "seconds": 0.182,
+      "conclusion": "(x)_30 - 30!m is irreducible mod 853, hence over Q; by Jordan its Galois group has a derangement, so a prime with no root exists (density >= 1/30)."
+    }
+  ]
+}

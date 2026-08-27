@@ -905,3 +905,29 @@ before i=10 rather than discovering it during a multi-day run.
 **Test.** `scripts/test_closure.py` forces deferral at i=5 and the deferred
 columns land outside every span. A case where they land INSIDE a sparse span is
 the one to add -- today it must raise; after this change it must repair.
+
+### Q31. How often does the sub-sqrt(N) blind spot bite, and does it scale with i? *(difficulty: low · **HARD**)* -- OPEN, added 2026-08-25
+`cells()` never scans p <= sqrt(N) -- structurally, not by accident: the
+Band II / Z-jump machinery starts at the first prime above sqrt(N) (8606 at
+i=9). The four i=9 Lucas fills (k = 87, 399, 553, 1281) are the evidence
+that this blind spot bites: each survived the hard just-above-sqrt(N)
+window the sweep does scan, and then died at the first live prime above k
+under full Lucas -- below sqrt(N) because those k are small, not because a
+theorem put the killer there (k=87 had only a 57.6% chance to die at its
+first live prime; "had to die below sqrt(N)" is NO -- effective Chebotarev
+at that bound needs disc((x)_k - k!m) with m at 21M digits, Q17, blocked).
+
+THE QUESTION: across all eight members, how many columns have their
+recorded kill prime <= sqrt(N_i)? A read over the witness tables already
+on disk -- minutes, no new mathematics. The decision it feeds: if the
+count is a handful per member and flat in i, the Lucas-fill patch is fine
+forever and this closes. If it GROWS with i, then i=10 needs the
+sub-sqrt(N) band handled by design (a small full-Lucas pre-pass below
+sqrt(N)) rather than by post-hoc cleanup -- a concrete input to the
+parked i=10 decision, cheaper to learn now than mid-run.
+
+Deliverable: the per-member count table, the verdict (flat / growing),
+and if growing, one sentence in the i=10 stanza of the refresher. Do not
+re-open Q17; location-certificates are known-blocked. Existence
+certificates for the four fills are Q14-section-6 material and already
+cheap (termination_certificate.py).
