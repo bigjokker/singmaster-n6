@@ -2,6 +2,8 @@
   "search": "coverage_ledger",
   "n_members": 8,
   "n_incomplete": 0,
+  "n_unbound": 2,
+  "n_ok": 6,
   "total_columns": 41590228,
   "members": [
     {
@@ -20,6 +22,9 @@
       "sha256": "ab08157ad34078714f57d1ca2023d464e195d17ca009d5bcfcec6819dc1eb6e6",
       "certificate_sha256": "ab08157ad3407871",
       "certificate_names_this_table": true,
+      "coverage_complete": true,
+      "bound": true,
+      "state": "COMPLETE",
       "ok": true
     },
     {
@@ -38,6 +43,9 @@
       "sha256": "028be3a55d945913df7d832d35278579b5f217ac8e8c278c0aad4510e2d4ccff",
       "certificate_sha256": "028be3a55d945913",
       "certificate_names_this_table": true,
+      "coverage_complete": true,
+      "bound": true,
+      "state": "COMPLETE",
       "ok": true
     },
     {
@@ -56,6 +64,9 @@
       "sha256": "64d3642c2346bd7ea13a6f47a3d3f983cf263568bcc1fb542d125d78e22614ac",
       "certificate_sha256": "64d3642c2346bd7e",
       "certificate_names_this_table": true,
+      "coverage_complete": true,
+      "bound": true,
+      "state": "COMPLETE",
       "ok": true
     },
     {
@@ -74,6 +85,9 @@
       "sha256": "cbdbd736ff61d96963b71557a01d0ae0e245ab1370b2f66eba6c6816b167c504",
       "certificate_sha256": "cbdbd736ff61d969",
       "certificate_names_this_table": true,
+      "coverage_complete": true,
+      "bound": true,
+      "state": "COMPLETE",
       "ok": true
     },
     {
@@ -92,6 +106,9 @@
       "sha256": "fa1d304c3f462f502519c7a056b6739a3f615b215d706ca2ac8f37105c7c327d",
       "certificate_sha256": "fa1d304c3f462f50",
       "certificate_names_this_table": true,
+      "coverage_complete": true,
+      "bound": true,
+      "state": "COMPLETE",
       "ok": true
     },
     {
@@ -110,6 +127,9 @@
       "sha256": "1ede909367ad5be55c31da257ce382dada351d6597960f4bcf10b84c2ba4d320",
       "certificate_sha256": "1ede909367ad5be5",
       "certificate_names_this_table": true,
+      "coverage_complete": true,
+      "bound": true,
+      "state": "COMPLETE",
       "ok": true
     },
     {
@@ -126,9 +146,12 @@
       "extra_sample": [],
       "family_columns_correctly_absent": true,
       "sha256": "596dbf47543fa60a82236fc2c74b4df0d5f4b42767767f1518dfd6456c96a527",
-      "certificate_sha256": "596dbf47543fa60a",
-      "certificate_names_this_table": true,
-      "ok": true
+      "certificate_sha256": null,
+      "certificate_names_this_table": null,
+      "coverage_complete": true,
+      "bound": false,
+      "state": "UNBOUND",
+      "ok": false
     },
     {
       "i": 9,
@@ -146,7 +169,10 @@
       "sha256": "e375de140d32cf77e9b61bbdb67cf77a7a2308367ba5005a8586bfcbbb3f80be",
       "certificate_sha256": null,
       "certificate_names_this_table": null,
-      "ok": true
+      "coverage_complete": true,
+      "bound": false,
+      "state": "UNBOUND",
+      "ok": false
     }
   ]
 }

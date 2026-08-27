@@ -461,7 +461,9 @@ independence -- the honest answer may be "keep the verifier slow on purpose".
 (Superseded 2026-08-23: the ledger now covers i=2..9 -- 41,590,228 columns,
 0 missing, 0 extra -- and reports coverage and certificate-binding as two
 facts, so i=8 and i=9 read "coverage complete, UNBOUND" rather than
-COMPLETE. Run the script; `results/coverage_ledger.json` predates the split.)
+COMPLETE. `results/coverage_ledger.json` was regenerated 2026-08-25 to the
+post-split schema and is pinned live against a table re-audit by
+`test_witness.py::test_coverage_ledger_json_is_current`.)
 
 *Original text:*
 **The one correctness gap found.** `N(m)=6` claims every k in [2,kmax] except
@@ -506,17 +508,21 @@ bound by regime rather than a code change.
 ### Q24. Re-derive the phase budget now that the table is gone. *(low - **HARD**)* — DONE 2026-08-20
 `profile_sweep.py` now times the windowed path and reports the old table cost as historical only. Two corrections came out of it: (1) timing the windowed scan on a SPREAD sample charges the whole factorial window to `sample` columns instead of a real chunk, so the profiler now splits fixed per-chunk cost from marginal per-column cost; (2) **Q2's "1.75x on Band II" was a multiplication count and is a wash in wall-clock** (1.01x over chunks of 2k/10k/33k columns, identical output). Z-jump: the pre-Q2 table path would have added ~208 core-h at i=9 that is now gone. The extrapolated totals remain good only to a factor of ~2, so Q11's i=10 figure should be quoted as an order of magnitude, not a number.
 
-**Correction 2026-08-23.** The profiler does time the windowed path, as above,
-but two *reference* figures both tools still print are stale and should not be
-quoted: `work_census.SCAN_RATE = 1.865e8` was measured on the numpy
-`(s*F) % p` loop, and production has run the Granlund-Montgomery kernel since
-`8e64945`. Everything derived from that constant is stale with it -- the
-census's core-hour column, its "5.6x at i=7 and 9.4x at i=8", and
-`profile_sweep`'s "6.11x at i=7 and 10.27x at i=8". The visible symptom is
-i=8 printing "scan is 209.66% of wall", which is impossible and is the
-constant, not the run. Both files are commented to that effect; **no new
-constant was chosen here**, because picking one is a measurement, not a
-documentation fix.
+**Correction 2026-08-23, RESOLVED 2026-08-25.** The profiler does time the
+windowed path, as above, but two *reference* figures both tools printed were
+stale: `work_census.SCAN_RATE = 1.865e8` was measured on the numpy
+`(s*F) % p` loop while production has run the Granlund-Montgomery kernel since
+`8e64945`, so the census's core-hour column, its "5.6x at i=7 and 9.4x at
+i=8", and `profile_sweep`'s "6.11x at i=7 and 10.27x at i=8" were all ~4.7x
+off. The visible symptom was i=8 printing "scan is 209.66% of wall", which is
+impossible. **Re-measured 2026-08-25: SCAN_RATE = 8.80e8 census-ops/s**, taken
+end to end through `scan_ks_windowed` on the GM kernel at two real fat-cell
+primes (881.2M and 878.2M ops/s, 0.3% apart). i=8 now reads 44.43% of wall,
+i=7 3.47%, i=9 21.2% -- all possible. The old ratio pairs are superseded, not
+revived. Subtlety recorded at the constant: odd `k` runs TWO kernel passes
+(`_gm_first` and `_gm_last`) over the same half-window while the census counts
+`ceil(g/2)` once, so the constant is calibrated on census ops, not on raw loop
+iterations (2.58e9/s in cache, 1.16e9/s once the window turns memory-bound).
 
 *Original text:*
 `profile_sweep.py` still times `fact_table`, which Q2 removed from the hot

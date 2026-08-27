@@ -951,6 +951,57 @@ def test_ledger_numbers_unchanged_on_a_real_table() -> None:
                f"state {aud['state']})")
 
 
+def test_coverage_ledger_json_is_current() -> None:
+    """results/coverage_ledger.json must match a live re-audit of the tables.
+
+    It went stale once: written before coverage and binding were separated, it
+    carried no `bound` field at all and its i=8 row asserted
+    certificate_sha256 = 596dbf47..., a binding the i=8 sweep record does not
+    contain (i=8 ships UNBOUND). Nothing caught that, because the tests
+    imported the coverage_ledger MODULE and never read its json. This compares
+    the artifact against audit_member run live, so any table change or a
+    pre-split schema fails here until the json is regenerated.
+    """
+    import coverage_ledger as CL
+
+    path = ROOT / "results" / "coverage_ledger.json"
+    if not path.exists():
+        ok.append("results/coverage_ledger.json absent; ledger-json pin skipped")
+        return
+    art = json.loads(path.read_text(encoding="utf-8"))
+    expect("n_unbound" in art and "n_ok" in art,
+           "ledger json has the post-split schema (n_unbound / n_ok present)")
+    members = {m["i"]: m for m in art["members"]}
+    expect(sorted(members) == list(range(2, 10)), "ledger covers i = 2..9")
+
+    total = 0
+    for i, m in sorted(members.items()):
+        npz = ROOT / "results" / f"i{i}_witness.npz"
+        if not npz.exists():
+            ok.append(f"i{i}_witness.npz absent; ledger row {i} skipped")
+            continue
+        aud = CL.audit_member(i, npz)
+        expect(m["n_witnessed"] == aud["n_witnessed"]
+               and m["n_expected"] == aud["n_expected"]
+               and m["n_missing"] == 0 and m["n_extra"] == 0,
+               f"i={i}: ledger row matches a live audit "
+               f"({aud['n_witnessed']:,} witnessed, 0 missing, 0 extra)")
+        expect(m["sha256"] == aud["sha256"],
+               f"i={i}: ledger names the table digest on disk")
+        expect(m["bound"] == aud["bound"],
+               f"i={i}: bound flag matches live ({aud['bound']})")
+        expect(not (m["bound"] is False and m["certificate_sha256"]),
+               f"i={i}: an UNBOUND row carries no phantom certificate digest")
+        total += aud["n_witnessed"]
+
+    expect(art["total_columns"] == total,
+           f"ledger total_columns == sum over tables ({total:,})")
+    expect(art["n_incomplete"] == 0, "no member is coverage-incomplete")
+    expect(art["n_unbound"] == 2 and {i for i, m in members.items()
+                                      if m["bound"] is False} == {8, 9},
+           "exactly i=8 and i=9 are UNBOUND, as the record says")
+
+
 def test_build_family_clips_engine_band_at_kmax() -> None:
     """The engine band below the Z-jump start must stop at k_max.
 
@@ -1145,6 +1196,7 @@ def main() -> int:
     test_build_i8_from_its_checkpoint_leaves_1021_to_the_engine()
     test_column_coverage_matches_a_set_reference()
     test_ledger_numbers_unchanged_on_a_real_table()
+    test_coverage_ledger_json_is_current()
     test_build_family_clips_engine_band_at_kmax()
     test_verifier_rejects_the_j0_image_entry()
     test_bandii_count_identity_catches_a_sparse_span()

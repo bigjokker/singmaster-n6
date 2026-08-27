@@ -39,13 +39,14 @@ Scan work and wall clock are reported as TWO numbers, and the gap between
 them is not constant: a faster scan is not a faster job, and no wall clock is
 extrapolated to an unrun member.
 
-STALE, 2026-08-23: the "6.11x at i=7 and 10.27x at i=8" this file used to
-quote is a ratio against work_census.SCAN_RATE, which was measured on the old
-numpy loop; production has run the Granlund-Montgomery kernel since 8e64945.
-Precisely: the i=8 half moved (its recorded wall was regenerated under GM,
-7,508 s -> 174 s), while at i=7 work_census still prints 6.11x today, because
-results/i7_sweep.json was never re-run. The pair is unreliable because its
-DENOMINATOR is a pre-GM constant, not because both numbers visibly changed.
+RESOLVED 2026-08-25: the "6.11x at i=7 and 10.27x at i=8" this file used to
+quote was a ratio against work_census.SCAN_RATE while that constant was still
+the pre-Granlund-Montgomery 1.865e8. SCAN_RATE has since been re-measured on
+the GM kernel (8.80e8 census-ops/s), so the denominator is current and the
+old pair is simply superseded, not merely suspect. Note i=7's recorded wall
+still predates GM (results/i7_sweep.json was never re-run), so its wall/scan
+ratio compares a GM scan estimate against a pre-GM wall and reads high; i=8's
+wall was regenerated under GM (7,508 s -> 174 s) and is the comparable one.
 The rate this profiler MEASURES at run time is current; the fixed reference
 it is compared against is not.
 
@@ -366,8 +367,8 @@ def report(r: dict) -> None:
               f"{w / r['scan_core_h_hi']:.2f}x - {w / r['scan_core_h_lo']:.2f}x")
         print("    These are two different numbers, and their ratio is not")
         print("    constant -- do not extrapolate it to an unrun member. (The")
-        print("    once-quoted 6.11x/10.27x was against work_census.SCAN_RATE,")
-        print("    a pre-Granlund-Montgomery figure; it is stale, not current.)")
+        print("    once-quoted 6.11x/10.27x used a pre-Granlund-Montgomery")
+        print("    SCAN_RATE; that constant was re-measured 2026-08-25.)")
     elif r.get("record_partial"):
         print("    WALL CLOCK not comparable: this record is partial (its `seconds`")
         print("    covers only a resumed leg). No ratio is printed.")

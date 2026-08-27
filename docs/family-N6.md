@@ -525,10 +525,14 @@ weaken the others, which stand on their own certificates.
   62-digit values, one decade above the first value the classifier calls
   past. The scan start was corrected on 2026-08-23; the artifacts were not
   re-run.)
-* **Not `results/coverage_ledger.json`.** Still stale: the ledger json
-  predates the coverage/binding split, and its \(i=8\) row still asserts a
-  certificate digest that the current \(i=8\) record does not contain. Run
-  `coverage_ledger.py`; do not quote that file. (`results/ghost_census.json`
+* **`results/coverage_ledger.json` is current again (2026-08-25).** It was
+  stale — written before the coverage/binding split, with no `bound` field and
+  an \(i=8\) row asserting a certificate digest the \(i=8\) record does not
+  contain — and has been regenerated: 8 members, 41,590,228 columns, 0 missing,
+  0 extra, \(i=8\) and \(i=9\) `bound: false`. It is now pinned live against a
+  re-audit of the tables by
+  `test_witness.py::test_coverage_ledger_json_is_current`, so it cannot drift
+  silently. (`results/ghost_census.json`
   was in the same boat until 2026-08-24; it has since been regenerated from
   the current tables — eight members, digests matching this section's table,
   live-pinned by `scripts/test_ghost_census.py` — and IS now citable, with

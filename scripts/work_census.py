@@ -54,16 +54,17 @@ rather than absorbed into a fudge:
 Scan work and wall clock are reported as TWO numbers. They are not the same
 number and the gap between them is not constant.
 
-STALE, 2026-08-23 -- READ BEFORE QUOTING THE CORE-HOUR COLUMN. SCAN_RATE
-below was measured on the numpy `(s * F) % p` loop, and production has run
-the Granlund-Montgomery kernel since 8e64945; results/i8_sweep.json was
-regenerated under it (52dc1ac, 7508 s -> 174 s). So the scan core-hours this
-file prints, and the "5.6x at i=7 / 9.4x at i=8" gap once quoted here, are
-both stale by roughly the kernel speedup. The visible symptom is i=8 printing
-"scan is 209.66% of wall", which is impossible: it is the constant, not the
-run. The EXACT element counts and every gate are unaffected -- they are
-integer reconstructions from the record and do not use SCAN_RATE. Re-measuring
-is a job, not a documentation fix, so no replacement constant is chosen here.
+RE-MEASURED 2026-08-25. SCAN_RATE is now 8.80e8 census-ops/s, measured on the
+Granlund-Montgomery kernel that has run since 8e64945; the old 1.865e8 came
+from the superseded numpy `(s * F) % p` loop and left every core-hour figure
+~4.7x high. The visible symptom -- i=8 printing "scan is 209.66% of wall",
+which is impossible -- is gone: i=8 now reads 44.43%, i=7 3.47%, i=9 21.2%.
+The once-quoted "5.6x at i=7 / 9.4x at i=8" gap was computed against the old
+denominator and should not be revived; the current wall/scan ratios print
+below and are NOT constant across i. The EXACT element counts and every gate
+are unaffected either way -- they are integer reconstructions from the record
+and do not use SCAN_RATE. See the constant for the method and its one
+subtlety (odd k costs two kernel passes; the census counts the half once).
 
     python scripts/work_census.py
     python scripts/work_census.py --i 9
@@ -98,14 +99,31 @@ from bandii_kernel import (  # noqa: E402
 # the sweep, and it is deliberately quoted to three digits because the probe
 # bugs this file replaces were factors of 8 to 150, not 10%.
 #
-# STALE (noted 2026-08-23): since 8e64945, 2026-08-22, that kernel is no
-# longer what runs. The
-# default is Granlund-Montgomery, which is several times faster, so every
-# core-hour figure derived from this constant reads high -- at i=8 high
-# enough to print a scan share above 100% of wall. Deliberately NOT replaced
-# by a guess: the number is only meaningful measured on this machine over the
-# kernel actually in use. Element counts and gates do not touch it.
-SCAN_RATE = 1.865e8
+# RE-MEASURED 2026-08-25 on the Granlund-Montgomery kernel actually in use
+# (USE_GM_SCAN=1, numba present), replacing the pre-GM 1.865e8 which was
+# measured on the old numpy `(s*F) % p` loop and left every core-hour figure
+# reading ~4.7x high -- at i=8 high enough to print a scan share of 209.66%
+# of wall, which is impossible. With the value below i=8 reads 44.43%.
+#
+# Measured END TO END through scan_ks_windowed on 400-column batches at real
+# fat-cell parameters (p = 2,700,967 and 5,401,973), counting CENSUS ops --
+# ceil(g/2) per column-pass, exactly what this file sums -- against wall
+# clock: 881.2M and 878.2M ops/s, agreeing to 0.3%.
+#
+# Deliberately the END-TO-END rate, not the raw kernel loop. The bare
+# _gm_first loop runs at 2.58e9 iter/s in cache (1.16e9 at 68 MB, where it
+# turns memory-bound), but ODD k costs TWO passes over the half-window
+# (_gm_first plus _gm_last) while the census counts ceil(g/2) once -- so raw
+# iterations and census ops differ by ~1.5x on a half-odd column mix, before
+# per-chunk fact_window setup and per-column slicing. Calibrating on census
+# ops folds all of that in, which is the only way `ops / rate` means
+# anything. Slightly conservative: production chunks are larger than 400
+# columns, so setup amortises further and the true rate is a little higher --
+# erring toward core-hours reading high, not low.
+#
+# Element counts and gates never touch this constant; they are integer
+# reconstructions from the record.
+SCAN_RATE = 8.80e8
 
 
 def check(cond: bool, msg: str) -> None:

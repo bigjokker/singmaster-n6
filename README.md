@@ -111,9 +111,13 @@ and i=9 *coverage complete, UNBOUND*, since their sweep records carry no
 certificate. Unbound is neither a coverage hole nor a clean bill, so the
 script prints it as its own state and **exits 1**.
 
-`results/coverage_ledger.json` in the tree predates that split and still
-shows the old single verdict; the script is the current statement, not that
-file.
+`results/coverage_ledger.json` was regenerated 2026-08-25 and now carries the
+post-split schema — `bound` per member, `n_unbound`, `n_ok` — with i=8 and i=9
+correctly `bound: false` and no certificate digest. (The committed copy
+predating the split had no `bound` field at all and asserted a certificate for
+i=8 that its sweep record does not contain.) It is pinned live against a
+re-audit of the tables by `test_witness.py::test_coverage_ledger_json_is_current`,
+so it cannot drift again.
 
 ### Independent re-checks
 
@@ -154,7 +158,7 @@ Witness tables are the proof object; the sweep JSONs are the run records.
 
 | File | Claim |
 |---|---|
-| `results/coverage_ledger.json` | Stale: written before coverage and binding were separated. Run `scripts/coverage_ledger.py` for the current statement (8 members, 41,590,228 columns, i=8/i=9 UNBOUND) |
+| `results/coverage_ledger.json` | Regenerated 2026-08-25: 8 members, 41,590,228 columns, 0 missing, 0 extra, i=8/i=9 `bound: false` (UNBOUND). Live-pinned against a table re-audit by `test_witness.py` |
 | `results/i9_witness.npz` | i=9: 35,522,326 per-column certificates, \(k=2..35{,}522{,}329\); 83 engine-filled (k=2..80 and the four Lucas columns) |
 | `results/i8_witness.npz` | i=8: 5,182,634 per-column certificates, \(k=2..5{,}182{,}637\); two rows are not from the sweep (engine fill k=2, repair 1021: 3517 → 1051) |
 | `results/i7_witness.npz` | i=7: 756,133 certificates |
@@ -292,14 +296,18 @@ no-`r_expected` fallback, where r(p) is indeed almost the whole cost. No
 artifact in the tree currently measures a per-phase scan-vs-r(p) split on
 the GM kernel, so none is quoted here.
 
-**Stale, and knowingly so:** `work_census.SCAN_RATE = 1.865e8` was measured on
-the old numpy `(s*F) % p` loop, and production has run the
-Granlund–Montgomery kernel since `8e64945`. Every figure derived from that
-constant is stale with it — the census's core-hour column, its "5.6x / 9.4x",
-and the profiler's "6.11x at i=7 and 10.27x at i=8". The visible symptom is
-i=8 printing "scan is 209.66% of wall", which is the constant, not the run.
-Both files say so in place. Re-measuring is a job, not a doc fix, so no
-replacement number is quoted here.
+**Re-measured 2026-08-25:** `work_census.SCAN_RATE` is now **8.80e8**
+census-ops/s, measured end to end through `scan_ks_windowed` on the
+Granlund–Montgomery kernel that has run since `8e64945` (400-column batches at
+two real fat-cell primes, agreeing to 0.3%). The old `1.865e8` came from the
+superseded numpy `(s*F) % p` loop and left every derived core-hour figure
+~4.7× high — the visible symptom being i=8 printing "scan is 209.66% of wall",
+which is impossible. It now reads **44.43%** (i=7 3.47%, i=9 21.2%). The
+earlier "5.6x / 9.4x" and "6.11x / 10.27x" pairs were computed against the old
+denominator and are superseded, not revived. One subtlety is recorded at the
+constant: odd `k` costs two kernel passes over the half-window while the census
+counts `ceil(g/2)` once, so the rate is deliberately calibrated on census ops
+rather than raw loop iterations (which run at 2.58e9/s in cache).
 
 ## Checkpoints
 
